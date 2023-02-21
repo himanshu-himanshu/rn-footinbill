@@ -7,12 +7,10 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-
-import RequiredSign from '../../utils/RequiredSign';
-import { addATestResult } from '../../actions/testAction';
+import {addATestResult} from '../../actions/testAction';
 import RNPickerSelect from 'react-native-picker-select';
-import { useDispatch, useSelector } from 'react-redux';
-import { Formik } from 'formik';
+import {useDispatch, useSelector} from 'react-redux';
+import {Formik} from 'formik';
 import * as Yup from 'yup';
 
 const validationSchema = Yup.object({
@@ -20,23 +18,25 @@ const validationSchema = Yup.object({
     .trim()
     .min(4, 'More than 3 characters only!')
     .required('Risk is required!'),
-  bloodPressureLow: Yup.number('Should only be numeric value in mm Hg')
-    .required('Low BP value is required!'),
-  bloodPressureHigh: Yup.number('Should only be numeric value in mm Hg')
-    .required('High BP value is required!'),
-  respiratoryRate: Yup.number()
-    .required('Respiratory rate is required! in BPM')
+  bloodPressureLow: Yup.number(
+    'Should only be numeric value in mm Hg',
+  ).required('Low BP value is required!'),
+  bloodPressureHigh: Yup.number(
+    'Should only be numeric value in mm Hg',
+  ).required('High BP value is required!'),
+  respiratoryRate: Yup.number().required(
+    'Respiratory rate is required! in BPM',
+  ),
 });
 
-export const AddATestResultScreen = ({ navigation, route }) => {
-
+export const AddATestResultScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
 
   const formObject = {
-    risk: "",
-    bloodPressureLow: "",
-    bloodPressureHigh: "",
-    respiratoryRate: ""
+    risk: '',
+    bloodPressureLow: '',
+    bloodPressureHigh: '',
+    respiratoryRate: '',
   };
 
   let performAddition = async values => {
@@ -45,7 +45,7 @@ export const AddATestResultScreen = ({ navigation, route }) => {
       bloodPressureLow: values.bloodPressureLow,
       bloodPressureHigh: values.bloodPressureHigh,
       respiratoryRate: values.respiratoryRate,
-      userId: route.params.patientId
+      userId: route.params.patientId,
     };
     const output = await dispatch(addATestResult(payload, navigation));
 
@@ -143,11 +143,11 @@ export const AddATestResultScreen = ({ navigation, route }) => {
                     }
                   }}
                   items={[
-                    { label: 'Normal', value: 'normal' },
-                    { label: 'Level1', value: 'level1' },
-                    { label: 'Level2', value: 'level2' },
-                    { label: 'Level3', value: 'level3' },
-                    { label: 'Severe', value: 'severe' },
+                    {label: 'Normal', value: 'normal'},
+                    {label: 'Level1', value: 'level1'},
+                    {label: 'Level2', value: 'level2'},
+                    {label: 'Level3', value: 'level3'},
+                    {label: 'Severe', value: 'severe'},
                   ]}
                 />
                 {touched.risk && errors.risk ? (
@@ -158,12 +158,10 @@ export const AddATestResultScreen = ({ navigation, route }) => {
               </View>
 
               <View style={[styles.button, styles.shadowSm]}>
-                <TouchableOpacity
-                  onPress={handleSubmit}>
+                <TouchableOpacity onPress={handleSubmit}>
                   <Text style={styles.buttonText}>Submit</Text>
                 </TouchableOpacity>
               </View>
-
             </>
           );
         }}
@@ -232,7 +230,7 @@ const styles = StyleSheet.create({
   },
   shadowSm: {
     shadowColor: '#00000020',
-    shadowOffset: { width: -2, height: 4 },
+    shadowOffset: {width: -2, height: 4},
     shadowOpacity: 0.2,
     shadowRadius: 4,
   },
@@ -243,7 +241,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     letterSpacing: 0.5,
     fontWeight: '500',
-  }
+  },
 });
 
 export default AddATestResultScreen;

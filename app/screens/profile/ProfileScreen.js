@@ -7,7 +7,6 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import RequiredSign from '../../utils/RequiredSign';
 import {updateProfile} from '../../actions/authAction';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
@@ -17,7 +16,7 @@ export const ProfileScreen = ({navigation}) => {
   const dispatch = useDispatch();
 
   const user = useSelector(state => state.auth.user);
-  const state = useSelector(state => console.log('State 123' , state));
+  const state = useSelector(state => console.log('State 123', state));
   let validationSchema = Yup.object({
     email: Yup.string()
       .trim()
@@ -56,7 +55,6 @@ export const ProfileScreen = ({navigation}) => {
           return (
             <>
               <View style={styles.body}>
-
                 <View style={styles.inputBox}>
                   <Text style={styles.label}>Your Email</Text>
                   <TextInput
@@ -113,7 +111,7 @@ export const ProfileScreen = ({navigation}) => {
                     ''
                   )}
                 </View>
-                
+
                 <View style={styles.inputBox}>
                   <TouchableOpacity onPress={handleSubmit}>
                     <Text style={styles.button}>Update</Text>
@@ -122,11 +120,14 @@ export const ProfileScreen = ({navigation}) => {
 
                 <View style={styles.inputBox}>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('updatePasswordScreen', {email : user.email})}>
+                    onPress={() =>
+                      navigation.navigate('updatePasswordScreen', {
+                        email: user.email,
+                      })
+                    }>
                     <Text style={styles.passwordButton}>Change Password</Text>
                   </TouchableOpacity>
                 </View>
-                
               </View>
             </>
           );

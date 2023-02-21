@@ -12,8 +12,8 @@ import RNPickerSelect from 'react-native-picker-select';
 import {registerPatient} from '../../actions/authAction';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
-import bloodGroupData from '../../utils/bloodGroup.json';
-import provinceData from '../../utils/province.json';
+// import bloodGroupData from '../../utils/bloodGroup.json';
+// import provinceData from '../../utils/province.json';
 import * as Yup from 'yup';
 
 const validationSchema = Yup.object({
