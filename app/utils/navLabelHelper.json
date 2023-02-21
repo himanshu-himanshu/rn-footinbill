@@ -1,0 +1,59 @@
+[{
+    "loginScreen": {
+      "loggedInTitle": "Home",
+      "loggedOutTitle": "Login"
+    },
+
+    "registerScreen": {
+      "loggedInTitle": "Home",
+      "loggedOutTitle": "Sign Up"
+    },
+    "homeScreen": {
+      "loggedInTitle": "Home",
+      "loggedOutTitle": "Login"
+    },
+    "forgotPasswordScreen": {
+      "loggedInTitle": "Forgot Password",
+      "loggedOutTitle": "Forgot Password"
+    },
+    "verifyForgotPasswordOtpScreen": {
+      "loggedInTitle": "Verification",
+      "loggedOutTitle": "Login"
+    },
+    "updatePasswordScreen": {
+      "loggedInTitle": "Update Password",
+      "loggedOutTitle": "Login"
+    },
+    "welcomeScreen": {
+      "loggedInTitle": "Welcome",
+      "loggedOutTitle": "Login"
+    },
+    "profileScreen": {
+      "loggedInTitle": "Profile",
+      "loggedOutTitle": "Login"
+    },
+    "addPatientScreen": {
+      "loggedInTitle": "Add A Patient",
+      "loggedOutTitle": "Login"
+    },
+    "viewAllPatients": {
+      "loggedInTitle": "View All Patients",
+      "loggedOutTitle": "Login"
+    },
+    "viewAPatientScreen": {
+      "loggedInTitle": "View A Patient",
+      "loggedOutTitle": "Login"
+    },
+    "viewAllTestResultsScreen": {
+      "loggedInTitle": "View All Tests",
+      "loggedOutTitle": "Login"
+    },
+    "addATestResultScreen": {
+      "loggedInTitle": "Add A Test",
+      "loggedOutTitle": "Login"
+    },
+    "viewATestResultScreen": {
+      "loggedInTitle": "View ATest",
+      "loggedOutTitle": "Login"
+    }
+  }]
