@@ -12,6 +12,7 @@ import {logoutUser, getAllPatientsOfAUser} from '../../app/actions/authAction';
 import {useSelector, useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import showSnack from '../utils/ShowSnack';
+import BottomNavigator from './bottomNavigator/BottomNavigator';
 
 export const HomeScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -54,23 +55,7 @@ export const HomeScreen = ({navigation}) => {
     navigation.navigate('loginScreen');
     showSnack('See you soon!');
   };
-  return (
-    <>
-      <ScrollView contentContainerStyle={styles.body}>
-        <View style={styles.container}>
-          <View style={styles.imageView}>
-            <Image
-              source={require('../../assets/images/image.jpg')}
-              style={styles.image}
-            />
-          </View>
-          <TouchableOpacity onPress={() => showAlert()} style={styles.redBox}>
-            <Text style={styles.label}>Logout</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </>
-  );
+  return <BottomNavigator />;
 };
 
 const styles = StyleSheet.create({
@@ -150,3 +135,19 @@ const styles = StyleSheet.create({
   },
 });
 export default HomeScreen;
+
+// <>
+// <ScrollView contentContainerStyle={styles.body}>
+//   <View style={styles.container}>
+//     <View style={styles.imageView}>
+//       <Image
+//         source={require('../../assets/images/image.jpg')}
+//         style={styles.image}
+//       />
+//     </View>
+//     <TouchableOpacity onPress={() => showAlert()} style={styles.redBox}>
+//       <Text style={styles.label}>Logout</Text>
+//     </TouchableOpacity>
+//   </View>
+// </ScrollView>
+// </>
