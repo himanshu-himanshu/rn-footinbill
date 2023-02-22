@@ -62,7 +62,7 @@ const Profile = ({navigation}) => {
                 Account
               </Text>
 
-              <View className="bg-[#D9ED92] py-6 px-2 w-full rounded-3xl flex flex-row justify-between items-center mt-4">
+              <View className="bg-[#D9ED92] py-6 px-2 w-full rounded-tl-3xl rounded-br-3xl flex flex-row justify-between items-center mt-4">
                 <View className="px-4 py-2">
                   <Text className="text-xl tracking-wider pb-2">Username</Text>
                   <Text className="text-xsm text-gray-500">
