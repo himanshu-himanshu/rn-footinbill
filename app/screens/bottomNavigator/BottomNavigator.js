@@ -22,7 +22,7 @@ const BottomNavigator = () => {
           backgroundColor: 'white',
           position: 'absolute',
           height: 90,
-          backgroundColor: '#99D98C',
+          backgroundColor: '#D9ED92',
           paddingTop: 40,
           //   bottom: 30,
           //   marginHorizontal: 10,
@@ -41,7 +41,7 @@ const BottomNavigator = () => {
             <Image
               source={require('../../../assets/images/home.png')}
               className="h-9 w-9"
-              style={{tintColor: focused ? '#184E77' : '#999999'}}
+              style={{tintColor: focused ? '#1E6091' : '#999999'}}
             />
           ),
         }}
@@ -55,7 +55,7 @@ const BottomNavigator = () => {
             <Image
               source={require('../../../assets/images/settings.png')}
               className="h-9 w-9"
-              style={{tintColor: focused ? '#184E77' : '#999999'}}
+              style={{tintColor: focused ? '#1E6091' : '#999999'}}
             />
           ),
         }}
