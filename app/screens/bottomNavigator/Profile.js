@@ -1,4 +1,11 @@
-import {View, Text, SafeAreaView, TouchableOpacity, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  Alert,
+  Image,
+} from 'react-native';
 import React from 'react';
 import {
   logoutUser,
@@ -50,9 +57,26 @@ const Profile = ({navigation}) => {
         <View className="w-full h-full">
           {/********* Title View **********/}
           <View className="h-[70vh] flex w-full justify-start items-start px-4 py-2">
-            <Text className="text-2xl font-Raleway tracking-wider py-4">
-              Account
-            </Text>
+            <View className="h-full w-full">
+              <Text className="text-2xl font-Raleway tracking-wider px-4 py-4">
+                Account
+              </Text>
+
+              <View className="bg-[#D9ED92] py-6 px-2 w-full rounded-3xl flex flex-row justify-between items-center mt-4">
+                <View className="px-4 py-2">
+                  <Text className="text-xl tracking-wider pb-2">Username</Text>
+                  <Text className="text-xsm text-gray-500">
+                    Thanks for being a loyal user
+                  </Text>
+                </View>
+                <View className="px-4">
+                  <Image
+                    source={require('../../../assets/images/man.png')}
+                    className="h-16 w-16"
+                  />
+                </View>
+              </View>
+            </View>
           </View>
 
           {/********* Logout View **********/}
