@@ -8,7 +8,7 @@ const Home = () => {
         <View className="w-full h-full">
           <View className="h-full w-full p-4">
             <Text className="text-2xl font-Raleway tracking-wider px-4 py-4">
-              Account
+              Home
             </Text>
 
             {/*********** Card View ***********/}
