@@ -21,16 +21,16 @@ const BottomNavigator = () => {
         tabBarStyle: {
           backgroundColor: 'white',
           position: 'absolute',
-          height: 90,
+          //height: 90,
+          //backgroundColor: '#D9ED92',
+          //paddingTop: 30,
+          //borderRadius: 10,
+          height: 80,
           backgroundColor: '#D9ED92',
-          paddingTop: 30,
-          borderRadius: 10,
-          //   height: 60,
-          //   backgroundColor: '#D9ED92',
-          //   paddingTop: 30,
-          //   bottom: 30,
-          //   marginHorizontal: 20,
-          //   borderRadius: 20,
+          paddingTop: 40,
+          bottom: 30,
+          marginHorizontal: 20,
+          borderRadius: 20,
         },
         tabBarLabelStyle: {
           fontSize: 18,
@@ -44,7 +44,7 @@ const BottomNavigator = () => {
           tabBarIcon: ({focused}) => (
             <Image
               source={require('../../../assets/images/home.png')}
-              className="h-9 w-9"
+              className={focused ? 'h-9 w-9' : 'h-9 w-9'}
               style={{tintColor: focused ? '#1E6091' : '#999999'}}
             />
           ),

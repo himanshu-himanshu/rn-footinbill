@@ -4,7 +4,10 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Alert,
+  TextInput,
+  Modal,
   Image,
+  Button,
 } from 'react-native';
 import React from 'react';
 import {
@@ -14,9 +17,11 @@ import {
 import {useSelector, useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import showSnack from '../../utils/ShowSnack';
+import {useState} from 'react';
 
 const Profile = ({navigation}) => {
   const dispatch = useDispatch();
+  const [visible, setVisible] = useState(false);
 
   const showAlert = () =>
     Alert.alert(
@@ -51,6 +56,15 @@ const Profile = ({navigation}) => {
     navigation.navigate('loginScreen');
     showSnack('See you soon!');
   };
+
+  const handleHide = () => {
+    setVisible(false);
+  };
+
+  const handleShow = () => {
+    setVisible(true);
+  };
+
   return (
     <View className="w-full h-screen bg-white">
       <SafeAreaView>
@@ -78,7 +92,9 @@ const Profile = ({navigation}) => {
 
             {/*********** Links View ***********/}
             <View className="m-2 flex flex-col space-y-6">
-              <TouchableOpacity className="flex flex-row items-center justify-between border-b border-gray-100 pb-4">
+              <TouchableOpacity
+                className="flex flex-row items-center justify-between border-b border-gray-100 pb-4"
+                onPress={handleShow}>
                 <View className="flex flex-row items-center space-x-4">
                   <Image
                     source={require('../../../assets/images/password.png')}
@@ -137,6 +153,73 @@ const Profile = ({navigation}) => {
             </View>
           </View>
         </View>
+
+        {/****************************************************************************************/}
+        {/***************************************** MODAL ****************************************/}
+
+        <Modal
+          visible={visible}
+          animationType="slide"
+          onRequestClose={handleHide}>
+          <SafeAreaView>
+            <View className="h-full">
+              <View className="flex p-4">
+                <TouchableOpacity onPress={handleHide}>
+                  <Text className="text-2xl text-gray-500">&larr;</Text>
+                </TouchableOpacity>
+              </View>
+              {/********* Header View **********/}
+              <View className="flex w-full justify-center items-center pb-12">
+                <Image
+                  source={require('../../../assets/images/otp.png')}
+                  className="h-40 w-40"
+                />
+                <Text className="text-3xl font-Raleway font-semibold tracking-wide py-4">
+                  Change Password
+                </Text>
+              </View>
+
+              {/********* Password View **********/}
+              <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
+                <TextInput
+                  secureTextEntry={true}
+                  placeholder="New Password"
+                  name="otp"
+                  keyboardType="numeric"
+                  className="p-4 text-xl text-gray-600 border border-gray-300"
+                  autoCapitalize="none"
+                />
+              </View>
+
+              {/********* Password View **********/}
+              <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
+                <TextInput
+                  secureTextEntry={true}
+                  placeholder="Confirm Password"
+                  name="otp"
+                  keyboardType="numeric"
+                  className="p-4 text-xl text-gray-600 border border-gray-300"
+                  autoCapitalize="none"
+                />
+              </View>
+
+              {/********* Login Button View **********/}
+              <View className="w-[90%] mx-auto shadow-md bg-[#b5e48c] rounded-sm mt-12">
+                <TouchableOpacity>
+                  <Text className="text-center px-10 py-4 text-gray-700 font-bold text-xl rounded-full">
+                    Submit
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity onPress={handleHide}>
+                <Text className="text-center px-10 py-4 text-pink-700 text-md rounded-full mt-12">
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
+        </Modal>
       </SafeAreaView>
     </View>
   );
