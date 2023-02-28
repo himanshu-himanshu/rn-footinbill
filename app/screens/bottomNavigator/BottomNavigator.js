@@ -1,13 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {
-  Text,
-  Image,
-  View,
-  TextInput,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import {Image} from 'react-native';
+import Groups from './Groups';
 import Home from './Home';
 import Profile from './Profile';
 
@@ -36,6 +29,7 @@ const BottomNavigator = () => {
           fontSize: 18,
         },
       })}>
+      {/*********** Home Tab ***********/}
       <Tab.Screen
         name="Home"
         component={Home}
@@ -50,6 +44,24 @@ const BottomNavigator = () => {
           ),
         }}
       />
+
+      {/*********** Groups Tab ***********/}
+      <Tab.Screen
+        name="Groups"
+        component={Groups}
+        options={{
+          tabBarLabel: '',
+          tabBarIcon: ({focused}) => (
+            <Image
+              source={require('../../../assets/images/meeting.png')}
+              className="h-10 w-10"
+              style={{tintColor: focused ? '#1E6091' : '#999999'}}
+            />
+          ),
+        }}
+      />
+
+      {/*********** Profile Tab ***********/}
       <Tab.Screen
         name="Settings"
         component={Profile}
