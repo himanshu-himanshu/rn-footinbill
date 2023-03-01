@@ -24,10 +24,6 @@ const validationSchema = Yup.object({
     .required('Password is required')
     .trim()
     .min(8, 'Password is too short'),
-  // confirmPassword: Yup.string()
-  //   .required('Confirm password is required')
-  //   .trim()
-  //   .equals([Yup.ref('password'), null], 'Passwords do not match eachother'),
 });
 
 export const RegisterScreen = ({navigation}) => {
@@ -37,10 +33,6 @@ export const RegisterScreen = ({navigation}) => {
     name: '',
     email: '',
     password: '',
-    // name: 'guru',
-    // email: 'guru2@yopmail.com',
-    // password: '12345678',
-    // confirmPassword: '12345678',
   };
 
   let performRegister = async values => {
@@ -146,29 +138,9 @@ export const RegisterScreen = ({navigation}) => {
                         ''
                       )}
                     </View>
-                    {/* <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
-                      <TextInput
-                        secureTextEntry={true}
-                        placeholder="Confirm Password"
-                        name="confirmpassword"
-                        className="p-4 text-xl text-gray-600 border border-gray-300"
-                        keyboardType="default"
-                        // value={formObject.confirmPassword}
-                        autoCapitalize="none"
-                        onChangeText={handleChange('confirmPassword')}
-                        onBlur={handleBlur('confirmPassword')}
-                      />
-                      {touched.confirmPassword && errors.confirmPassword ? (
-                        <Text className="text-red-400 px-1 font-light">
-                          {errors.confirmPassword}
-                        </Text>
-                      ) : (
-                        ''
-                      )}
-                    </View> */}
 
                     {/********* Signin Button View **********/}
-                    <View className="w-[90%] mx-auto shadow-md bg-primary rounded-sm mt-6">
+                    <View className="w-[90%] mx-auto shadow-md bg-primary rounded-sm mt-6 bg-[#b5e48c]">
                       <TouchableOpacity onPress={handleSubmit}>
                         <Text className="text-center px-10 py-4 text-gray-700 font-bold text-xl rounded-full">
                           Create account

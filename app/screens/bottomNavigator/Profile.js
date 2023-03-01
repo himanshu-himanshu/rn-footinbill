@@ -17,7 +17,6 @@ import {
   changePassword,
 } from '../../../app/actions/authAction';
 import {useSelector, useDispatch} from 'react-redux';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 import showSnack from '../../utils/ShowSnack';
 import * as Yup from 'yup';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -40,8 +39,6 @@ export const Profile = ({navigation}) => {
   // const formObject = { confirmPassword: '', currentPassword: '', password: '' };
   const {authToken, authUser} = useSelector(state => state.auth);
 
-  console.log('-------------', authToken);
-
   useEffect(() => {
     console.log('DISPATCHING GETAUTHUSER');
     dispatch(getAuthUser(authToken));
@@ -52,16 +49,22 @@ export const Profile = ({navigation}) => {
     dispatch(getAuthUser(authToken));
   }, [authToken]);
 
+  // State Variables
   const [visible, setVisible] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
 
+  //------------------------------------------------------//
+  /** submit Function when users click on change password */
+  //-----------------------------------------------------//
   const submitFunc = async e => {
     e.preventDefault();
     console.log('currentPassword', currentPassword);
     console.log('newPassword', newPassword);
     console.log('confirmPassword', confirmPassword);
+
+    // Form Validation
     if (currentPassword == '') {
       alert('Current Password cannot be empty');
       return;
@@ -86,6 +89,7 @@ export const Profile = ({navigation}) => {
       authToken: authToken,
     };
 
+    // Dispatch changePassword reducer with payload data
     let response = await dispatch(changePassword(payload));
     console.log('response change password', response.data);
     alert(response.data.message);
@@ -95,6 +99,7 @@ export const Profile = ({navigation}) => {
     setConfirmPassword('');
     navigation.navigate('homeScreen');
   };
+
   const handleHide = () => {
     setVisible(false);
   };
@@ -102,6 +107,9 @@ export const Profile = ({navigation}) => {
     setVisible(true);
   };
 
+  //------------------------------------------------------//
+  /** Show alert when user clicks on logout */
+  //-----------------------------------------------------//
   const showAlert = () => {
     Alert.alert(
       'Are You Sure?',
@@ -168,6 +176,7 @@ export const Profile = ({navigation}) => {
 
                 {/*********** Links View ***********/}
                 <View className="m-2 flex flex-col space-y-6">
+                  {/*********** Change Password Link ***********/}
                   <TouchableOpacity
                     className="flex flex-row items-center justify-between border-b border-gray-100 pb-4"
                     onPress={handleShow}>
@@ -186,6 +195,7 @@ export const Profile = ({navigation}) => {
                     />
                   </TouchableOpacity>
 
+                  {/*********** Rate Us Link ***********/}
                   <TouchableOpacity className="flex flex-row items-center justify-between border-b border-gray-100 pb-4">
                     <View className="flex flex-row items-center space-x-4">
                       <Image
@@ -200,6 +210,7 @@ export const Profile = ({navigation}) => {
                     />
                   </TouchableOpacity>
 
+                  {/*********** Tell Your Friend Link ***********/}
                   <TouchableOpacity className="flex flex-row items-center justify-between">
                     <View className="flex flex-row items-center space-x-4">
                       <Image
@@ -232,74 +243,90 @@ export const Profile = ({navigation}) => {
                   </TouchableOpacity>
                 </View>
               </View>
+
+              {/******************* MODAL *******************/}
               <Modal
                 visible={visible}
                 animationType="slide"
                 onRequestClose={handleHide}>
-                <View className="h-full">
-                  <View className="flex p-4">
-                    <TouchableOpacity onPress={handleHide}>
-                      <Text className="text-2xl text-gray-500">&larr;</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View className="flex w-full justify-center items-center pb-12">
-                    <Image
-                      source={require('../../../assets/images/otp.png')}
-                      className="h-40 w-40"
-                    />
-                    <Text className="text-3xl font-Raleway font-semibold tracking-wide py-4">
-                      Change Password
-                    </Text>
-                  </View>
-                  <View className="w-full h-screen bg-white">
-                    <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
-                      <TextInput
-                        onChangeText={value => setCurrentPassword(value)}
-                        value={currentPassword}
-                        secureTextEntry={true}
-                        placeholder="Current Password"
-                        name="currentPassword"
-                        className="p-4 text-xl text-gray-600 border border-gray-300"
-                        autoCapitalize="none"
-                      />
+                <SafeAreaView>
+                  <View className="h-full">
+                    {/*********** Header View ***********/}
+                    <View className="flex p-4">
+                      <TouchableOpacity onPress={handleHide}>
+                        <Text className="text-2xl text-gray-500">&larr;</Text>
+                      </TouchableOpacity>
                     </View>
-                    <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
-                      <TextInput
-                        onChangeText={value => setNewPassword(value)}
-                        value={newPassword}
-                        secureTextEntry={true}
-                        placeholder="New Password"
-                        name="password"
-                        className="p-4 text-xl text-gray-600 border border-gray-300"
-                        autoCapitalize="none"
+                    <View className="flex w-full justify-center items-center pb-6">
+                      <Image
+                        source={require('../../../assets/images/otp.png')}
+                        className="h-40 w-40"
                       />
+                      <Text className="text-3xl font-Raleway font-semibold tracking-wide py-4">
+                        Change Password
+                      </Text>
                     </View>
-                    <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
-                      <TextInput
-                        onChangeText={value => setConfirmPassword(value)}
-                        value={confirmPassword}
-                        secureTextEntry={true}
-                        placeholder="Confirm New Password"
-                        name="confirmPassword"
-                        className="p-4 text-xl text-gray-600 border border-gray-300"
-                        autoCapitalize="none"
-                      />
-                    </View>
-                    <View className="w-[90%] mx-auto shadow-md bg-[#b5e48c] rounded-sm mt-12">
-                      <TouchableOpacity onPress={submitFunc}>
-                        {/* <TouchableOpacity onPress={handleSubmit}> */}
-                        <Text className="text-center px-10 py-4 text-gray-700 font-bold text-xl rounded-full">
-                          Submit
+
+                    {/*********** Inputs View ***********/}
+                    <View className="w-full h-screen bg-white">
+                      {/*********** Current Password Input View ***********/}
+                      <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
+                        <TextInput
+                          onChangeText={value => setCurrentPassword(value)}
+                          value={currentPassword}
+                          secureTextEntry={true}
+                          placeholder="Current Password"
+                          name="currentPassword"
+                          className="p-4 text-xl text-gray-600 border border-gray-300"
+                          autoCapitalize="none"
+                        />
+                      </View>
+
+                      {/*********** New Password Input View ***********/}
+                      <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
+                        <TextInput
+                          onChangeText={value => setNewPassword(value)}
+                          value={newPassword}
+                          secureTextEntry={true}
+                          placeholder="New Password"
+                          name="password"
+                          className="p-4 text-xl text-gray-600 border border-gray-300"
+                          autoCapitalize="none"
+                        />
+                      </View>
+
+                      {/*********** Confirm Password Input View ***********/}
+                      <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
+                        <TextInput
+                          onChangeText={value => setConfirmPassword(value)}
+                          value={confirmPassword}
+                          secureTextEntry={true}
+                          placeholder="Confirm New Password"
+                          name="confirmPassword"
+                          className="p-4 text-xl text-gray-600 border border-gray-300"
+                          autoCapitalize="none"
+                        />
+                      </View>
+
+                      {/*********** Submit Button View ***********/}
+                      <View className="w-[90%] mx-auto shadow-md bg-[#b5e48c] rounded-sm mt-6">
+                        <TouchableOpacity onPress={submitFunc}>
+                          {/* <TouchableOpacity onPress={handleSubmit}> */}
+                          <Text className="text-center px-10 py-4 text-gray-700 font-bold text-xl rounded-full">
+                            Submit
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+
+                      {/*********** Cancel Button View ***********/}
+                      <TouchableOpacity onPress={handleHide}>
+                        <Text className="text-center px-10 py-4 text-pink-700 text-md rounded-full mt-6">
+                          Cancel
                         </Text>
                       </TouchableOpacity>
                     </View>
-                    <TouchableOpacity onPress={handleHide}>
-                      <Text className="text-center px-10 py-4 text-pink-700 text-md rounded-full mt-12">
-                        Cancel
-                      </Text>
-                    </TouchableOpacity>
                   </View>
-                </View>
+                </SafeAreaView>
               </Modal>
             </View>
           </SafeAreaView>
