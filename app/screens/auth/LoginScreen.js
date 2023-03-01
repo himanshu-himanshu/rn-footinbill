@@ -23,8 +23,8 @@ const validationSchema = Yup.object({
 
 export const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
-  //const formObject = {email: '', password: ''};
-  const formObject = {email: 'gold@yopmail.com', password: '123456'};
+  const formObject = {email: '', password: ''};
+  //const formObject = {email: 'gold@yopmail.com', password: '123456'};
 
   let performLogin = async values => {
     let payload = {
@@ -32,12 +32,13 @@ export const LoginScreen = ({navigation}) => {
       password: values.password,
     };
     let response = await dispatch(loginUser(payload));
-    // if (response && response.success) {
-    navigation.navigate('homeScreen');
-    // } else {
-    //   console.log('res', response);
-    //   alert(response.error.response.data);
-    // }
+
+    if (response.code == 200) {
+      navigation.navigate('homeScreen');
+    } else {
+      console.log('res', response);
+      alert(response.message);
+    }
     // .then((res) => {
     //   console.log('res', res);
     //   if (res && res.success) {
@@ -95,7 +96,6 @@ export const LoginScreen = ({navigation}) => {
                         onBlur={handleBlur('email')}
                         onChangeText={handleChange('email')}
                         autoCapitalize="none"
-                        value={formObject.email}
                       />
                       {touched.email && errors.email ? (
                         <Text className="text-red-400 px-1 font-light">
@@ -115,7 +115,6 @@ export const LoginScreen = ({navigation}) => {
                         autoCapitalize="none"
                         onChangeText={handleChange('password')}
                         onBlur={handleBlur('password')}
-                        value={formObject.password}
                       />
                       {touched.password && errors.password ? (
                         <Text className="text-red-400 px-1 font-light">

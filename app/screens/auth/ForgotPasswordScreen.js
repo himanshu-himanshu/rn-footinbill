@@ -12,7 +12,6 @@ import {sendForgotPasswordOTPEmail} from '../../actions/authAction';
 import {useDispatch} from 'react-redux';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-//import AsyncStorage from '@react-native-community/async-storage';
 
 let validationSchema = Yup.object({
   email: Yup.string()
@@ -94,7 +93,7 @@ export const ForgotPasswordScreen = ({navigation}) => {
                     </View>
 
                     {/********* OTP Button View **********/}
-                    <View className="w-[90%] mx-auto shadow-md bg-primary rounded-sm mt-8">
+                    <View className="w-[90%] mx-auto shadow-md bg-primary rounded-sm mt-8 bg-[#b5e48c] ">
                       <TouchableOpacity onPress={handleSubmit}>
                         <Text className="text-center px-10 py-4 text-gray-700 font-bold text-xl rounded-full">
                           Send OTP
@@ -134,35 +133,3 @@ export const ForgotPasswordScreen = ({navigation}) => {
 };
 
 export default ForgotPasswordScreen;
-
-{
-  /* 
-  <View style={styles.inputBox}>
-    <TextInput
-      style={styles.input}
-      onChangeText={handleChange('email')}
-      onBlur={handleBlur('email')}
-      autoCapitalize="none"
-      placeholder="Email"
-    />
-    {touched.email && errors.email ? (
-      <Text style={styles.error}>{errors.email}</Text>
-    ) : (
-      ''
-    )}
-  </View>
-
-  <View style={[styles.button, styles.shadowSm]}>
-    <TouchableOpacity onPress={handleSubmit}>
-      <Text style={styles.buttonText}>Send OTP</Text>
-    </TouchableOpacity>
-  </View>
-
-  <View style={[styles.inputBox, styles.signUpView]}>
-    <Text style={styles.bottomText}>Don't have an account ?</Text>
-    <TouchableOpacity onPress={() => navigation.navigate('registerScreen')}>
-      <Text style={styles.signUp}>Sign Up</Text>
-    </TouchableOpacity>
-  </View>
-</View>; */
-}

@@ -13,6 +13,7 @@ import {
 } from '../constants/actionStrings';
 import EndPoints from '../constants/endPoints';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {err} from 'react-native-svg/lib/typescript/xml';
 
 // -------------  set user details ------- //
 export const getUserToken = () => async dispatch => {
@@ -32,14 +33,23 @@ export const loginUser = loginData => async dispatch => {
   let k = await axios
     .post(API_URL + EndPoints.signIn, loginData)
     .then(function (fff) {
+      console.log('fff', fff);
       dispatch(saveAuthToken(fff.data.data.access_token));
       dispatch(getAuthUser(fff.data.data.access_token));
-      return fff;
+      let any = {
+        code: 200,
+        message: fff.data.message,
+      };
+      return any;
     })
     .catch(function (error) {
       // alert(error.response.data.message);
       // return error;
-      return error;
+      let any = {
+        code: 401,
+        message: error.response.data.message,
+      };
+      return any;
     });
   console.log('k', k);
   return k;

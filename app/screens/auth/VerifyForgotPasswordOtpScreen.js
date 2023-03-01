@@ -13,16 +13,12 @@ import {useDispatch} from 'react-redux';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import showSnack from '../../utils/ShowSnack';
-// import AsyncStorage from '@react-native-community/async-storage';
 
 let validationSchema = Yup.object({
-  otp: Yup.number()
-    .min(1, 'Must be 6 digits')
-    .max(999999, 'Must be 6 digits')
-    .required('OTP is required'),
+  otp: Yup.number().required('OTP is required'),
   password: Yup.string()
     .trim()
-    .min(8, 'Password is too short!')
+    .min(6, 'Password is too short!')
     .required('Password is required!'),
   confirmPassword: Yup.string()
     .trim()
@@ -41,25 +37,15 @@ export const VerifyForgotPasswordOtpScreen = ({route, navigation}) => {
     };
 
     let response = await dispatch(verifyForgotPasswordOTP(payload));
-    if (response && response.success) {
+    if (response && response.data.success) {
       // navigation.navigate('updatePasswordScreen', { email: route.params.email });
+      alert(response.data.message);
       navigation.navigate('loginScreen');
     } else {
       console.log('screen response 0--0 0-o o0-0', response);
-      alert(response.message);
+      alert(response.data.message);
     }
   };
-
-  // let resendOtp = async values => {
-  //   let payload = {
-  //     email: route.params.email,
-  //   };
-
-  //   let response = await dispatch(sendForgotPasswordOTPEmail(payload));
-  //   if (response && response.success) {
-  //     showSnack('OTP resent on the email, please check!');
-  //   }
-  // };
 
   return (
     <ScrollView>
@@ -122,11 +108,11 @@ export const VerifyForgotPasswordOtpScreen = ({route, navigation}) => {
                       <TextInput
                         secureTextEntry={true}
                         placeholder="Create password"
-                        name="otp"
+                        name="password"
                         keyboardType="numeric"
                         className="p-4 text-xl text-gray-600 border border-gray-300"
-                        onChangeText={handleChange('otp')}
-                        onBlur={handleBlur('otp')}
+                        onChangeText={handleChange('password')}
+                        onBlur={handleBlur('password')}
                         autoCapitalize="none"
                       />
                       {touched.password && errors.password ? (
@@ -142,11 +128,11 @@ export const VerifyForgotPasswordOtpScreen = ({route, navigation}) => {
                       <TextInput
                         secureTextEntry={true}
                         placeholder="Confirm password"
-                        name="otp"
+                        name="confirmPassword"
                         keyboardType="numeric"
                         className="p-4 text-xl text-gray-600 border border-gray-300"
-                        onChangeText={handleChange('otp')}
-                        onBlur={handleBlur('otp')}
+                        onChangeText={handleChange('confirmPassword')}
+                        onBlur={handleBlur('confirmPassword')}
                         autoCapitalize="none"
                       />
                       {touched.confirmPassword && errors.confirmPassword ? (
@@ -160,23 +146,11 @@ export const VerifyForgotPasswordOtpScreen = ({route, navigation}) => {
 
                     {/********* Verify OTP Button View **********/}
                     <View>
-                      <TouchableOpacity className="w-[90%] mx-auto shadow-md bg-primary rounded-sm mt-4">
-                        <Text className="text-center px-10 py-4 text-gray-700 font-bold text-xl rounded-full">
-                          Verify OTP
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-
-                    {/********* Resend OTP View **********/}
-                    <View className="flex w-[90%] justify-end items-center mt-8 mx-auto">
                       <TouchableOpacity
-                        className="flex flex-row space-x-2"
-                        onPress={() => navigation.navigate('Signin')}>
-                        <Text className="text-gray-500 tracking-wide">
-                          Haven't recieved yet?
-                        </Text>
-                        <Text className="text-[#52b69a] font-bold tracking-wide">
-                          Resend
+                        onPress={handleSubmit}
+                        className="w-[90%] mx-auto shadow-md bg-primary rounded-sm mt-4">
+                        <Text className="bg-[#b5e48c] text-center px-10 py-4 text-gray-700 font-bold text-xl rounded-full">
+                          Verify OTP
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -200,76 +174,3 @@ export const VerifyForgotPasswordOtpScreen = ({route, navigation}) => {
   );
 };
 export default VerifyForgotPasswordOtpScreen;
-
-{
-  /* <View style={styles.body}>
-     
-                <View style={styles.inputBox}>
-                  <TextInput
-                    style={styles.input}
-                    keyboardType="numeric"
-                    onChangeText={handleChange('otp')}
-                    onBlur={handleBlur('otp')}
-                    autoCapitalize="none"
-                    placeholder="Enter OTP"
-                  />
-                  {touched.otp && errors.otp ? (
-                    <Text style={styles.error}>{errors.otp}</Text>
-                  ) : (
-                    ''
-                  )}
-                </View>
-                <View style={styles.inputBox}>
-                  <TextInput
-                    style={styles.input}
-                    autoCapitalize="none"
-                    onChangeText={handleChange('password')}
-                    onBlur={handleBlur('password')}
-                    placeholder={'New password'}
-                    secureTextEntry={true}
-                  />
-                  {touched.password && errors.password ? (
-                    <Text style={styles.error}>{errors.password}</Text>
-                  ) : (
-                    ''
-                  )}
-                </View>
-
-                <View style={styles.inputBox}>
-                  <TextInput
-                    style={styles.input}
-                    autoCapitalize="none"
-                    onChangeText={handleChange('confirmPassword')}
-                    onBlur={handleBlur('confirmPassword')}
-                    placeholder={'Confirm password'}
-                    secureTextEntry={true}
-                  />
-                  {touched.confirmPassword && errors.confirmPassword ? (
-                    <Text style={styles.error}>{errors.confirmPassword}</Text>
-                  ) : (
-                    ''
-                  )}
-                </View>
-
-                <View style={[styles.button, styles.shadowSm]}>
-                  <TouchableOpacity onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>Update Password</Text>
-                  </TouchableOpacity>
-                </View>
-
-                <View style={[styles.inputBox, styles.signUpView]}>
-                  <TouchableOpacity
-                    onPress={() => resendOtp(route.params.email)}>
-                    <Text style={styles.resendText}>Resend</Text>
-                  </TouchableOpacity>
-                </View> 
-
-                <View style={[styles.inputBox, styles.signUpView]}>
-                  <Text style={styles.bottomText}>Go back to</Text>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate('loginScreen')}>
-                    <Text style={styles.signUp}>Login</Text>
-                  </TouchableOpacity>
-                </View>
-              </View> */
-}
