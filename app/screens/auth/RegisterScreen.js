@@ -8,7 +8,6 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
 import {registerUser} from '../../actions/authAction';
 import {useDispatch} from 'react-redux';
 import {Formik} from 'formik';
@@ -194,81 +193,3 @@ export const RegisterScreen = ({navigation}) => {
 };
 
 export default RegisterScreen;
-
-{
-  /*
-              <View style={styles.inputBox}>
-                <TextInput
-                  keyboardType="default"
-                  style={styles.input}
-                  // value={formObject.name}
-                  placeholder={'Name'}
-                  onBlur={handleBlur('name')}
-                  onChangeText={handleChange('name')}
-                  autoCapitalize="none"
-                />
-                {touched.name && errors.name ? (
-                  <Text style={styles.error}>{errors.name}</Text>
-                ) : (
-                  ''
-                )}
-              </View>
-
-              <View style={styles.inputBox}>
-                <TextInput
-                  keyboardType="default"
-                  style={styles.input}
-                  // value={formObject.email}
-                  placeholder={'Email'}
-                  onBlur={handleBlur('email')}
-                  onChangeText={handleChange('email')}
-                  autoCapitalize="none"
-                />
-
-                {touched.email && errors.email ? (
-                  <Text style={styles.error}>{errors.email}</Text>
-                ) : (
-                  ''
-                )}
-              </View>
-
-              <View style={styles.inputBox}>
-                <TextInput
-                  keyboardType="default"
-                  style={styles.input}
-                  // value={formObject.password}
-                  autoCapitalize="none"
-                  onChangeText={handleChange('password')}
-                  onBlur={handleBlur('password')}
-                  placeholder={'Create password'}
-                  secureTextEntry={true}
-                />
-                {touched.password && errors.password ? (
-                  <Text style={styles.error}>{errors.password}</Text>
-                ) : (
-                  ''
-                )}
-              </View>
-              <View style={styles.inputBox}>
-                <TextInput
-                  keyboardType="default"
-                  style={styles.input}
-                  // value={formObject.confirmPassword}
-                  autoCapitalize="none"
-                  onChangeText={handleChange('confirmPassword')}
-                  onBlur={handleBlur('confirmPassword')}
-                  placeholder={'Confirm password'}
-                  secureTextEntry={true}
-                />
-                {touched.confirmPassword && errors.confirmPassword ? (
-                  <Text style={styles.error}>{errors.confirmPassword}</Text>
-                ) : (
-                  ''
-                )}
-              </View>
-              <View style={[styles.button, styles.shadowSm]}>
-                <TouchableOpacity onPress={handleSubmit}>
-                  <Text style={styles.buttonText}>Register</Text>
-                </TouchableOpacity>
-              </View> */
-}
