@@ -39,18 +39,6 @@ export const LoginScreen = ({navigation}) => {
       console.log('res', response);
       alert(response.message);
     }
-    // .then((res) => {
-    //   console.log('res', res);
-    //   if (res && res.success) {
-    //     if (res && res.success) {
-    //       navigation.navigate('homeScreen');
-    //       alert(res.message);
-    //     } else {
-    //       // console.log('screen response 0--0 0-o o0-0', response);
-    //       alert('Wrong Password');
-    //     }
-    //   }
-    // });
   };
 
   return (

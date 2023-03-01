@@ -71,10 +71,6 @@ export const VerifyForgotPasswordOtpScreen = ({route, navigation}) => {
                   <View className="w-full h-full">
                     {/********* Header View **********/}
                     <View className="flex w-full justify-center items-center pt-8 pb-8">
-                      {/* <Image
-                        source={require('../../../assets/images/otp.png')}
-                        className="h-40 w-40"
-                      /> */}
                       <Text className="text-3xl font-Raleway font-semibold tracking-wide py-4">
                         Verification
                       </Text>
