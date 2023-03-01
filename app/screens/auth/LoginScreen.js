@@ -12,32 +12,43 @@ import {loginUser} from '../../actions/authAction';
 import {useDispatch} from 'react-redux';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const validationSchema = Yup.object({
-  email: Yup.string()
+  email: Yup.string().required('Email is required').email('Invalid email'),
+  password: Yup.string()
+    .required('Password is required')
     .trim()
-    .required('Email is required.')
-    .email('Not a valid email.'),
-  password: Yup.string().required('Password is required.'),
+    .min(5, 'Password is too short'),
 });
 
 export const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
-  //const formObject = {email: '', password: ''};
-  const formObject = {email: 'test@test.com', password: 'test1234'};
+  const formObject = {email: 'gold@yopmail.com', password: '123456'};
 
   let performLogin = async values => {
     let payload = {
       email: values.email,
       password: values.password,
     };
-    // let response = await dispatch(loginUser(payload));
-
+    let response = await dispatch(loginUser(payload));
     // if (response && response.success) {
-    //   // AsyncStorage.setItem('userToken', response.token);
+    navigation.navigate('homeScreen');
+    // } else {
+    //   console.log('res', response);
+    //   alert(response.error.response.data);
     // }
-    await dispatch(loginUser(payload));
+    // .then((res) => {
+    //   console.log('res', res);
+    //   if (res && res.success) {
+    //     if (res && res.success) {
+    //       navigation.navigate('homeScreen');
+    //       alert(res.message);
+    //     } else {
+    //       // console.log('screen response 0--0 0-o o0-0', response);
+    //       alert('Wrong Password');
+    //     }
+    //   }
+    // });
   };
 
   return (
@@ -57,13 +68,12 @@ export const LoginScreen = ({navigation}) => {
           handleSubmit,
           isSubmitting,
         }) => {
-          let {email, password} = values;
           return (
             <>
               <View className="w-full h-screen bg-white">
                 <SafeAreaView>
                   <View className="w-full h-full">
-                    {/********* Header View **********/}
+                    {/*** Header View ****/}
                     <View className="flex w-full justify-center items-center pt-8 pb-12">
                       <Text className="text-3xl font-Raleway font-bold tracking-wide py-4">
                         Log in
@@ -73,7 +83,7 @@ export const LoginScreen = ({navigation}) => {
                       </Text>
                     </View>
 
-                    {/********* Email & Password View **********/}
+                    {/*** Email & Password View ****/}
                     <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
                       <TextInput
                         secureTextEntry={false}
@@ -84,6 +94,7 @@ export const LoginScreen = ({navigation}) => {
                         onBlur={handleBlur('email')}
                         onChangeText={handleChange('email')}
                         autoCapitalize="none"
+                        value={formObject.email}
                       />
                       {touched.email && errors.email ? (
                         <Text className="text-red-400 px-1 font-light">
@@ -103,6 +114,7 @@ export const LoginScreen = ({navigation}) => {
                         autoCapitalize="none"
                         onChangeText={handleChange('password')}
                         onBlur={handleBlur('password')}
+                        value={formObject.password}
                       />
                       {touched.password && errors.password ? (
                         <Text className="text-red-400 px-1 font-light">
@@ -113,7 +125,7 @@ export const LoginScreen = ({navigation}) => {
                       )}
                     </View>
 
-                    {/********* Forgot password View **********/}
+                    {/*** Forgot password View ****/}
                     <View className="flex w-[90%] justify-end items-end mt-2 mx-auto">
                       <TouchableOpacity
                         onPress={() =>
@@ -123,19 +135,16 @@ export const LoginScreen = ({navigation}) => {
                       </TouchableOpacity>
                     </View>
 
-                    {/********* Login Button View **********/}
+                    {/*** Login Button View ****/}
                     <View className="w-[90%] mx-auto shadow-md bg-[#b5e48c] rounded-sm mt-12">
-                      <TouchableOpacity
-                        onPress={
-                          isSubmitting == false ? handleSubmit : handleSubmit
-                        }>
+                      <TouchableOpacity onPress={handleSubmit}>
                         <Text className="text-center px-10 py-4 text-gray-700 font-bold text-xl rounded-full">
                           Log in
                         </Text>
                       </TouchableOpacity>
                     </View>
 
-                    {/********* Signup View **********/}
+                    {/*** Signup View ****/}
                     <View className="flex w-[90%] justify-end items-center mt-8 mx-auto">
                       <TouchableOpacity
                         className="flex flex-row space-x-2"
@@ -149,7 +158,7 @@ export const LoginScreen = ({navigation}) => {
                       </TouchableOpacity>
                     </View>
 
-                    {/********* Social Media View **********/}
+                    {/*** Social Media View ****/}
                     <View className="flex w-full justify-center items-center mt-14">
                       <Text className="text-gray-400 tracking-wide py-4">
                         Or
@@ -179,78 +188,4 @@ export const LoginScreen = ({navigation}) => {
     </ScrollView>
   );
 };
-{
-  /* <View className="body">
-                <View style={styles.brandView}>
-                  <Text style={[styles.brandText, styles.shadowSm]} >
-                    FootInBill
-                  </Text>
-                </View>
-                <View style={styles.welcomeView}>
-                  <Text style={[styles.brandText, styles.welcomeText]}>
-                    Welcome, log in into your account
-                  </Text>
-                </View>
-                <View style={styles.inputBox}>
-                  <TextInput
-                    keyboardType="default"
-                    style={styles.input}
-                    placeholder={'Email'}
-                    onBlur={handleBlur('email')}
-                    onChangeText={handleChange('email')}
-                    autoCapitalize="none"
-                  />
-
-                  {touched.email && errors.email ? (
-                    <Text style={styles.error}>{errors.email}</Text>
-                  ) : (
-                    ''
-                  )}
-                </View>
-                <View style={styles.inputBox}>
-                  <TextInput
-                    keyboardType="default"
-                    style={styles.input}
-                    autoCapitalize="none"
-                    onChangeText={handleChange('password')}
-                    onBlur={handleBlur('password')}
-                    placeholder={'Password'}
-                    secureTextEntry={true}
-                  />
-                  {touched.password && errors.password ? (
-                    <Text style={styles.error}>{errors.password}</Text>
-                  ) : (
-                    ''
-                  )}
-                </View>
-                <View style={[styles.button, styles.shadowSm]}>
-                  <TouchableOpacity
-                    onPress={
-                      isSubmitting == false ? handleSubmit : handleSubmit
-                    }>
-                    <Text style={styles.buttonText}>Login</Text>
-                  </TouchableOpacity>
-                </View>
-
-                <View style="flex w-[90%] justify-end items-end mt-2 mx-auto">
-                  <TouchableOpacity
-                    style={[styles.button, styles.shadowSm]}
-                    onPress={() => navigation.navigate('forgotPasswordScreen')}>
-                    <Text style={styles.buttonText}>Forgot Password?</Text>
-                  </TouchableOpacity>
-                </View>
-
-                <View style="w-90% mx-auto shadow-md bg-primary rounded-sm mt-12">
-                  <TouchableOpacity
-                    style={styles.signInView}
-                    onPress={() => navigation.navigate('registerScreen')}>
-                    <Text>
-                      Don't have an account?{' '}
-                      <Text style={styles.signIn}>Sign Up</Text>
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <Text className="text-red-800">Hello</Text>
-              </View> */
-}
 export default LoginScreen;

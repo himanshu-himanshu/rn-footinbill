@@ -1,10 +1,15 @@
-import { loginString, updateAuthUserString, getAllTestsOfAPatientString, getAllPatientsOfAUserString, logOutString, getAPatientsInfoString } from '../constants/actionStrings';
+import {
+  loginString,
+  updateAuthUserString,
+  saveAuthTokenString,
+  saveAuthUserString,
+  logOutString,
+} from '../constants/actionStrings';
 
 export default (state = {}, action) => {
   switch (action.type) {
     case logOutString:
-      return {
-      };
+      return {};
     case loginString:
       return {
         ...state,
@@ -15,15 +20,15 @@ export default (state = {}, action) => {
         ...state,
         user: action.payload.data,
       };
-    case getAllPatientsOfAUserString:
+    case saveAuthTokenString:
       return {
         ...state,
-        allPatients: action.payload,
+        authToken: action.payload,
       };
-    case getAPatientsInfoString:
+    case saveAuthUserString:
       return {
         ...state,
-        patient: action.payload,
+        authUser: action.payload,
       };
     default:
       return state;
