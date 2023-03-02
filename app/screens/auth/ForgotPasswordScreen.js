@@ -19,20 +19,27 @@ let validationSchema = Yup.object({
     .email('Not a valid email.')
     .required('Email is required.'),
 });
+
 export const ForgotPasswordScreen = ({navigation}) => {
   const dispatch = useDispatch();
   let formObject = {email: ''};
 
+  //---------------------------------------------------//
+  /** Send OTP to email function */
+  //---------------------------------------------------//
   let sendForgotPasswordOTPEmailAction = async values => {
     let payload = {
       email: values.email,
     };
+
     let response = await dispatch(sendForgotPasswordOTPEmail(payload));
-    console.log('response on fot password screne', response);
-    if (response && response.success) {
+    //console.log('response on fot password screne', response);
+    if (response.code == 200) {
       navigation.navigate('verifyForgotPasswordOtpScreen', {
         email: values.email,
       });
+    } else {
+      alert(response.message);
     }
   };
 
@@ -114,6 +121,8 @@ export const ForgotPasswordScreen = ({navigation}) => {
                         </Text>
                       </TouchableOpacity>
                     </View>
+
+                    {/********* Back to login View **********/}
                     <TouchableOpacity
                       onPress={() => navigation.navigate('loginScreen')}
                       className="flex flex-row items-center w-full justify-center mt-8 space-x-2 text-gray-500">

@@ -117,12 +117,21 @@ export const sendForgotPasswordOTPEmail =
     const res = await axios
       .post(url, data)
       .then(function (response) {
-        return response;
+        let any = {
+          code: 200,
+          message: response.data.message,
+        };
+        return any;
       })
       .catch(function (error) {
-        return error.response.data;
+        let any = {
+          code: 401,
+          message: error.response.data.message,
+        };
+        return any;
       });
-    return res.data;
+
+    return res;
   };
 
 // ----------------Verify OTP--------------------- //
