@@ -65,15 +65,23 @@ export const changePassword = payload => async dispatch => {
     .put(API_URL + EndPoints.changePassword, payload, config)
     .then(function (innerResponse) {
       console.log('innerResponse', innerResponse);
-      return innerResponse;
+      let any = {
+        code: 200,
+        message: innerResponse.data.message,
+      };
+      return any;
     })
     .catch(err => {
       console.log(
         'AUTH ACTION CHANGE PASS**************',
         err.response.data.message,
       );
+      let any = {
+        code: 401,
+        message: err.response.data.message,
+      };
+      return any;
     });
-  console.log('response', response);
   return response;
 };
 
@@ -98,15 +106,27 @@ export const registerUser = signUpData => async dispatch => {
   // dispatch({ type: isLoadingString, payload: { loader: true } });
   // const response = await apiRequest(EndPoints.signUp, 'POST', signUpData);
   let url = API_URL + EndPoints.signUp;
-  axios
+  let res = await axios
     .post(url, signUpData)
     .then(function (response) {
       if (response && response.data.success) {
         AsyncStorage.setItem('userToken', response.data.data.access_token);
         dispatch({type: loginString, payload: response.data});
+        let any = {
+          code: 200,
+          message: response.data.message,
+        };
+        return any;
       }
     })
-    .catch(function (error) {});
+    .catch(function (error) {
+      let any = {
+        code: 401,
+        message: error.response.data.message,
+      };
+      return any;
+    });
+  return res;
 };
 
 // ----------------send otp to email API--------------------- //

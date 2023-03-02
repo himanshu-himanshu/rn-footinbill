@@ -41,7 +41,14 @@ export const RegisterScreen = ({navigation}) => {
       password: values.password,
     };
     console.log('Performing register');
-    await dispatch(registerUser(payload));
+    let response = await dispatch(registerUser(payload));
+
+    if (response.code == 200) {
+      navigation.navigate('homeScreen');
+    } else {
+      console.log('res', response);
+      alert(response.message);
+    }
   };
 
   return (

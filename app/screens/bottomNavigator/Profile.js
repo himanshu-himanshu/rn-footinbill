@@ -91,13 +91,18 @@ export const Profile = ({navigation}) => {
 
     // Dispatch changePassword reducer with payload data
     let response = await dispatch(changePassword(payload));
-    console.log('response change password', response.data);
-    alert(response.data.message);
-    handleHide();
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
-    navigation.navigate('homeScreen');
+
+    if (response.code == 200) {
+      alert(response.message);
+      handleHide();
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      navigation.navigate('homeScreen');
+    } else {
+      console.log('INSDIE PROFILE ELSE ************');
+      alert(response.message);
+    }
   };
 
   const handleHide = () => {
