@@ -219,7 +219,7 @@ export const Profile = ({navigation}) => {
                   <TouchableOpacity className="flex flex-row items-center justify-between">
                     <View className="flex flex-row items-center space-x-4">
                       <Image
-                        source={require('../../../assets/images/friend.png')}
+                        source={require('../../../assets/images/friendship.png')}
                         className="h-6 w-6"
                       />
                       <Text className="text-lg font-light">
@@ -237,7 +237,7 @@ export const Profile = ({navigation}) => {
                 <View className="flex w-full h- justify-center items-center px-4 py-6 mt-[30%] border-t border-b border-gray-100">
                   <TouchableOpacity
                     onPress={() => showAlert()}
-                    className="flex flex-row items-center space-x-4">
+                    className="flex flex-row items-center space-x-2">
                     <Image
                       source={require('../../../assets/images/off.png')}
                       className="h-5 w-5"
