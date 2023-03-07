@@ -11,15 +11,32 @@ import {
 } from 'react-native';
 
 import React, {useEffect, useState} from 'react';
+import AddFriend from './components/AddFriend';
 
 const Home = () => {
   // State Variables
   const [visible, setVisible] = useState(false);
 
+  const friendList = [
+    {
+      name: 'Gurminder Singh',
+    },
+    {
+      name: 'Samir Patel',
+    },
+    {
+      name: 'Nirav Goswami',
+    },
+    {
+      name: 'Esha',
+    },
+  ];
+
   const handleHide = () => {
     setVisible(false);
   };
   const handleShow = () => {
+    console.log('LOL');
     setVisible(true);
   };
 
@@ -29,33 +46,56 @@ const Home = () => {
         <View className="w-full h-full">
           <View className="h-full w-full p-4 ">
             {/*********** Heading Text ***********/}
-            <Text className="text-2xl font-Raleway tracking-wider px-4 py-4">
-              Home
-            </Text>
-
-            {/*********** Center Text View ***********/}
-            <View className="h-[80%] w-full px-4 flex justify-center items-center">
-              <Text className="text-gray-900 text-md tracking-wide text-center font-bold mb-2">
-                Welcome to FootInBill
+            <View className="flex flex-row items-center justify-between">
+              <Text className="text-2xl font-Raleway tracking-wider px-4 py-4">
+                Friends
               </Text>
-              <Text className="text-gray-700 text-md tracking-wide text-center py-2">
-                You have not added any friends yet.
-              </Text>
-
-              {/*********** Add Friend Button ***********/}
               <TouchableOpacity
-                className="flex flex-row items-center justify-center border-b border-gray-100 px-8 py-4 bg-[#76C893] mt-6 rounded-md space-x-2"
+                className="mr-2 flex justify-center items-center"
                 onPress={handleShow}>
-                <View className="flex flex-row items-center space-x-4">
-                  <Text className="text-md font-semibold text-gray-800">
-                    Add friend
+                <Text className="text-md text-blue-500">Add</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/** Show when user has no friends */}
+            {/* <AddFriend handleShow={handleShow} /> */}
+
+            {/** Show whenever there is atleast one friend  */}
+            <View className="p-2 flex flex-col">
+              {/*********** Card View ***********/}
+              <View className="bg-gray-200 py-2 px-2 w-full rounded-xl flex flex-row items-center mb-2 shadow-2xl">
+                <View className="px-2">
+                  <Image
+                    source={require('../../../assets/images/man.png')}
+                    className="h-14 w-14"
+                  />
+                </View>
+                <View className="px-4 py-2">
+                  <Text className="text-lg tracking-wider pb-2">
+                    Total balance
+                  </Text>
+                  <Text className="text-xsm text-gray-700">
+                    You are all settled up
                   </Text>
                 </View>
-                <Image
-                  source={require('../../../assets/images/plus.png')}
-                  className="h-6 w-6"
-                />
-              </TouchableOpacity>
+              </View>
+
+              {/*********** Map through list to render each friend ***********/}
+              {friendList.map(friend => (
+                <TouchableOpacity className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100">
+                  <View className="flex flex-row items-center space-x-4">
+                    <Image
+                      source={require('../../../assets/images/user.png')}
+                      className="h-10 w-10"
+                    />
+                    <Text className="text-lg font-light">{friend.name}</Text>
+                  </View>
+                  <Image
+                    source={require('../../../assets/images/next.png')}
+                    className="h-6 w-6"
+                  />
+                </TouchableOpacity>
+              ))}
             </View>
           </View>
 
