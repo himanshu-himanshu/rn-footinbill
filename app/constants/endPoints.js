@@ -8,6 +8,10 @@ const EndPoints = {
   resendOtp: 'users/signUpResendOtp',
   updatePassword: 'users/updatePassword',
   changePassword: 'profile/password',
+  getAllGroups: 'groups',
+  createAGroup: 'groups',
+  getAllFriends: 'user/friend',
+  createAFriend: 'friends',
   logOutUser: 'logOutUser',
   getAuthUser: 'auth/me',
 };

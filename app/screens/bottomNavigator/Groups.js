@@ -10,22 +10,46 @@ import {
   Button,
 } from 'react-native';
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import CreateGroup from './components/CreateGroup';
+import {
+  createGroup,
+  getAllGroups,
+} from '../../../app/actions/groupAction';
+import { useSelector, useDispatch } from 'react-redux';
 
 const Groups = () => {
   // State Variables
+  const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
+  const [groupName, setGroupName] = useState("");
 
-  const groupList = [
-    {
-      name: 'Three Musketeers',
-    },
-    {
-      name: 'Centennial Friends',
-    },
-  ];
+  const { authToken } = useSelector(state => state.auth);
+  useEffect(() => {
+    let response = dispatch(getAllGroups(authToken));
+    console.log('response000000 - --  -', response.data);
+    // if (response.code == 200) {
+    //   alert(response.message);
+    // } else {
+    //   alert(response.message);
+    // }
+  }, []);
+  // console.log('groupsgroupsgroupsgroupsgroups', groups);
+  // setGroupList(groups.data);
 
+  // console.log('groupList', groupList);
+  // useEffect(() => {
+
+  //   setGroupList(groups);
+
+  // }, [])
+
+  const handleCreateGroup = () => {
+    dispatch(createGroup({ name: groupName }, authToken));
+    handleHide();
+    dispatch(getAllGroups(authToken));
+  };
+  const { groups } = useSelector(state => state.group);
   const handleHide = () => {
     setVisible(false);
   };
@@ -71,16 +95,16 @@ const Groups = () => {
                   </Text>
                 </View>
               </View> */}
-
+              {/* {console.log('himanshu', groups.data)} */}
               {/*********** Map through list to render each group ***********/}
-              {groupList.map(friend => (
-                <TouchableOpacity className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100">
+              {groups && groups.data && groups.data.map((group, key) => (
+                <TouchableOpacity key={key} className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100">
                   <View className="flex flex-row items-center space-x-4">
                     <Image
                       source={require('../../../assets/images/meet.png')}
                       className="h-10 w-10"
                     />
-                    <Text className="text-lg font-light">{friend.name}</Text>
+                    <Text className="text-lg font-light">{group.name}</Text>
                   </View>
                   <Image
                     source={require('../../../assets/images/next.png')}
@@ -119,9 +143,8 @@ const Groups = () => {
                   {/*********** Name Input View ***********/}
                   <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
                     <TextInput
-                      // onChangeText={value => setNewPassword(value)}
-                      // value={newPassword}
-                      secureTextEntry={true}
+                      onChangeText={value => setGroupName(value)}
+                      // secureTextEntry={true}
                       placeholder="Group name"
                       name="name"
                       className="p-4 text-xl text-gray-600 border border-gray-300"
@@ -129,24 +152,11 @@ const Groups = () => {
                     />
                   </View>
 
-                  {/*********** Email Input View ***********/}
-                  {/* <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
-                    <TextInput
-                      // onChangeText={value => setConfirmPassword(value)}
-                      // value={confirmPassword}
-                      secureTextEntry={true}
-                      placeholder="Email"
-                      name="email"
-                      className="p-4 text-xl text-gray-600 border border-gray-300"
-                      autoCapitalize="none"
-                    />
-                  </View> */}
-
                   {/*********** Add Friend Button View ***********/}
                   <View className="w-[90%] mx-auto shadow-md bg-[#34A0A4] rounded-sm mt-6">
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={handleCreateGroup}>
                       <Text className="text-center px-10 py-4 text-gray-700 font-bold text-xl rounded-full capitalize">
-                        create Group
+                        Create Group
                       </Text>
                     </TouchableOpacity>
                   </View>

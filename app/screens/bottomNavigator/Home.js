@@ -10,33 +10,37 @@ import {
   Button,
 } from 'react-native';
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import AddFriend from './components/AddFriend';
+import { createFriend, getAllFriends } from '../../actions/friendAction';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Home = () => {
-  // State Variables
+  const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
+  const [friendName, setFriendName] = useState("");
+  const [friendEmail, setFriendEmail] = useState("");
 
-  const friendList = [
-    {
-      name: 'Gurminder Singh',
-    },
-    {
-      name: 'Samir Patel',
-    },
-    {
-      name: 'Nirav Goswami',
-    },
-    {
-      name: 'Esha',
-    },
-  ];
-
+  const { authToken } = useSelector(state => state.auth);
+  useEffect(() => {
+    let response = dispatch(getAllFriends(authToken));
+    console.log('response000000 - --  -', response.data);
+    // if (response.code == 200) {
+    //   alert(response.message);
+    // } else {
+    //   alert(response.message);
+    // }
+  }, []);
+  const createFriendFunc = () => {
+    dispatch(createFriend({ name: friendName, email: friendEmail }, authToken));
+    handleHide();
+    dispatch(getAllFriends(authToken));
+  };
+  const { friends } = useSelector(state => state.friend);
   const handleHide = () => {
     setVisible(false);
   };
   const handleShow = () => {
-    console.log('LOL');
     setVisible(true);
   };
 
@@ -78,11 +82,13 @@ const Home = () => {
                     You are all settled up
                   </Text>
                 </View>
+                {console.log('friends', friends)}
               </View>
-
+        
               {/*********** Map through list to render each friend ***********/}
-              {friendList.map(friend => (
-                <TouchableOpacity className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100">
+              {friends && friends.data && friends.data.map((friend, index) => (
+                <TouchableOpacity key={index} className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100">
+                  {console.log(friend)}
                   <View className="flex flex-row items-center space-x-4">
                     <Image
                       source={require('../../../assets/images/user.png')}
@@ -127,9 +133,8 @@ const Home = () => {
                   {/*********** Name Input View ***********/}
                   <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
                     <TextInput
-                      // onChangeText={value => setNewPassword(value)}
+                      onChangeText={value => setFriendName(value)}
                       // value={newPassword}
-                      secureTextEntry={true}
                       placeholder="Name"
                       name="name"
                       className="p-4 text-xl text-gray-600 border border-gray-300"
@@ -140,9 +145,8 @@ const Home = () => {
                   {/*********** Email Input View ***********/}
                   <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
                     <TextInput
-                      // onChangeText={value => setConfirmPassword(value)}
+                      onChangeText={value => setFriendEmail(value)}
                       // value={confirmPassword}
-                      secureTextEntry={true}
                       placeholder="Email"
                       name="email"
                       className="p-4 text-xl text-gray-600 border border-gray-300"
@@ -152,7 +156,7 @@ const Home = () => {
 
                   {/*********** Add Friend Button View ***********/}
                   <View className="w-[90%] mx-auto shadow-md bg-[#76C893] rounded-sm mt-6">
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={createFriendFunc}>
                       <Text className="text-center px-10 py-4 text-gray-700 font-bold text-xl rounded-full capitalize">
                         Add friend
                       </Text>

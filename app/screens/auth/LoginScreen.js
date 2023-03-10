@@ -24,22 +24,22 @@ const validationSchema = Yup.object({
 export const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
   //const formObject = {email: '', password: ''};
-  const formObject = {email: 'admin@yopmail.com', password: 'admin123'};
+  const formObject = {email: 'fold@yopmail.com', password: '12345678'};
 
   let performLogin = async values => {
-    // let payload = {
-    //   email: values.email,
-    //   password: values.password,
-    // };
-    // let response = await dispatch(loginUser(payload));
+    let payload = {
+      email: values.email,
+      password: values.password,
+    };
+    let response = await dispatch(loginUser(payload));
 
-    // if (response.code == 200) {
-    //   navigation.navigate('homeScreen');
-    // } else {
-    //   console.log('res', response);
-    //   alert(response.message);
-    // }
-    navigation.navigate('homeScreen');
+    if (response.code == 200) {
+      navigation.navigate('homeScreen');
+    } else {
+      console.log('res 90 90 90 909 0 90 00-----', response.data);
+      alert(response.message);
+    }
+    // navigation.navigate('homeScreen');
   };
 
   return (
