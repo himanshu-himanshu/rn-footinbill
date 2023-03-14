@@ -81,8 +81,8 @@ const GroupScreen = ({navigation}) => {
                 Invite friends to join group and share expenses.
               </Text>
 
-              {/*********** Create Group Button ***********/}
-              <TouchableOpacity className="flex flex-row items-center justify-center border-b border-gray-100 px-8 py-4 bg-[#76C893] mt-6 rounded-md space-x-2">
+              {/*********** Add Member Button ***********/}
+              <TouchableOpacity className="flex flex-row items-center justify-center border-b border-gray-100 px-8 py-4 bg-[#B5E48C] mt-6 rounded-md space-x-2">
                 <View className="flex flex-row items-center space-x-4">
                   <Text className="text-md font-semibold text-gray-800">
                     Add Member
@@ -94,30 +94,6 @@ const GroupScreen = ({navigation}) => {
                 />
               </TouchableOpacity>
             </View>
-
-            {/** Show whenever there is atleast one group  */}
-            {/* <View className="p-2 flex flex-col">
-              {groups &&
-                groups.data &&
-                groups.data.map((group, key) => (
-                  <TouchableOpacity
-                    key={key}
-                    className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100"
-                    onPress={() => navigation.navigate('groupScreen')}>
-                    <View className="flex flex-row items-center space-x-4">
-                      <Image
-                        source={require('../../../assets/images/meet.png')}
-                        className="h-10 w-10"
-                      />
-                      <Text className="text-lg font-light">{group.name}</Text>
-                    </View>
-                    <Image
-                      source={require('../../../assets/images/next.png')}
-                      className="h-6 w-6"
-                    />
-                  </TouchableOpacity>
-                ))}
-            </View> */}
           </View>
         </View>
       </SafeAreaView>
