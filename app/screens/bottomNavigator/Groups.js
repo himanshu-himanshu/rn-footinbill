@@ -10,21 +10,20 @@ import {
   Button,
 } from 'react-native';
 
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import CreateGroup from './components/CreateGroup';
-import {
-  createGroup,
-  getAllGroups,
-} from '../../../app/actions/groupAction';
-import { useSelector, useDispatch } from 'react-redux';
+import {createGroup, getAllGroups} from '../../../app/actions/groupAction';
+import {useSelector, useDispatch} from 'react-redux';
 
-const Groups = () => {
+const Groups = ({navigation}) => {
   // State Variables
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
-  const [groupName, setGroupName] = useState("");
+  const [groupName, setGroupName] = useState('');
 
-  const { authToken } = useSelector(state => state.auth);
+  const {authToken} = useSelector(state => state.auth);
+  const {groups} = useSelector(state => state.group);
+
   useEffect(() => {
     let response = dispatch(getAllGroups(authToken));
     console.log('response000000 - --  -', response.data);
@@ -34,28 +33,22 @@ const Groups = () => {
     //   alert(response.message);
     // }
   }, []);
-  // console.log('groupsgroupsgroupsgroupsgroups', groups);
-  // setGroupList(groups.data);
-
-  // console.log('groupList', groupList);
-  // useEffect(() => {
-
-  //   setGroupList(groups);
-
-  // }, [])
 
   const handleCreateGroup = () => {
-    dispatch(createGroup({ name: groupName }, authToken));
+    dispatch(createGroup({name: groupName}, authToken));
     handleHide();
     dispatch(getAllGroups(authToken));
   };
-  const { groups } = useSelector(state => state.group);
+
+  //console.log('GROUPS***************', groups.data);
+
   const handleHide = () => {
     setVisible(false);
   };
   const handleShow = () => {
     setVisible(true);
   };
+
   return (
     <View className="w-full h-screen bg-white">
       <SafeAreaView>
@@ -74,44 +67,33 @@ const Groups = () => {
             </View>
 
             {/** Show when no groups*/}
-            {/* <CreateGroup handleShow={handleShow} /> */}
+            {groups && groups.data.length == 0 && (
+              <CreateGroup handleShow={handleShow} />
+            )}
 
-            {/** Show whenever there is atleast one friend  */}
+            {/** Show whenever there is atleast one group  */}
             <View className="p-2 flex flex-col">
-              {/*********** Card View ***********/}
-              {/* <View className="bg-gray-200 py-2 px-2 w-full rounded-xl flex flex-row items-center mb-2 shadow-2xl">
-                <View className="px-2">
-                  <Image
-                    source={require('../../../assets/images/man.png')}
-                    className="h-14 w-14"
-                  />
-                </View>
-                <View className="px-4 py-2">
-                  <Text className="text-lg tracking-wider pb-2">
-                    Total balance
-                  </Text>
-                  <Text className="text-xsm text-gray-700">
-                    You are all settled up
-                  </Text>
-                </View>
-              </View> */}
-              {/* {console.log('himanshu', groups.data)} */}
               {/*********** Map through list to render each group ***********/}
-              {groups && groups.data && groups.data.map((group, key) => (
-                <TouchableOpacity key={key} className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100">
-                  <View className="flex flex-row items-center space-x-4">
+              {groups &&
+                groups.data &&
+                groups.data.map((group, key) => (
+                  <TouchableOpacity
+                    key={key}
+                    className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100"
+                    onPress={() => navigation.navigate('groupScreen')}>
+                    <View className="flex flex-row items-center space-x-4">
+                      <Image
+                        source={require('../../../assets/images/meet.png')}
+                        className="h-10 w-10"
+                      />
+                      <Text className="text-lg font-light">{group.name}</Text>
+                    </View>
                     <Image
-                      source={require('../../../assets/images/meet.png')}
-                      className="h-10 w-10"
+                      source={require('../../../assets/images/next.png')}
+                      className="h-6 w-6"
                     />
-                    <Text className="text-lg font-light">{group.name}</Text>
-                  </View>
-                  <Image
-                    source={require('../../../assets/images/next.png')}
-                    className="h-6 w-6"
-                  />
-                </TouchableOpacity>
-              ))}
+                  </TouchableOpacity>
+                ))}
             </View>
           </View>
 
