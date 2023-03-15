@@ -14,6 +14,7 @@ import React, {useEffect, useState} from 'react';
 import AddFriend from './components/AddFriend';
 import {createFriend, getAllFriends} from '../../actions/friendAction';
 import {useDispatch, useSelector} from 'react-redux';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -26,16 +27,11 @@ const Home = () => {
 
   const {friend} = useSelector(state => state.friend);
 
-  // useSelector(state => console.log('HOME SCREEN STATE *********** ', state));
+  useSelector(state => console.log('HOME SCREEN STATE *********** ', state));
+  useSelector(state => console.log('HOME SCREEN STATE *********** ', friend));
 
   useEffect(() => {
-    let response = dispatch(getAllFriends(authToken));
-    //console.log('response000000 - --  -', response.data);
-    // if (response.code == 200) {
-    //   alert(response.message);
-    // } else {
-    //   alert(response.message);
-    // }
+    dispatch(getAllFriends(authToken));
   }, []);
 
   const createFriendFunc = () => {
@@ -69,50 +65,54 @@ const Home = () => {
             </View>
 
             {/** Show when user has no friends */}
-            {/* <AddFriend handleShow={handleShow} /> */}
+            {!friend && <AddFriend handleShow={handleShow} />}
 
-            {/** Show whenever there is atleast one friend  */}
-            <View className="p-2 flex flex-col">
-              {/*********** Card View ***********/}
-              <View className="bg-gray-200 py-2 px-2 w-full rounded-xl flex flex-row items-center mb-2 shadow-2xl">
-                <View className="px-2">
-                  <Image
-                    source={require('../../../assets/images/man.png')}
-                    className="h-14 w-14"
-                  />
-                </View>
-                <View className="px-4 py-2">
-                  <Text className="text-lg tracking-wider pb-2">
-                    Total balance
-                  </Text>
-                  <Text className="text-xsm text-gray-700">
-                    You are all settled up
-                  </Text>
-                </View>
-              </View>
-
-              {/*********** Map through list to render each friend ***********/}
-              {friend &&
-                friend.data &&
-                friend.data.map((friend, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100">
-                    {console.log('INSIDE FRIEND MAP', friend)}
-                    <View className="flex flex-row items-center space-x-4">
-                      <Image
-                        source={require('../../../assets/images/user.png')}
-                        className="h-10 w-10"
-                      />
-                      <Text className="text-lg font-light">{friend.name}</Text>
-                    </View>
+            <ScrollView>
+              {/** Show whenever there is atleast one friend  */}
+              <View className="p-2 flex flex-col">
+                {/*********** Card View ***********/}
+                <View className="bg-gray-200 py-2 px-2 w-full rounded-xl flex flex-row items-center mb-2 shadow-2xl">
+                  <View className="px-2">
                     <Image
-                      source={require('../../../assets/images/next.png')}
-                      className="h-6 w-6"
+                      source={require('../../../assets/images/man.png')}
+                      className="h-14 w-14"
                     />
-                  </TouchableOpacity>
-                ))}
-            </View>
+                  </View>
+                  <View className="px-4 py-2">
+                    <Text className="text-lg tracking-wider pb-2">
+                      Total balance
+                    </Text>
+                    <Text className="text-xsm text-gray-700">
+                      You are all settled up
+                    </Text>
+                  </View>
+                </View>
+
+                {/*********** Map through list to render each friend ***********/}
+
+                {friend &&
+                  friend.data &&
+                  friend.data.map((friend, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100">
+                      <View className="flex flex-row items-center space-x-4">
+                        <Image
+                          source={require('../../../assets/images/user.png')}
+                          className="h-10 w-10"
+                        />
+                        <Text className="text-lg font-light">
+                          {friend.name}
+                        </Text>
+                      </View>
+                      <Image
+                        source={require('../../../assets/images/next.png')}
+                        className="h-6 w-6"
+                      />
+                    </TouchableOpacity>
+                  ))}
+              </View>
+            </ScrollView>
           </View>
 
           {/******************* MODAL *******************/}

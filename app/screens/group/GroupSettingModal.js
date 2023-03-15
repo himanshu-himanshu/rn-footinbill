@@ -16,6 +16,7 @@ const GroupSettingModal = ({
   groupMembers,
   authUser,
   createdBy,
+  groupName,
 }) => {
   console.log('INSIDE GROUP MODAL SETTING ', authUser);
   return (
@@ -48,7 +49,7 @@ const GroupSettingModal = ({
               source={require('../../../assets/images/meet.png')}
               className="h-10 w-10"
             />
-            <Text className="text-md tracking-wide">Group Name</Text>
+            <Text className="text-md tracking-wide">{groupName}</Text>
           </View>
 
           {/*********** Links View ***********/}
@@ -58,7 +59,9 @@ const GroupSettingModal = ({
             {/*********** Group Members ***********/}
             {groupMembers &&
               groupMembers.map(member => (
-                <TouchableOpacity className="flex flex-row items-center w-full">
+                <TouchableOpacity
+                  className="flex flex-row items-center w-full"
+                  key={member._id}>
                   <View className="flex flex-row items-center space-x-4 w-full">
                     <Image
                       source={require('../../../assets/images/man.png')}

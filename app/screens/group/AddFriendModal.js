@@ -9,9 +9,56 @@ import {
   Modal,
   Button,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import axios from 'axios';
+import {API_URL} from '../../constants/actionStrings';
+import showSnack from '../../utils/ShowSnack';
 
-const AddFriendModal = ({handleHide, addFriendFunction}) => {
+const AddFriendModal = ({
+  handleHide,
+  addFriendFunction,
+  groupId,
+  authToken,
+  getGroupMembers,
+}) => {
+  const [friendName, setFriendName] = useState('');
+  const [friendEmail, setFriendEmail] = useState('');
+
+  //---------------------------------------------------//
+  /*** Function to add member to current group */
+  //---------------------------------------------------//
+  const addMember = async () => {
+    const instance = axios.create({
+      baseURL: API_URL,
+      timeout: 2500,
+      headers: {Authorization: 'Bearer ' + authToken},
+    });
+    const res = await instance
+      .post(`groups` + `/` + groupId + `/members`, {
+        members: [
+          {
+            name: friendName,
+            email: friendEmail,
+          },
+        ],
+      })
+      .then(response => {
+        console.log('INSIDE ADD MEMBER FUNC THEN ', response.data);
+        showSnack(response.data.message);
+        getGroupMembers();
+        handleHide();
+      })
+      .catch(function (error) {
+        console.log('INSIDE ADD MEMBER FUNC CATCH ', error);
+        let any = {
+          code: 401,
+          message: error.response.data.message,
+        };
+        return any;
+      });
+    return res;
+  };
+
   return (
     <SafeAreaView>
       <View className="h-full">
@@ -59,7 +106,7 @@ const AddFriendModal = ({handleHide, addFriendFunction}) => {
 
           {/*********** Add Friend Button View ***********/}
           <View className="w-[90%] mx-auto shadow-xl bg-[#8F43EE] rounded-md mt-6">
-            <TouchableOpacity onPress={addFriendFunction}>
+            <TouchableOpacity onPress={() => addMember()}>
               <Text className="text-center px-10 py-4 text-gray-100 font-bold text-xl rounded-full capitalize">
                 Add friend
               </Text>

@@ -3,56 +3,67 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
-  TextInput,
-  Alert,
   Image,
   Modal,
-  Button,
 } from 'react-native';
-
-import {API_URL} from '../../constants/actionStrings';
 import React, {useEffect, useState} from 'react';
-import {getAGroup} from '../../../app/actions/groupAction';
-import {getAuthUser} from '../../../app/actions/authAction';
 import {useSelector, useDispatch} from 'react-redux';
-import AddFriendModal from './AddFriendModal';
-import GroupSettingModal from './GroupSettingModal';
 import axios from 'axios';
 
-const GroupScreen = ({navigation, route}) => {
-  const [visible, setVisible] = useState(false);
-  const [visibleSetting, setVisibleSetting] = useState(false);
-  const {_id} = route.params.groupData;
-  const [groupMembers, setGroupMembers] = useState([]);
+import {API_URL} from '../../constants/actionStrings';
+import {getAGroup} from '../../../app/actions/groupAction';
+import {getAuthUser} from '../../../app/actions/authAction';
+import AddFriendModal from './AddFriendModal';
+import GroupSettingModal from './GroupSettingModal';
+import AddMember from './components/AddMember';
+import AddExpense from './components/AddExpense';
 
-  const {authToken, authUser} = useSelector(state => state.auth);
+const GroupScreen = ({navigation, route}) => {
+  const {_id} = route.params.groupData;
 
   const dispatch = useDispatch();
+
+  // useState Variables
+  const [visible, setVisible] = useState(false);
+  const [visibleSetting, setVisibleSetting] = useState(false);
+  const [groupMembers, setGroupMembers] = useState([]);
+
+  // Fetch from state
+  const {authToken, authUser} = useSelector(state => state.auth);
 
   useEffect(() => {
     console.log('USE EFFECT CALLED', authToken, _id);
     dispatch(getAGroup(authToken, _id));
-    getGroupMembers(authToken, _id);
+    getGroupMembers();
     dispatch(getAuthUser(authToken));
     console.log('USE STATE ARRAY ', groupMembers);
   }, []);
 
-  useEffect(() => {
-    console.log('USE EFFECT CALLED', authToken, _id);
-    dispatch(getAGroup(authToken, _id));
-    getGroupMembers(authToken, _id);
-    dispatch(getAuthUser(authToken));
-    console.log('USE STATE ARRAY ', groupMembers);
-  }, [route]);
+  useEffect(
+    () => {
+      console.log('USE EFFECT CALLED', authToken, _id);
+      dispatch(getAGroup(authToken, _id));
+      getGroupMembers();
+      dispatch(getAuthUser(authToken));
+      console.log('USE STATE ARRAY ', groupMembers);
+    },
+    [route],
+    [navigation],
+    [visible],
+    [groupMembers],
+  );
 
-  const getGroupMembers = async (authToken, id) => {
+  //---------------------------------------------------//
+  /*** Function to fetch members of current group */
+  //---------------------------------------------------//
+  const getGroupMembers = async () => {
     const instance = axios.create({
       baseURL: API_URL,
-      timeout: 1000,
+      timeout: 2500,
       headers: {Authorization: 'Bearer ' + authToken},
     });
     const res = await instance
-      .get(`groups` + `/` + id + `/members`)
+      .get(`groups` + `/` + _id + `/members`)
       .then(response => {
         console.log('INSIDE GET ALL MEMBERS FUNC THEN ', response.data.data);
         setGroupMembers(response.data.data);
@@ -68,12 +79,6 @@ const GroupScreen = ({navigation, route}) => {
     return res;
   };
 
-  console.log('AFTER USE EFFECT');
-
-  const {group} = useSelector(state => state.group);
-
-  console.log('GROUP DATA FROM STATE: ', group);
-
   const handleHide = () => {
     setVisible(false);
   };
@@ -86,6 +91,8 @@ const GroupScreen = ({navigation, route}) => {
   const handleSettingShow = () => {
     setVisibleSetting(true);
   };
+
+  const {group} = useSelector(state => state.group);
 
   const addFriendFunction = () => {};
 
@@ -130,7 +137,7 @@ const GroupScreen = ({navigation, route}) => {
             </View>
 
             {/*********** Three Butons View (Only show if there is atleast one member in group) ***********/}
-            {group && group.data && group.data.members.length > 1 && (
+            {groupMembers.length > 1 && (
               <View className="flex flex-row items-center space-x-3 justify-center">
                 <TouchableOpacity className="flex flex-row items-center justify-center shadow-xl border border-[#8F43EE] bg-[#8F43EE] px-3 py-2 mt-6 rounded-md space-x-2">
                   <View className="flex flex-row items-center space-x-4">
@@ -165,56 +172,10 @@ const GroupScreen = ({navigation, route}) => {
             )}
 
             {/** Show when atleast two members and no expense added in group */}
-            {group && group.data && group.data.members.length > 1 && (
-              <View className="h-[60%] w-full px-4 flex justify-center items-center">
-                <Text className="text-gray-900 text-md tracking-wide text-center font-bold mb-2">
-                  Nothing to show here!
-                </Text>
-                <Text className="text-gray-700 text-md tracking-wide text-center py-2">
-                  Click on Add Expense button to add an expense with this group.
-                </Text>
-
-                {/*********** Add Member Button ***********/}
-                <TouchableOpacity className="flex flex-row items-center justify-center border-b border-gray-100 px-8 py-4 bg-[#8F43EE] mt-6 rounded-md space-x-2">
-                  <View className="flex flex-row items-center space-x-4">
-                    <Text className="text-md font-semibold text-gray-100">
-                      Add Expense
-                    </Text>
-                  </View>
-                  <Image
-                    source={require('../../../assets/images/plus.png')}
-                    className="h-6 w-6"
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
+            {groupMembers.length > 1 && <AddExpense />}
 
             {/** Show when no members in group */}
-            {group && group.data && group.data.members.length == 1 && (
-              <View className="h-[70%] w-full px-4 flex justify-center items-center">
-                <Text className="text-gray-900 text-md tracking-wide text-center font-bold mb-2">
-                  You are the only one here!
-                </Text>
-                <Text className="text-gray-700 text-md tracking-wide text-center py-2">
-                  Invite friends to join group and share expenses.
-                </Text>
-
-                {/*********** Add Member Button ***********/}
-                <TouchableOpacity
-                  className="flex flex-row items-center justify-center border-b border-gray-100 px-8 py-4 bg-[#34A0A4] mt-6 rounded-md space-x-2"
-                  onPress={() => handleShow()}>
-                  <View className="flex flex-row items-center space-x-4">
-                    <Text className="text-md font-semibold text-gray-100">
-                      Add Member
-                    </Text>
-                  </View>
-                  <Image
-                    source={require('../../../assets/images/plus.png')}
-                    className="h-6 w-6"
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
+            {groupMembers.length == 1 && <AddMember handleShow={handleShow} />}
           </View>
 
           {/******************* ADD FRIEND MODAL *******************/}
@@ -225,6 +186,9 @@ const GroupScreen = ({navigation, route}) => {
             <AddFriendModal
               handleHide={handleHide}
               addFriendFunction={addFriendFunction}
+              groupId={group && group.data._id}
+              authToken={authToken}
+              getGroupMembers={getGroupMembers}
             />
           </Modal>
 
@@ -237,7 +201,8 @@ const GroupScreen = ({navigation, route}) => {
               handleSettingHide={handleSettingHide}
               groupMembers={groupMembers}
               authUser={authUser}
-              createdBy={group.data.createdBy}
+              createdBy={group && group.data.createdBy}
+              groupName={route.params.groupData.name}
             />
           </Modal>
         </View>

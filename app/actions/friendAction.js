@@ -14,13 +14,13 @@ export const getAllFriends = authToken => async dispatch => {
 
   const instance = axios.create({
     baseURL: API_URL,
-    timeout: 1000,
+    timeout: 2000,
     headers: {Authorization: 'Bearer ' + authToken},
   });
   const res = await instance
     .get(EndPoints.getAllFriends)
     .then(response => {
-      console.log('INSIDE THEN GET ALL FRIENDS ****** ', response.data);
+      console.log('INSIDE THEN GET ALL FRIENDS ****** ', response);
       dispatch({type: getAllFriendsString, payload: response});
       let any = {
         code: 200,
