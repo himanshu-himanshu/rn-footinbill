@@ -13,6 +13,7 @@ import RegisterScreen from './app/screens/auth/RegisterScreen';
 import HomeScreen from './app/screens/HomeScreen';
 import navLabelHelper from './app/utils/navLabelHelper.json';
 import GroupScreen from './app/screens/group/GroupScreen';
+import FriendScreen from './app/screens/friend/FriendScreen';
 
 const App = () => {
   let auth = useSelector(state => state.auth);
@@ -115,6 +116,16 @@ const App = () => {
               : {title: helper.profileScreen.loggedOutTitle}
           }
           component={isLoggedIn ? GroupScreen : LoginScreen}
+        />
+
+        <Stack.Screen
+          name="friendScreen"
+          options={
+            isLoggedIn
+              ? {title: helper.profileScreen.loggedInTitle}
+              : {title: helper.profileScreen.loggedOutTitle}
+          }
+          component={isLoggedIn ? FriendScreen : LoginScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

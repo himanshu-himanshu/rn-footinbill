@@ -17,7 +17,39 @@ const GroupSettingModal = ({
   authUser,
   createdBy,
   groupName,
+  handleDeleteGroup,
 }) => {
+  //------------------------------------------------------//
+  /** Show alert when user clicks on logout */
+  //-----------------------------------------------------//
+  const showAlert = () => {
+    Alert.alert(
+      'Are You Sure?',
+      'You want to delete group',
+      [
+        {
+          text: 'Ok',
+          onPress: () => {
+            handleDeleteGroup();
+          },
+          style: 'default',
+        },
+        {
+          text: 'Cancel',
+          onPress: () => {
+            return false;
+          },
+          style: 'destructive',
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () => {
+          return false;
+        },
+      },
+    );
+  };
   console.log('INSIDE GROUP MODAL SETTING ', authUser);
   return (
     <SafeAreaView>
@@ -35,7 +67,7 @@ const GroupSettingModal = ({
               </Text>
             </View>
 
-            <TouchableOpacity className="">
+            <TouchableOpacity onPress={() => showAlert()}>
               <Image
                 source={require('../../../assets/images/delete.png')}
                 className="h-5 w-5"

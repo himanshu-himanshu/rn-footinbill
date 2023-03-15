@@ -16,19 +16,17 @@ import {createFriend, getAllFriends} from '../../actions/friendAction';
 import {useDispatch, useSelector} from 'react-redux';
 import {ScrollView} from 'react-native-gesture-handler';
 
-const Home = () => {
+const Home = ({navigation}) => {
   const dispatch = useDispatch();
 
   const [visible, setVisible] = useState(false);
   const [friendName, setFriendName] = useState('');
   const [friendEmail, setFriendEmail] = useState('');
+  const [allFriends, setAllFriends] = useState([]);
 
   const {authToken} = useSelector(state => state.auth);
 
   const {friend} = useSelector(state => state.friend);
-
-  useSelector(state => console.log('HOME SCREEN STATE *********** ', state));
-  useSelector(state => console.log('HOME SCREEN STATE *********** ', friend));
 
   useEffect(() => {
     dispatch(getAllFriends(authToken));
@@ -71,7 +69,7 @@ const Home = () => {
               {/** Show whenever there is atleast one friend  */}
               <View className="p-2 flex flex-col">
                 {/*********** Card View ***********/}
-                <View className="bg-gray-200 py-2 px-2 w-full rounded-xl flex flex-row items-center mb-2 shadow-2xl">
+                <View className="bg-gray-200 py-2 px-2 w-full rounded-xl flex flex-row items-center mb-2 shadow-md">
                   <View className="px-2">
                     <Image
                       source={require('../../../assets/images/man.png')}
@@ -95,7 +93,12 @@ const Home = () => {
                   friend.data.map((friend, index) => (
                     <TouchableOpacity
                       key={index}
-                      className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100">
+                      className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100"
+                      onPress={() =>
+                        navigation.navigate('friendScreen', {
+                          friendData: friend,
+                        })
+                      }>
                       <View className="flex flex-row items-center space-x-4">
                         <Image
                           source={require('../../../assets/images/user.png')}

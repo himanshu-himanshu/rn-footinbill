@@ -26,14 +26,16 @@ const Groups = ({navigation}) => {
   const {groups} = useSelector(state => state.group);
 
   useEffect(() => {
-    let response = dispatch(getAllGroups(authToken));
-    console.log('response000000 - --  -', response.data);
-    // if (response.code == 200) {
-    //   alert(response.message);
-    // } else {
-    //   alert(response.message);
-    // }
+    dispatch(getAllGroups(authToken));
   }, []);
+
+  useEffect(
+    () => {
+      dispatch(getAllGroups(authToken));
+    },
+    [navigation],
+    [visible],
+  );
 
   const handleCreateGroup = () => {
     dispatch(createGroup({name: groupName}, authToken));
@@ -41,7 +43,7 @@ const Groups = ({navigation}) => {
     dispatch(getAllGroups(authToken));
   };
 
-  //console.log('GROUPS***************', groups.data);
+  console.log('GROUPS***************', groups);
 
   const handleHide = () => {
     setVisible(false);

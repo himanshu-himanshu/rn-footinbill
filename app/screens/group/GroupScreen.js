@@ -50,7 +50,6 @@ const GroupScreen = ({navigation, route}) => {
     [route],
     [navigation],
     [visible],
-    [groupMembers],
   );
 
   //---------------------------------------------------//
@@ -70,6 +69,34 @@ const GroupScreen = ({navigation, route}) => {
       })
       .catch(function (error) {
         console.log('INSIDE GET ALL MEMBERS FUNC CATCH ', error);
+        let any = {
+          code: 401,
+          message: error.response.data.message,
+        };
+        return any;
+      });
+    return res;
+  };
+
+  //---------------------------------------------------//
+  /*** Function to delete current group */
+  //---------------------------------------------------//
+
+  const handleDeleteGroup = async () => {
+    const instance = axios.create({
+      baseURL: API_URL,
+      timeout: 2500,
+      headers: {Authorization: 'Bearer ' + authToken},
+    });
+    const res = await instance
+      .delete(`groups` + `/` + _id)
+      .then(response => {
+        console.log('INSIDE DELETE GROUP FUNC THEN ', response.data.data);
+        handleSettingHide();
+        navigation.goBack();
+      })
+      .catch(function (error) {
+        console.log('IINSIDE DELETE GROUP FUNC CATCH ', error);
         let any = {
           code: 401,
           message: error.response.data.message,
@@ -203,6 +230,7 @@ const GroupScreen = ({navigation, route}) => {
               authUser={authUser}
               createdBy={group && group.data.createdBy}
               groupName={route.params.groupData.name}
+              handleDeleteGroup={handleDeleteGroup}
             />
           </Modal>
         </View>

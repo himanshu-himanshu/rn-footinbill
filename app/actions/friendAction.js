@@ -25,6 +25,7 @@ export const getAllFriends = authToken => async dispatch => {
       let any = {
         code: 200,
         message: response.data.message,
+        data: response.data.data,
       };
       return any;
     })
@@ -33,6 +34,7 @@ export const getAllFriends = authToken => async dispatch => {
       let any = {
         code: 401,
         message: error.response.data.message,
+        data: [],
       };
       return any;
     });
