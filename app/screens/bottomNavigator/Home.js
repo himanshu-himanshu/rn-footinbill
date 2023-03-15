@@ -92,7 +92,8 @@ const Home = () => {
               </View>
 
               {/*********** Map through list to render each friend ***********/}
-              {friend.data &&
+              {friend &&
+                friend.data &&
                 friend.data.map((friend, index) => (
                   <TouchableOpacity
                     key={index}

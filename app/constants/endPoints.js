@@ -14,5 +14,6 @@ const EndPoints = {
   createAFriend: 'user/friend',
   logOutUser: 'logOutUser',
   getAuthUser: 'auth/me',
+  getAGroup: 'groups',
 };
 export default EndPoints;

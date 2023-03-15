@@ -81,7 +81,9 @@ const Groups = ({navigation}) => {
                   <TouchableOpacity
                     key={key}
                     className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100"
-                    onPress={() => navigation.navigate('groupScreen')}>
+                    onPress={() =>
+                      navigation.navigate('groupScreen', {groupData: group})
+                    }>
                     <View className="flex flex-row items-center space-x-4">
                       <Image
                         source={require('../../../assets/images/meet.png')}

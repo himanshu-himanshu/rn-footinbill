@@ -11,6 +11,7 @@ export const updateProfileString = 'UPDATE_PROFILE';
 export const logOutString = 'LOGOUT';
 export const saveAuthTokenString = 'SAVE_AUTH_TOKEN';
 export const getAllGroupsString = 'GET_ALL_GROUPS';
+export const getAGroupString = 'GET_A_GROUP';
 export const createGroupString = 'CREATE_A_GROUP';
 export const createFriendString = 'CREATE_A_FRIEND';
 export const getAllFriendsString = 'GET_ALL_FRIENDS';
