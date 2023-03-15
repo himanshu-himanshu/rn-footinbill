@@ -9,17 +9,17 @@ import {
   Modal,
   Button,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { Formik } from 'formik';
+import React, {useEffect, useState} from 'react';
+import {Formik} from 'formik';
 import {
   logoutUser,
   getAuthUser,
   changePassword,
 } from '../../../app/actions/authAction';
-import { useSelector, useDispatch } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import showSnack from '../../utils/ShowSnack';
 import * as Yup from 'yup';
-import { ScrollView } from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const validationSchema = Yup.object({
   currentPassword: Yup.string('Not a valid currentPassword.')
@@ -33,11 +33,11 @@ const validationSchema = Yup.object({
     .required('new password is required.'),
 });
 
-export const Profile = ({ navigation }) => {
+export const Profile = ({navigation}) => {
   const dispatch = useDispatch();
 
   // const formObject = { confirmPassword: '', currentPassword: '', password: '' };
-  const { authToken, authUser } = useSelector(state => state.auth);
+  const {authToken, authUser} = useSelector(state => state.auth);
 
   useEffect(() => {
     console.log('DISPATCHING GETAUTHUSER');

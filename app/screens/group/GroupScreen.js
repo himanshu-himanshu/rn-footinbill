@@ -13,8 +13,12 @@ import {
 import React, {useEffect, useState} from 'react';
 import {getAGroup} from '../../../app/actions/groupAction';
 import {useSelector, useDispatch} from 'react-redux';
+import AddFriendModal from './AddFriendModal';
+import GroupSettingModal from './GroupSettingModal';
 
 const GroupScreen = ({navigation, route}) => {
+  const [visible, setVisible] = useState(false);
+  const [visibleSetting, setVisibleSetting] = useState(false);
   const {_id} = route.params.groupData;
 
   const {authToken} = useSelector(state => state.auth);
@@ -42,6 +46,21 @@ const GroupScreen = ({navigation, route}) => {
   // console.log('GROUP MEMBER FROM STATE: ', members);
 
   const handleSettingModal = () => {};
+
+  const handleHide = () => {
+    setVisible(false);
+  };
+  const handleShow = () => {
+    setVisible(true);
+  };
+  const handleSettingHide = () => {
+    setVisibleSetting(false);
+  };
+  const handleSettingShow = () => {
+    setVisibleSetting(true);
+  };
+
+  const addFriendFunction = () => {};
 
   return (
     <View className="w-full h-screen bg-white">
@@ -74,7 +93,7 @@ const GroupScreen = ({navigation, route}) => {
               <View className="">
                 <TouchableOpacity
                   className="flex justify-center items-center rounded-full"
-                  onPress={() => handleSettingModal()}>
+                  onPress={() => handleSettingShow()}>
                   <Image
                     source={require('../../../assets/images/setting2.jpg')}
                     className="h-10 w-10"
@@ -94,7 +113,9 @@ const GroupScreen = ({navigation, route}) => {
                   </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity className="flex flex-row items-center justify-center border border-[#76C893] px-3 py-2 mt-6 rounded-md space-x-2">
+                <TouchableOpacity
+                  className="flex flex-row items-center justify-center border border-[#76C893] px-3 py-2 mt-6 rounded-md space-x-2"
+                  onPress={() => handleShow()}>
                   <View className="flex flex-row items-center space-x-4">
                     <Text className="text-sm font-normal text-[#184E77]">
                       Add Member
@@ -127,9 +148,11 @@ const GroupScreen = ({navigation, route}) => {
                 </Text>
 
                 {/*********** Add Member Button ***********/}
-                <TouchableOpacity className="flex flex-row items-center justify-center border-b border-gray-100 px-8 py-4 bg-[#B5E48C] mt-6 rounded-md space-x-2">
+                <TouchableOpacity
+                  className="flex flex-row items-center justify-center border-b border-gray-100 px-8 py-4 bg-[#8F43EE] mt-6 rounded-md space-x-2"
+                  onPress={() => handleShow()}>
                   <View className="flex flex-row items-center space-x-4">
-                    <Text className="text-md font-semibold text-gray-800">
+                    <Text className="text-md font-semibold text-gray-100">
                       Add Member
                     </Text>
                   </View>
@@ -141,6 +164,25 @@ const GroupScreen = ({navigation, route}) => {
               </View>
             )}
           </View>
+
+          {/******************* ADD FRIEND MODAL *******************/}
+          <Modal
+            visible={visible}
+            animationType="slide"
+            onRequestClose={handleHide}>
+            <AddFriendModal
+              handleHide={handleHide}
+              addFriendFunction={addFriendFunction}
+            />
+          </Modal>
+
+          {/******************* SETTING MODAL *******************/}
+          <Modal
+            visible={visibleSetting}
+            onRequestClose={handleSettingHide}
+            animationType="fade">
+            <GroupSettingModal handleSettingHide={handleSettingHide} />
+          </Modal>
         </View>
       </SafeAreaView>
     </View>
