@@ -13,6 +13,9 @@ import {
 import CreateGroup from '../bottomNavigator/components/CreateGroup';
 
 const GroupScreen = ({navigation}) => {
+  const handleSettingModal = () => {
+    console.log('Handling Setting');
+  };
   return (
     <View className="w-full h-screen bg-white">
       <SafeAreaView>
@@ -32,13 +35,25 @@ const GroupScreen = ({navigation}) => {
 
           <View className="h-full w-full p-4">
             {/*********** Heading Text ***********/}
-            <View className="flex flex-col items-start py-2">
-              <Text className="text-xl font-Raleway tracking-wider px-2 text-gray-800 pb-1">
-                Centennial College
-              </Text>
-              <Text className="text-xsm font-Raleway px-2 text-gray-600 font-light">
-                No expenses to show.
-              </Text>
+            <View className="flex flex-row items-start justify-between py-2">
+              <View>
+                <Text className="text-xl font-Raleway tracking-wider px-2 text-gray-800 pb-1">
+                  Centennial College
+                </Text>
+                <Text className="text-xsm font-Raleway px-2 text-gray-600 font-light">
+                  No expenses to show.
+                </Text>
+              </View>
+              <View className="">
+                <TouchableOpacity
+                  className="flex justify-center items-center rounded-full"
+                  onPress={() => handleSettingModal()}>
+                  <Image
+                    source={require('../../../assets/images/setting2.jpg')}
+                    className="h-10 w-10"
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
 
             {/*********** Three Butons View (Only show if there is atleast one member in group) ***********/}

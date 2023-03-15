@@ -18,6 +18,7 @@ import {useSelector, useDispatch} from 'react-redux';
 const Groups = ({navigation}) => {
   // State Variables
   const dispatch = useDispatch();
+
   const [visible, setVisible] = useState(false);
   const [groupName, setGroupName] = useState('');
 

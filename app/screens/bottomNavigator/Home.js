@@ -10,33 +10,40 @@ import {
   Button,
 } from 'react-native';
 
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import AddFriend from './components/AddFriend';
-import { createFriend, getAllFriends } from '../../actions/friendAction';
-import { useDispatch, useSelector } from 'react-redux';
+import {createFriend, getAllFriends} from '../../actions/friendAction';
+import {useDispatch, useSelector} from 'react-redux';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const [visible, setVisible] = useState(false);
-  const [friendName, setFriendName] = useState("");
-  const [friendEmail, setFriendEmail] = useState("");
 
-  const { authToken } = useSelector(state => state.auth);
+  const [visible, setVisible] = useState(false);
+  const [friendName, setFriendName] = useState('');
+  const [friendEmail, setFriendEmail] = useState('');
+
+  const {authToken} = useSelector(state => state.auth);
+
+  const {friend} = useSelector(state => state.friend);
+
+  // useSelector(state => console.log('HOME SCREEN STATE *********** ', state));
+
   useEffect(() => {
     let response = dispatch(getAllFriends(authToken));
-    console.log('response000000 - --  -', response.data);
+    //console.log('response000000 - --  -', response.data);
     // if (response.code == 200) {
     //   alert(response.message);
     // } else {
     //   alert(response.message);
     // }
   }, []);
+
   const createFriendFunc = () => {
-    dispatch(createFriend({ name: friendName, email: friendEmail }, authToken));
+    dispatch(createFriend({name: friendName, email: friendEmail}, authToken));
     handleHide();
     dispatch(getAllFriends(authToken));
   };
-  const { friends } = useSelector(state => state.friend);
+
   const handleHide = () => {
     setVisible(false);
   };
@@ -82,26 +89,28 @@ const Home = () => {
                     You are all settled up
                   </Text>
                 </View>
-                {console.log('friends', friends)}
               </View>
-        
+
               {/*********** Map through list to render each friend ***********/}
-              {friends && friends.data && friends.data.map((friend, index) => (
-                <TouchableOpacity key={index} className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100">
-                  {console.log(friend)}
-                  <View className="flex flex-row items-center space-x-4">
+              {friend.data &&
+                friend.data.map((friend, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100">
+                    {console.log('INSIDE FRIEND MAP', friend)}
+                    <View className="flex flex-row items-center space-x-4">
+                      <Image
+                        source={require('../../../assets/images/user.png')}
+                        className="h-10 w-10"
+                      />
+                      <Text className="text-lg font-light">{friend.name}</Text>
+                    </View>
                     <Image
-                      source={require('../../../assets/images/user.png')}
-                      className="h-10 w-10"
+                      source={require('../../../assets/images/next.png')}
+                      className="h-6 w-6"
                     />
-                    <Text className="text-lg font-light">{friend.name}</Text>
-                  </View>
-                  <Image
-                    source={require('../../../assets/images/next.png')}
-                    className="h-6 w-6"
-                  />
-                </TouchableOpacity>
-              ))}
+                  </TouchableOpacity>
+                ))}
             </View>
           </View>
 

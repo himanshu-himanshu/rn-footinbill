@@ -11,7 +11,7 @@ const EndPoints = {
   getAllGroups: 'groups',
   createAGroup: 'groups',
   getAllFriends: 'user/friend',
-  createAFriend: 'friends',
+  createAFriend: 'user/friend',
   logOutUser: 'logOutUser',
   getAuthUser: 'auth/me',
 };

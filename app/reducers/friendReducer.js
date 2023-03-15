@@ -1,16 +1,14 @@
-import {
-    getAllFriendsString,
-} from '../constants/actionStrings';
+import {getAllFriendsString} from '../constants/actionStrings';
 
 export default (state = {}, action) => {
-    console.log("friend REDUCER action ----------XXXX", action.payload);
-    switch (action.type) {
-        case getAllFriendsString:
-            return {
-                ...state,
-                friends: action.payload.data,
-            }
-        default:
-            return state;
-    }
+  console.log('friend REDUCER action ----------XXXX', action.payload);
+  switch (action.type) {
+    case getAllFriendsString:
+      return {
+        ...state,
+        friend: action.payload.data,
+      };
+    default:
+      return state;
+  }
 };
