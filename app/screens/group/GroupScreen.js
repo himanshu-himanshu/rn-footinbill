@@ -10,42 +10,69 @@ import {
   Button,
 } from 'react-native';
 
+import {API_URL} from '../../constants/actionStrings';
 import React, {useEffect, useState} from 'react';
 import {getAGroup} from '../../../app/actions/groupAction';
+import {getAuthUser} from '../../../app/actions/authAction';
 import {useSelector, useDispatch} from 'react-redux';
 import AddFriendModal from './AddFriendModal';
 import GroupSettingModal from './GroupSettingModal';
+import axios from 'axios';
 
 const GroupScreen = ({navigation, route}) => {
   const [visible, setVisible] = useState(false);
   const [visibleSetting, setVisibleSetting] = useState(false);
   const {_id} = route.params.groupData;
+  const [groupMembers, setGroupMembers] = useState([]);
 
-  const {authToken} = useSelector(state => state.auth);
+  const {authToken, authUser} = useSelector(state => state.auth);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     console.log('USE EFFECT CALLED', authToken, _id);
     dispatch(getAGroup(authToken, _id));
+    getGroupMembers(authToken, _id);
+    dispatch(getAuthUser(authToken));
+    console.log('USE STATE ARRAY ', groupMembers);
   }, []);
 
   useEffect(() => {
     console.log('USE EFFECT CALLED', authToken, _id);
     dispatch(getAGroup(authToken, _id));
+    getGroupMembers(authToken, _id);
+    dispatch(getAuthUser(authToken));
+    console.log('USE STATE ARRAY ', groupMembers);
   }, [route]);
+
+  const getGroupMembers = async (authToken, id) => {
+    const instance = axios.create({
+      baseURL: API_URL,
+      timeout: 1000,
+      headers: {Authorization: 'Bearer ' + authToken},
+    });
+    const res = await instance
+      .get(`groups` + `/` + id + `/members`)
+      .then(response => {
+        console.log('INSIDE GET ALL MEMBERS FUNC THEN ', response.data.data);
+        setGroupMembers(response.data.data);
+      })
+      .catch(function (error) {
+        console.log('INSIDE GET ALL MEMBERS FUNC CATCH ', error);
+        let any = {
+          code: 401,
+          message: error.response.data.message,
+        };
+        return any;
+      });
+    return res;
+  };
 
   console.log('AFTER USE EFFECT');
 
   const {group} = useSelector(state => state.group);
 
   console.log('GROUP DATA FROM STATE: ', group);
-
-  // let members = group.data.members;
-
-  // console.log('GROUP MEMBER FROM STATE: ', members);
-
-  const handleSettingModal = () => {};
 
   const handleHide = () => {
     setVisible(false);
@@ -137,6 +164,31 @@ const GroupScreen = ({navigation, route}) => {
               </View>
             )}
 
+            {/** Show when atleast two members and no expense added in group */}
+            {group && group.data && group.data.members.length > 1 && (
+              <View className="h-[60%] w-full px-4 flex justify-center items-center">
+                <Text className="text-gray-900 text-md tracking-wide text-center font-bold mb-2">
+                  Nothing to show here!
+                </Text>
+                <Text className="text-gray-700 text-md tracking-wide text-center py-2">
+                  Click on Add Expense button to add an expense with this group.
+                </Text>
+
+                {/*********** Add Member Button ***********/}
+                <TouchableOpacity className="flex flex-row items-center justify-center border-b border-gray-100 px-8 py-4 bg-[#8F43EE] mt-6 rounded-md space-x-2">
+                  <View className="flex flex-row items-center space-x-4">
+                    <Text className="text-md font-semibold text-gray-100">
+                      Add Expense
+                    </Text>
+                  </View>
+                  <Image
+                    source={require('../../../assets/images/plus.png')}
+                    className="h-6 w-6"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+
             {/** Show when no members in group */}
             {group && group.data && group.data.members.length == 1 && (
               <View className="h-[70%] w-full px-4 flex justify-center items-center">
@@ -149,7 +201,7 @@ const GroupScreen = ({navigation, route}) => {
 
                 {/*********** Add Member Button ***********/}
                 <TouchableOpacity
-                  className="flex flex-row items-center justify-center border-b border-gray-100 px-8 py-4 bg-[#8F43EE] mt-6 rounded-md space-x-2"
+                  className="flex flex-row items-center justify-center border-b border-gray-100 px-8 py-4 bg-[#34A0A4] mt-6 rounded-md space-x-2"
                   onPress={() => handleShow()}>
                   <View className="flex flex-row items-center space-x-4">
                     <Text className="text-md font-semibold text-gray-100">
@@ -181,7 +233,12 @@ const GroupScreen = ({navigation, route}) => {
             visible={visibleSetting}
             onRequestClose={handleSettingHide}
             animationType="fade">
-            <GroupSettingModal handleSettingHide={handleSettingHide} />
+            <GroupSettingModal
+              handleSettingHide={handleSettingHide}
+              groupMembers={groupMembers}
+              authUser={authUser}
+              createdBy={group.data.createdBy}
+            />
           </Modal>
         </View>
       </SafeAreaView>

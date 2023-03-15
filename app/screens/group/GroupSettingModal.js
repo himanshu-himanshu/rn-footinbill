@@ -11,7 +11,13 @@ import {
 } from 'react-native';
 import React from 'react';
 
-const GroupSettingModal = ({handleSettingHide}) => {
+const GroupSettingModal = ({
+  handleSettingHide,
+  groupMembers,
+  authUser,
+  createdBy,
+}) => {
+  console.log('INSIDE GROUP MODAL SETTING ', authUser);
   return (
     <SafeAreaView>
       <View className="w-full h-full">
@@ -46,54 +52,34 @@ const GroupSettingModal = ({handleSettingHide}) => {
           </View>
 
           {/*********** Links View ***********/}
-          <View className="m-2 flex flex-col space-y-6 border-b border-gray-100 pb-8">
+          <View className="m-2 flex flex-col space-y-6 border-b border-gray-100 pb-8 w-full">
             <Text className="font-light mb-2">Group members</Text>
 
-            {/*********** Change Password Link ***********/}
-            <TouchableOpacity className="flex flex-row items-center justify-between">
-              <View className="flex flex-row items-center space-x-4">
-                <Image
-                  source={require('../../../assets/images/man.png')}
-                  className="h-8 w-8"
-                />
-                <View>
-                  <Text className="text-md font-normal">Gurminder Singh</Text>
-                  <Text className="text-[12px] font-light text-gray-700">
-                    guru@yopmail.com
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity className="flex flex-row items-center justify-between">
-              <View className="flex flex-row items-center space-x-4">
-                <Image
-                  source={require('../../../assets/images/man.png')}
-                  className="h-8 w-8"
-                />
-                <View>
-                  <Text className="text-md font-normal">Nirav Goswami</Text>
-                  <Text className="text-[12px] font-light text-gray-700">
-                    nirav1234@yopmail.com
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity className="flex flex-row items-center justify-between">
-              <View className="flex flex-row items-center space-x-4">
-                <Image
-                  source={require('../../../assets/images/man.png')}
-                  className="h-8 w-8"
-                />
-                <View>
-                  <Text className="text-md font-normal">Himanshu</Text>
-                  <Text className="text-[12px] font-light text-gray-700">
-                    himanshu@yopmail.com
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
+            {/*********** Group Members ***********/}
+            {groupMembers &&
+              groupMembers.map(member => (
+                <TouchableOpacity className="flex flex-row items-center w-full">
+                  <View className="flex flex-row items-center space-x-4 w-full">
+                    <Image
+                      source={require('../../../assets/images/man.png')}
+                      className="h-8 w-8"
+                    />
+                    <View className="flex flex-col w-[85%]">
+                      <Text className="text-md font-normal">
+                        {authUser._id === member._id ? 'You' : member.name}
+                      </Text>
+                      <View className="flex flex-row items-center justify-between">
+                        <Text className="text-[12px] font-light text-gray-700">
+                          {member.email}
+                        </Text>
+                        <Text className="text-gray-500 italic text-[12px]">
+                          {member._id === createdBy ? 'Admin' : ''}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
           </View>
 
           {/*********** Links View ***********/}
