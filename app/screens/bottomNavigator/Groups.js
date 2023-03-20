@@ -21,7 +21,7 @@ const Groups = ({navigation}) => {
 
   const [visible, setVisible] = useState(false);
   const [groupName, setGroupName] = useState('');
-
+  const [loading, setLoading] = useState(true);
   const {authToken} = useSelector(state => state.auth);
   const {groups} = useSelector(state => state.group);
 
@@ -41,9 +41,12 @@ const Groups = ({navigation}) => {
     dispatch(createGroup({name: groupName}, authToken));
     handleHide();
     dispatch(getAllGroups(authToken));
+    setTimeout(() => {
+      setLoading(!loading);
+    }, 4000);
   };
 
-  console.log('GROUPS***************', groups);
+  //console.log('GROUPS***************', groups);
 
   const handleHide = () => {
     setVisible(false);

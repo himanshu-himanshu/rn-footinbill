@@ -15,7 +15,7 @@ import axios from 'axios';
 import {API_URL} from '../../constants/actionStrings';
 import showSnack from '../../utils/ShowSnack';
 
-const AddExpenseModal = ({handleExpenseHide, name, friendId}) => {
+const AddExpenseModal = ({handleExpenseHide, name, friendId, getExpenses}) => {
   const [description, setDescription] = useState();
   const [amount, setAmount] = useState();
 
@@ -25,7 +25,7 @@ const AddExpenseModal = ({handleExpenseHide, name, friendId}) => {
   console.log(friendId);
 
   //---------------------------------------------------//
-  /*** Function to add member to current group */
+  /*** Function to add expense */
   //---------------------------------------------------//
   const addExpense = async () => {
     let amountFloat = parseFloat(amount);
@@ -62,8 +62,9 @@ const AddExpenseModal = ({handleExpenseHide, name, friendId}) => {
       .post(`expenses`, payload)
       .then(response => {
         console.log('INSIDE ADD EXPENSE FUNC THEN ', response.data);
-        showSnack(response.data.message);
+        showSnack('Successfully added expense 💵');
         handleExpenseHide();
+        getExpenses();
       })
       .catch(function (error) {
         console.log('INSIDE ADD EXPENSE FUNC CATCH ', error);

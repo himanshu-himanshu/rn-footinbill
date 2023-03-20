@@ -1,14 +1,14 @@
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 
-const AddExpense = ({handleExpenseShow}) => {
+const AddExpense = ({handleExpenseShow, friendName}) => {
   return (
     <View className="h-[60%] w-full px-4 flex justify-center items-center">
       <Text className="text-gray-900 text-md tracking-wide text-center font-bold mb-2">
         Nothing to show here!
       </Text>
-      <Text className="text-gray-700 text-md tracking-wide text-center py-2">
-        Click on Add Expense button to add an expense with this group.
+      <Text className="text-gray-700 text-md tracking-wide text-center py-2 capitalize">
+        {`Click on Add Expense button to add an expense with ${friendName}.`}
       </Text>
 
       {/*********** Add Member Button ***********/}
