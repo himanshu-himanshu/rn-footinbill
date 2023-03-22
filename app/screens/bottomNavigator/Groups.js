@@ -23,6 +23,7 @@ const Groups = ({navigation}) => {
   const [groupName, setGroupName] = useState('');
   const [loading, setLoading] = useState(true);
   const {authToken} = useSelector(state => state.auth);
+
   const {groups} = useSelector(state => state.group);
 
   useEffect(() => {
@@ -38,12 +39,14 @@ const Groups = ({navigation}) => {
   );
 
   const handleCreateGroup = () => {
+    console.log('41*******');
     dispatch(createGroup({name: groupName}, authToken));
     handleHide();
-    dispatch(getAllGroups(authToken));
-    setTimeout(() => {
-      setLoading(!loading);
-    }, 4000);
+    console.log('44*******');
+    //dispatch(getAllGroups(authToken));
+    // setTimeout(() => {
+    //   setLoading(!loading);
+    // }, 4000);
   };
 
   //console.log('GROUPS***************', groups);
@@ -79,6 +82,21 @@ const Groups = ({navigation}) => {
 
             {/** Show whenever there is atleast one group  */}
             <View className="p-2 flex flex-col">
+              <TouchableOpacity
+                className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100"
+                onPress={() => navigation.navigate('groupScreen', {})}>
+                <View className="flex flex-row items-center space-x-4">
+                  <Image
+                    source={require('../../../assets/images/meet.png')}
+                    className="h-10 w-10"
+                  />
+                  <Text className="text-lg font-light">Non-group Expenses</Text>
+                </View>
+                <Image
+                  source={require('../../../assets/images/next.png')}
+                  className="h-6 w-6"
+                />
+              </TouchableOpacity>
               {/*********** Map through list to render each group ***********/}
               {groups &&
                 groups.data &&

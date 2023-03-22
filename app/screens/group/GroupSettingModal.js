@@ -100,7 +100,7 @@ const GroupSettingModal = ({
                       className="h-8 w-8"
                     />
                     <View className="flex flex-col w-[85%]">
-                      <Text className="text-md font-normal">
+                      <Text className="text-md font-normal capitalize">
                         {authUser._id === member._id ? 'You' : member.name}
                       </Text>
                       <View className="flex flex-row items-center justify-between">

@@ -85,6 +85,7 @@ export const createGroup = (data, authToken) => async dispatch => {
     .then(response => {
       console.log('RESPON 123SE', response.data);
       dispatch({type: createGroupString, payload: response});
+      dispatch(getAllGroups(authToken));
       let any = {
         code: 200,
         message: response.data.message,
@@ -98,5 +99,6 @@ export const createGroup = (data, authToken) => async dispatch => {
       };
       return any;
     });
+  console.log('INSIDE CREATE GROUP', res);
   return res;
 };

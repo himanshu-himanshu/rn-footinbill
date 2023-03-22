@@ -17,6 +17,7 @@ import AddFriendModal from './AddFriendModal';
 import GroupSettingModal from './GroupSettingModal';
 import AddMember from './components/AddMember';
 import AddExpense from './components/AddExpense';
+import AddExpenseModal from '../friend/AddExpenseModal';
 
 const GroupScreen = ({navigation, route}) => {
   const {_id} = route.params.groupData;
@@ -27,6 +28,8 @@ const GroupScreen = ({navigation, route}) => {
   const [visible, setVisible] = useState(false);
   const [visibleSetting, setVisibleSetting] = useState(false);
   const [groupMembers, setGroupMembers] = useState([]);
+  const [expenses, setExpenses] = useState([]);
+  const [expenseModal, setExpenseModal] = useState(false);
 
   // Fetch from state
   const {authToken, authUser} = useSelector(state => state.auth);
@@ -106,6 +109,59 @@ const GroupScreen = ({navigation, route}) => {
     return res;
   };
 
+  //---------------------------------------------------//
+  /*** Function to add expense */
+  //---------------------------------------------------//
+  const addExpense = async (amount, description) => {
+    let amountFloat = parseFloat(amount);
+    let payload = {
+      description: description,
+      totalAmount: amountFloat,
+      paidBy: [
+        {
+          paidByUser: authUser._id,
+          paidByAmount: amountFloat,
+        },
+      ],
+      splitWith: [
+        {
+          splitWithUser: authUser._id,
+          splitWithAmount: amountFloat / 2,
+        },
+        {
+          splitWithUser: route.params.friendData._id,
+          splitWithAmount: amountFloat / 2,
+        },
+      ],
+      splitType: 'equally',
+    };
+
+    console.log(payload);
+
+    const instance = axios.create({
+      baseURL: API_URL,
+      timeout: 2500,
+      headers: {Authorization: 'Bearer ' + authToken},
+    });
+    const res = await instance
+      .post(`expenses`, payload)
+      .then(response => {
+        console.log('INSIDE ADD EXPENSE FUNC THEN ', response.data);
+        showSnack('Successfully added expense 💵');
+        //handleExpenseHide();
+        getExpenses();
+      })
+      .catch(function (error) {
+        console.log('INSIDE ADD EXPENSE FUNC CATCH ', error);
+        let any = {
+          code: 401,
+          message: error.response.data.message,
+        };
+        return any;
+      });
+    return res;
+  };
+
   const handleHide = () => {
     setVisible(false);
   };
@@ -117,6 +173,12 @@ const GroupScreen = ({navigation, route}) => {
   };
   const handleSettingShow = () => {
     setVisibleSetting(true);
+  };
+  const handleExpenseHide = () => {
+    setExpenseModal(false);
+  };
+  const handleExpenseShow = () => {
+    setExpenseModal(true);
   };
 
   const {group} = useSelector(state => state.group);
@@ -188,7 +250,9 @@ const GroupScreen = ({navigation, route}) => {
                   />
                 </TouchableOpacity>
 
-                <TouchableOpacity className="flex flex-row items-center justify-center border border-[#76C893] px-3 py-2 mt-6 rounded-md space-x-2">
+                <TouchableOpacity
+                  className="flex flex-row items-center justify-center border border-[#76C893] px-3 py-2 mt-6 rounded-md space-x-2"
+                  onPress={() => handleExpenseShow()}>
                   <View className="flex flex-row items-center space-x-4">
                     <Text className="text-sm font-normal text-[#184E77]">
                       Add Expense
@@ -199,7 +263,9 @@ const GroupScreen = ({navigation, route}) => {
             )}
 
             {/** Show when atleast two members and no expense added in group */}
-            {groupMembers.length > 1 && <AddExpense />}
+            {groupMembers.length > 1 && (
+              <AddExpense handleExpenseShow={handleExpenseShow} />
+            )}
 
             {/** Show when no members in group */}
             {groupMembers.length == 1 && <AddMember handleShow={handleShow} />}
@@ -231,6 +297,18 @@ const GroupScreen = ({navigation, route}) => {
               createdBy={group && group.data.createdBy}
               groupName={route.params.groupData.name}
               handleDeleteGroup={handleDeleteGroup}
+            />
+          </Modal>
+
+          {/******************* EXPENSE MODAL *******************/}
+          <Modal
+            visible={expenseModal}
+            onRequestClose={handleExpenseHide}
+            animationType="slide">
+            <AddExpenseModal
+              name={route.params.groupData.name}
+              addExpense={addExpense}
+              handleExpenseHide={handleExpenseHide}
             />
           </Modal>
         </View>

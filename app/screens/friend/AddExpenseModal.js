@@ -4,77 +4,21 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TextInput,
-  Alert,
   Image,
-  Modal,
-  Button,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-import axios from 'axios';
-import {API_URL} from '../../constants/actionStrings';
-import showSnack from '../../utils/ShowSnack';
+import React, {useState} from 'react';
 
-const AddExpenseModal = ({handleExpenseHide, name, friendId, getExpenses}) => {
-  const [description, setDescription] = useState();
-  const [amount, setAmount] = useState();
+const AddExpenseModal = ({handleExpenseHide, name, addExpense}) => {
+  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState('');
 
-  const {authUser, authToken} = useSelector(state => state.auth);
-
-  console.log(authUser);
-  console.log(friendId);
-
-  //---------------------------------------------------//
-  /*** Function to add expense */
-  //---------------------------------------------------//
-  const addExpense = async () => {
-    let amountFloat = parseFloat(amount);
-    let payload = {
-      description: description,
-      totalAmount: amountFloat,
-      paidBy: [
-        {
-          paidByUser: authUser._id,
-          paidByAmount: amountFloat,
-        },
-      ],
-      splitWith: [
-        {
-          splitWithUser: authUser._id,
-          splitWithAmount: amountFloat / 2,
-        },
-        {
-          splitWithUser: friendId,
-          splitWithAmount: amountFloat / 2,
-        },
-      ],
-      splitType: 'equally',
-    };
-
-    console.log(payload);
-
-    const instance = axios.create({
-      baseURL: API_URL,
-      timeout: 2500,
-      headers: {Authorization: 'Bearer ' + authToken},
-    });
-    const res = await instance
-      .post(`expenses`, payload)
-      .then(response => {
-        console.log('INSIDE ADD EXPENSE FUNC THEN ', response.data);
-        showSnack('Successfully added expense 💵');
-        handleExpenseHide();
-        getExpenses();
-      })
-      .catch(function (error) {
-        console.log('INSIDE ADD EXPENSE FUNC CATCH ', error);
-        let any = {
-          code: 401,
-          message: error.response.data.message,
-        };
-        return any;
-      });
-    return res;
+  const handleAddExpenseClick = () => {
+    if (description === '' || amount === '') {
+      alert('Values cannot be empty');
+      return;
+    } else {
+      addExpense(amount, description);
+    }
   };
 
   return (
@@ -99,7 +43,7 @@ const AddExpenseModal = ({handleExpenseHide, name, friendId, getExpenses}) => {
 
         {/*********** Inputs View ***********/}
         <View className="w-full h-screen bg-white">
-          {/*********** Name Input View ***********/}
+          {/*********** Description Input View ***********/}
           <View className="flex w-[90%] flex-row justify-center items-center mx-auto my-2 rounded-sm">
             <Image
               source={require('../../../assets/images/desc.png')}
@@ -114,7 +58,7 @@ const AddExpenseModal = ({handleExpenseHide, name, friendId, getExpenses}) => {
             />
           </View>
 
-          {/*********** Email Input View ***********/}
+          {/*********** Amount Input View ***********/}
           <View className="flex w-[90%] flex-row justify-center items-center mx-auto my-2 rounded-sm">
             <Image
               source={require('../../../assets/images/amount.png')}
@@ -126,7 +70,7 @@ const AddExpenseModal = ({handleExpenseHide, name, friendId, getExpenses}) => {
               name="email"
               className="p-4 text-xl text-gray-600 rounded-md w-[85%]"
               autoCapitalize="none"
-              keyboardType="numeric"
+              keyboardType="number-pad"
             />
           </View>
 
@@ -138,7 +82,7 @@ const AddExpenseModal = ({handleExpenseHide, name, friendId, getExpenses}) => {
 
           {/*********** Add Friend Button View ***********/}
           <View className="w-[90%] mx-auto shadow-xl bg-[#E96479] rounded-md mt-6">
-            <TouchableOpacity onPress={() => addExpense()}>
+            <TouchableOpacity onPress={() => handleAddExpenseClick()}>
               <Text className="text-center px-10 py-4 text-gray-100 font-bold text-xl rounded-full capitalize">
                 Share expense
               </Text>

@@ -5,27 +5,37 @@ import {
   TouchableOpacity,
   Image,
   Modal,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import FriendSettingModal from './FriendSettingModal';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import {API_URL} from '../../constants/actionStrings';
 import AddExpense from './components/AddExpense';
 import AddExpenseModal from './AddExpenseModal';
 import showSnack from '../../utils/ShowSnack';
+import {Swipeable} from 'react-native-gesture-handler';
+import FriendSettingModal from './FriendSettingModal';
 
 const FriendScreen = ({navigation, route}) => {
   const [expenses, setExpenses] = useState([]);
+  const [loading, setLoading] = useState([]);
   const [visibleSetting, setVisibleSetting] = useState(false);
   const [expenseModal, setExpenseModal] = useState(false);
+  const [totalLent, setTotalLent] = useState(0);
 
-  const {authToken} = useSelector(state => state.auth);
+  const {authUser, authToken} = useSelector(state => state.auth);
 
   useEffect(() => {
+    setLoading(true);
     getExpenses();
+    setTotalLent(getTotalLent());
   }, []);
+
+  useEffect(() => {
+    setTotalLent(getTotalLent());
+  }, [expenses, loading]);
 
   //console.log('EXPENSES ARRAY', expenses[0]);
 
@@ -46,10 +56,20 @@ const FriendScreen = ({navigation, route}) => {
   const friendId = route.params.friendData._id;
   console.log('FRIEND DATA', route.params.friendData, friendId);
 
+  const getTotalLent = () => {
+    let totalLent = 0;
+    expenses &&
+      expenses.map(expense => {
+        totalLent = totalLent + expense.detailsSplit.amount;
+      });
+    return totalLent;
+  };
+
   //---------------------------------------------------//
-  /*** Function to get expenses of group */
+  /*** Function to get expenses with a friend */
   //---------------------------------------------------//
   const getExpenses = async () => {
+    setLoading(true);
     const instance = axios.create({
       baseURL: API_URL,
       timeout: 2500,
@@ -67,9 +87,64 @@ const FriendScreen = ({navigation, route}) => {
         setExpenses(friendExpesne);
         console.log('INSIDE GET EXPENSE FUNC THEN ', response.data);
         handleExpenseHide();
+        setLoading(false);
       })
       .catch(function (error) {
         console.log('INSIDE GET EXPENSE FUNC CATCH ', error);
+        let any = {
+          code: 401,
+          message: error.response.data.message,
+        };
+        setLoading(false);
+        return any;
+      });
+    return res;
+  };
+
+  //---------------------------------------------------//
+  /*** Function to add expense */
+  //---------------------------------------------------//
+  const addExpense = async (amount, description) => {
+    let amountFloat = parseFloat(amount);
+    let payload = {
+      description: description,
+      totalAmount: amountFloat,
+      paidBy: [
+        {
+          paidByUser: authUser._id,
+          paidByAmount: amountFloat,
+        },
+      ],
+      splitWith: [
+        {
+          splitWithUser: authUser._id,
+          splitWithAmount: amountFloat / 2,
+        },
+        {
+          splitWithUser: route.params.friendData._id,
+          splitWithAmount: amountFloat / 2,
+        },
+      ],
+      splitType: 'equally',
+    };
+
+    console.log(payload);
+
+    const instance = axios.create({
+      baseURL: API_URL,
+      timeout: 2500,
+      headers: {Authorization: 'Bearer ' + authToken},
+    });
+    const res = await instance
+      .post(`expenses`, payload)
+      .then(response => {
+        console.log('INSIDE ADD EXPENSE FUNC THEN ', response.data);
+        showSnack('Successfully added expense 💵');
+        //handleExpenseHide();
+        getExpenses();
+      })
+      .catch(function (error) {
+        console.log('INSIDE ADD EXPENSE FUNC CATCH ', error);
         let any = {
           code: 401,
           message: error.response.data.message,
@@ -103,9 +178,16 @@ const FriendScreen = ({navigation, route}) => {
                 <Text className="text-xl font-Raleway tracking-wider px-2 text-gray-800 pb-1 capitalize">
                   {route.params.friendData.name}
                 </Text>
-                <Text className="text-xsm font-Raleway px-2 text-gray-600 font-light">
-                  No expenses to show.
-                </Text>
+                {totalLent === 0 && (
+                  <Text className="text-xsm font-Raleway px-2 text-gray-600 font-light">
+                    No expenses to show.
+                  </Text>
+                )}
+                {totalLent !== 0 && (
+                  <Text className="text-xsm font-Raleway px-2 text-sky-700 font-semibold">
+                    You are owed CA ${totalLent} overall
+                  </Text>
+                )}
               </View>
               <View className="">
                 <TouchableOpacity
@@ -143,46 +225,56 @@ const FriendScreen = ({navigation, route}) => {
             )}
 
             {/** Show when atleast two members and no expense added in group */}
-            {expenses.length === 0 && (
+            {!loading && expenses.length === 0 && (
               <AddExpense
                 handleExpenseShow={handleExpenseShow}
                 friendName={route.params.friendData.name}
               />
             )}
 
-            {/** Single Expense Design */}
-            {expenses.map(expense => (
-              <View
-                className="pt-4 border-b pb-4 border-gray-100"
-                key={expense.date}>
-                <TouchableOpacity className="flex flex-row items-center justify-between">
-                  <View className="flex flex-row items-center space-x-4">
-                    <Image
-                      source={require('../../../assets/images/bag.png')}
-                      className="h-10 w-10"
-                    />
-                    <View className="flex space-y-1">
-                      <Text className="text-md font-normal">
-                        {expense.description}
-                      </Text>
-                      <Text className="text-md font-light text-gray-500">
-                        {expense.detailsPaid.message +
-                          ' CA $' +
-                          expense.detailsPaid.amount}
-                      </Text>
-                    </View>
-                  </View>
-                  <View className="flex space-y-1 justify-end items-end">
-                    <Text className="text-[12px] text-gray-800">
-                      {expense.detailsSplit.message}
-                    </Text>
-                    <Text className="text-[17px] text-sky-600 font-light">
-                      {'CA $' + expense.detailsSplit.amount}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+            {/** Show if loading is true */}
+            {loading && (
+              <View className="h-[50%] w-full flex justify-center items-center">
+                <ActivityIndicator size="large" color="#8F43EE" />
               </View>
-            ))}
+            )}
+
+            {/** Single Expense Design */}
+            {!loading &&
+              expenses.map(expense => (
+                <View
+                  className="border-b pb-3 border-gray-100"
+                  key={expense.date}>
+                  <Swipeable className="flex flex-row items-center justify-between">
+                    <View className="flex flex-row justify-between items-center p-4">
+                      <View className="flex flex-row items-center space-x-4">
+                        <Image
+                          source={require('../../../assets/images/bag.png')}
+                          className="h-10 w-10"
+                        />
+                        <View className="flex space-y-1">
+                          <Text className="text-md font-normal">
+                            {expense.description}
+                          </Text>
+                          <Text className="text-md font-light text-gray-500">
+                            {expense.detailsPaid.message +
+                              ' CA $' +
+                              expense.detailsPaid.amount}
+                          </Text>
+                        </View>
+                      </View>
+                      <View className="flex space-y-1 justify-end items-end">
+                        <Text className="text-[12px] text-gray-800">
+                          {expense.detailsSplit.message}
+                        </Text>
+                        <Text className="text-[17px] text-sky-600 font-light">
+                          {'CA $' + expense.detailsSplit.amount}
+                        </Text>
+                      </View>
+                    </View>
+                  </Swipeable>
+                </View>
+              ))}
           </View>
 
           {/******************* SETTING MODAL *******************/}
@@ -202,10 +294,9 @@ const FriendScreen = ({navigation, route}) => {
             onRequestClose={handleExpenseHide}
             animationType="slide">
             <AddExpenseModal
-              getExpenses={getExpenses}
-              handleExpenseHide={handleExpenseHide}
               name={route.params.friendData.name}
-              friendId={route.params.friendData._id}
+              addExpense={addExpense}
+              handleExpenseHide={handleExpenseHide}
             />
           </Modal>
         </View>
