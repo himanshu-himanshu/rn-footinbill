@@ -195,9 +195,10 @@ const ExpenseScreen = ({navigation, route}) => {
                 </View>
               </View>
 
-              <View className="flex flex-row justify-between ml-8">
+              <View className="flex flex-row justify-between ml-6">
                 <View className="flex flex-row justify-between items-center py-2 px-1 w-full">
                   <View className="flex flex-row items-center space-x-4">
+                    <Text className="text-lg text-gray-300">&rarr;</Text>
                     <Image
                       source={require('../../../assets/images/user12.png')}
                       className="h-9 w-9"
