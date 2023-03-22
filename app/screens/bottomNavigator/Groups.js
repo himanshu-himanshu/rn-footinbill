@@ -84,11 +84,11 @@ const Groups = ({navigation}) => {
             <View className="p-2 flex flex-col">
               <TouchableOpacity
                 className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100"
-                onPress={() => navigation.navigate('groupScreen', {})}>
-                <View className="flex flex-row items-center space-x-4">
+                onPress={() => navigation.navigate('nonGroupScreen')}>
+                <View className="flex flex-row items-center space-x-3">
                   <Image
-                    source={require('../../../assets/images/meet.png')}
-                    className="h-10 w-10"
+                    source={require('../../../assets/images/nongroup.png')}
+                    className="h-11 w-11"
                   />
                   <Text className="text-lg font-light">Non-group Expenses</Text>
                 </View>
@@ -107,10 +107,10 @@ const Groups = ({navigation}) => {
                     onPress={() =>
                       navigation.navigate('groupScreen', {groupData: group})
                     }>
-                    <View className="flex flex-row items-center space-x-4">
+                    <View className="flex flex-row items-center space-x-3">
                       <Image
-                        source={require('../../../assets/images/meet.png')}
-                        className="h-10 w-10"
+                        source={require('../../../assets/images/mountains.png')}
+                        className="h-11 w-11"
                       />
                       <Text className="text-lg font-light">{group.name}</Text>
                     </View>
@@ -136,35 +136,41 @@ const Groups = ({navigation}) => {
                     <Text className="text-2xl text-gray-500">&larr;</Text>
                   </TouchableOpacity>
                 </View>
-                <View className="flex w-full justify-center items-center pb-6">
+                <View className="flex w-full justify-center items-center pb-8">
                   <Image
                     source={require('../../../assets/images/group.jpg')}
                     className="h-44 w-44"
                   />
-                  <Text className="text-2xl font-Raleway font-semibold tracking-wide py-4 capitalize">
-                    Create new group
+                  <Text className="text-2xl font-Raleway font-semibold tracking-wide py-4">
+                    Create a group
+                  </Text>
+                  <Text className="text-[12px] font-Raleway font-light tracking-wide px-4 pt-2">
+                    Create group now and start adding members to share expense
+                    to a larger group.
                   </Text>
                 </View>
 
                 {/*********** Inputs View ***********/}
                 <View className="w-full h-screen bg-white">
                   {/*********** Name Input View ***********/}
-                  <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
+                  <View className="flex w-[90%] flex-row justify-center items-center mx-auto my-2">
+                    <Image
+                      source={require('../../../assets/images/desc.png')}
+                      className="h-8 w-8"
+                    />
                     <TextInput
                       onChangeText={value => setGroupName(value)}
-                      // secureTextEntry={true}
                       placeholder="Group name"
                       name="name"
-                      className="p-4 text-xl text-gray-600 border border-gray-300"
-                      autoCapitalize="none"
+                      className="p-4 text-xl text-gray-600 rounded-md w-[85%]"
                     />
                   </View>
 
                   {/*********** Add Friend Button View ***********/}
                   <View className="w-[90%] mx-auto shadow-md bg-[#34A0A4] rounded-sm mt-6">
                     <TouchableOpacity onPress={handleCreateGroup}>
-                      <Text className="text-center px-10 py-4 text-gray-700 font-bold text-xl rounded-full capitalize">
-                        Create Group
+                      <Text className="text-center px-10 py-4 text-gray-100 font-bold text-xl rounded-full capitalize">
+                        Create Now
                       </Text>
                     </TouchableOpacity>
                   </View>

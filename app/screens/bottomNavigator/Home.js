@@ -72,12 +72,12 @@ const Home = ({navigation}) => {
                 <View className="bg-gray-200 py-2 px-2 w-full rounded-xl flex flex-row items-center mb-2 shadow-md">
                   <View className="px-2">
                     <Image
-                      source={require('../../../assets/images/man.png')}
+                      source={require('../../../assets/images/list.png')}
                       className="h-14 w-14"
                     />
                   </View>
                   <View className="px-4 py-2">
-                    <Text className="text-lg tracking-wider pb-2">
+                    <Text className="text-lg tracking-wider">
                       Total balance
                     </Text>
                     <Text className="text-xsm text-gray-700">
@@ -99,12 +99,12 @@ const Home = ({navigation}) => {
                           friendData: friend,
                         })
                       }>
-                      <View className="flex flex-row items-center space-x-4">
+                      <View className="flex flex-row items-center space-x-3">
                         <Image
-                          source={require('../../../assets/images/user.png')}
-                          className="h-10 w-10"
+                          source={require('../../../assets/images/user12.png')}
+                          className="h-11 w-11"
                         />
-                        <Text className="text-lg font-light">
+                        <Text className="text-lg font-light capitalize">
                           {friend.name}
                         </Text>
                       </View>
@@ -144,26 +144,30 @@ const Home = ({navigation}) => {
                 {/*********** Inputs View ***********/}
                 <View className="w-full h-screen bg-white">
                   {/*********** Name Input View ***********/}
-                  <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
+                  <View className="flex w-[90%] flex-row justify-center items-center mx-auto my-2">
+                    <Image
+                      source={require('../../../assets/images/card.png')}
+                      className="h-9 w-9"
+                    />
                     <TextInput
                       onChangeText={value => setFriendName(value)}
-                      // value={newPassword}
-                      placeholder="Name"
+                      placeholder="Enter Name"
                       name="name"
-                      className="p-4 text-xl text-gray-600 border border-gray-300"
-                      autoCapitalize="none"
+                      className="p-4 text-xl text-gray-600 rounded-md w-[85%]"
                     />
                   </View>
 
-                  {/*********** Email Input View ***********/}
-                  <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
+                  {/*********** Name Input View ***********/}
+                  <View className="flex w-[90%] flex-row justify-center items-center mx-auto my-2">
+                    <Image
+                      source={require('../../../assets/images/email.png')}
+                      className="h-9 w-9"
+                    />
                     <TextInput
                       onChangeText={value => setFriendEmail(value)}
-                      // value={confirmPassword}
-                      placeholder="Email"
+                      placeholder="Enter Email"
                       name="email"
-                      className="p-4 text-xl text-gray-600 border border-gray-300"
-                      autoCapitalize="none"
+                      className="p-4 text-xl text-gray-600 rounded-md w-[85%]"
                     />
                   </View>
 
