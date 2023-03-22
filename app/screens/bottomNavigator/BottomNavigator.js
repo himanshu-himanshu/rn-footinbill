@@ -1,5 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Image} from 'react-native';
+import Activity from './Activity';
 import Groups from './Groups';
 import Home from './Home';
 import Profile from './Profile';
@@ -34,8 +35,8 @@ const BottomNavigator = () => {
           tabBarIcon: ({focused}) => (
             <Image
               source={require('../../../assets/images/home.png')}
-              className={focused ? 'h-9 w-9' : 'h-9 w-9'}
-              style={{tintColor: focused ? '#1E6091' : '#999999'}}
+              className="h-10 w-10"
+              style={{tintColor: focused ? '#EA5455' : '#999999'}}
             />
           ),
         }}
@@ -50,8 +51,24 @@ const BottomNavigator = () => {
           tabBarIcon: ({focused}) => (
             <Image
               source={require('../../../assets/images/meeting.png')}
+              className="h-11 w-11"
+              style={{tintColor: focused ? '#EA5455' : '#999999'}}
+            />
+          ),
+        }}
+      />
+
+      {/*********** Groups Tab ***********/}
+      <Tab.Screen
+        name="Activity"
+        component={Activity}
+        options={{
+          tabBarLabel: '',
+          tabBarIcon: ({focused}) => (
+            <Image
+              source={require('../../../assets/images/hour-glass.png')}
               className="h-10 w-10"
-              style={{tintColor: focused ? '#1E6091' : '#999999'}}
+              style={{tintColor: focused ? '#EA5455' : '#999999'}}
             />
           ),
         }}
@@ -66,8 +83,8 @@ const BottomNavigator = () => {
           tabBarIcon: ({focused}) => (
             <Image
               source={require('../../../assets/images/settings.png')}
-              className="h-9 w-9"
-              style={{tintColor: focused ? '#1E6091' : '#999999'}}
+              className="h-10 w-10"
+              style={{tintColor: focused ? '#EA5455' : '#999999'}}
             />
           ),
         }}

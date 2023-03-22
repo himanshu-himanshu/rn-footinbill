@@ -15,6 +15,7 @@ import axios from 'axios';
 import {API_URL} from '../../constants/actionStrings';
 import {getAuthUser} from '../../../app/actions/authAction';
 import AddExpense from './components/AddExpense';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const GroupScreen = ({navigation, route}) => {
   //   const {_id} = route.params.groupData;
@@ -97,9 +98,9 @@ const GroupScreen = ({navigation, route}) => {
             </TouchableOpacity>
           </View>
 
-          <View className="h-full w-full p-4">
+          <View className="h-full w-full py-4">
             {/*********** Heading Text ***********/}
-            <View className="flex flex-row items-start justify-between py-2">
+            <View className="flex flex-row items-start justify-between py-2 px-4">
               <View>
                 <Text className="text-xl font-Raleway tracking-wider px-2 text-gray-800 pb-1">
                   Non-group Expenses
@@ -112,7 +113,7 @@ const GroupScreen = ({navigation, route}) => {
 
             {/*********** Three Butons View (Only show if there is atleast one member in group) ***********/}
 
-            <View className="flex flex-row items-center space-x-4 justify-start mb-5">
+            <View className="flex flex-row items-center space-x-4 justify-start mb-5 px-4">
               <TouchableOpacity className="flex flex-row items-center justify-center shadow-xl border border-[#8F43EE] bg-[#8F43EE] px-3 py-2 mt-6 rounded-md space-x-2">
                 <View className="flex flex-row items-center space-x-4">
                   <Text className="text-sm font-normal text-white">
@@ -137,43 +138,44 @@ const GroupScreen = ({navigation, route}) => {
               </View>
             )}
 
-            {!loading &&
-              expenses &&
-              expenses.map(expense => (
-                <View
-                  className="border-b pb-1 border-gray-100"
-                  key={expense.id}>
-                  <TouchableOpacity className="flex flex-row items-center justify-between">
-                    <View className="flex flex-row justify-between items-center px-1 py-4 w-full">
-                      <View className="flex flex-row items-center space-x-3">
-                        <Image
-                          source={require('../../../assets/images/bill.png')}
-                          className="h-11 w-11"
-                        />
-                        <View className="flex space-y-1">
-                          <Text className="text-md font-normal capitalize">
-                            {expense.description}
+            <ScrollView className="mb-12 pb-12">
+              {!loading &&
+                expenses &&
+                expenses.map(expense => (
+                  <View
+                    className="border-b pb-1 border-gray-100 px-4"
+                    key={expense.id}>
+                    <TouchableOpacity className="flex flex-row items-center justify-between">
+                      <View className="flex flex-row justify-between items-center px-1 py-4 w-full">
+                        <View className="flex flex-row items-center space-x-3">
+                          <Image
+                            source={require('../../../assets/images/bill.png')}
+                            className="h-11 w-11"
+                          />
+                          <View className="flex space-y-1">
+                            <Text className="text-md font-normal capitalize">
+                              {expense.description}
+                            </Text>
+                            <Text className="text-md font-light text-gray-600">
+                              {expense.detailsPaid.message +
+                                ' CA $ ' +
+                                expense.detailsPaid.amount.toFixed(2)}
+                            </Text>
+                          </View>
+                        </View>
+                        <View className="flex space-y-1 justify-end items-end">
+                          <Text className="text-[12px] text-gray-800">
+                            {expense.detailsSplit.message}
                           </Text>
-                          <Text className="text-md font-light text-gray-600">
-                            {expense.detailsPaid.message +
-                              ' CA $ ' +
-                              expense.detailsPaid.amount.toFixed(2)}
+                          <Text className="text-[17px] text-sky-600 font-light">
+                            {'CA $ ' + expense.detailsSplit.amount.toFixed(2)}
                           </Text>
                         </View>
                       </View>
-                      <View className="flex space-y-1 justify-end items-end">
-                        <Text className="text-[12px] text-gray-800">
-                          {expense.detailsSplit.message}
-                        </Text>
-                        <Text className="text-[17px] text-sky-600 font-light">
-                          {'CA $ ' + expense.detailsSplit.amount.toFixed(2)}
-                        </Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              ))}
-
+                    </TouchableOpacity>
+                  </View>
+                ))}
+            </ScrollView>
             {/** Show when atleast two members and no expense added in group */}
             {false && <AddExpense handleExpenseShow={handleExpenseShow} />}
           </View>

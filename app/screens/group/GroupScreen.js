@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
   Modal,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -11,13 +12,15 @@ import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 
 import {API_URL} from '../../constants/actionStrings';
-import {getAGroup} from '../../../app/actions/groupAction';
+import {getAGroup, getAllGroups} from '../../../app/actions/groupAction';
 import {getAuthUser} from '../../../app/actions/authAction';
 import AddFriendModal from './AddFriendModal';
 import GroupSettingModal from './GroupSettingModal';
 import AddMember from './components/AddMember';
 import AddExpense from './components/AddExpense';
 import AddExpenseModal from '../friend/AddExpenseModal';
+import showSnack from '../../utils/ShowSnack';
+import {Swipeable} from 'react-native-gesture-handler';
 
 const GroupScreen = ({navigation, route}) => {
   const {_id} = route.params.groupData;
@@ -25,6 +28,7 @@ const GroupScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
 
   // useState Variables
+  const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
   const [visibleSetting, setVisibleSetting] = useState(false);
   const [groupMembers, setGroupMembers] = useState([]);
@@ -39,6 +43,7 @@ const GroupScreen = ({navigation, route}) => {
     dispatch(getAGroup(authToken, _id));
     getGroupMembers();
     dispatch(getAuthUser(authToken));
+    getExpenses();
     console.log('USE STATE ARRAY ', groupMembers);
   }, []);
 
@@ -48,6 +53,7 @@ const GroupScreen = ({navigation, route}) => {
       dispatch(getAGroup(authToken, _id));
       getGroupMembers();
       dispatch(getAuthUser(authToken));
+      getExpenses();
       console.log('USE STATE ARRAY ', groupMembers);
     },
     [route],
@@ -95,8 +101,10 @@ const GroupScreen = ({navigation, route}) => {
       .delete(`groups` + `/` + _id)
       .then(response => {
         console.log('INSIDE DELETE GROUP FUNC THEN ', response.data.data);
+        showSnack('Group deleted successfully');
         handleSettingHide();
         navigation.goBack();
+        dispatch(getAllGroups(authToken));
       })
       .catch(function (error) {
         console.log('IINSIDE DELETE GROUP FUNC CATCH ', error);
@@ -114,6 +122,19 @@ const GroupScreen = ({navigation, route}) => {
   //---------------------------------------------------//
   const addExpense = async (amount, description) => {
     let amountFloat = parseFloat(amount);
+    let totalMembers = groupMembers.length;
+    let tempSplitWith = [];
+
+    groupMembers.map(member => {
+      let obj = {
+        splitWithUser: member._id,
+        splitWithAmount: amount / totalMembers,
+      };
+      tempSplitWith.push(obj);
+    });
+
+    console.log('TEMP SPLIT WITH', tempSplitWith);
+
     let payload = {
       description: description,
       totalAmount: amountFloat,
@@ -123,17 +144,9 @@ const GroupScreen = ({navigation, route}) => {
           paidByAmount: amountFloat,
         },
       ],
-      splitWith: [
-        {
-          splitWithUser: authUser._id,
-          splitWithAmount: amountFloat / 2,
-        },
-        {
-          splitWithUser: route.params.friendData._id,
-          splitWithAmount: amountFloat / 2,
-        },
-      ],
+      splitWith: tempSplitWith,
       splitType: 'equally',
+      group: _id,
     };
 
     console.log(payload);
@@ -148,8 +161,8 @@ const GroupScreen = ({navigation, route}) => {
       .then(response => {
         console.log('INSIDE ADD EXPENSE FUNC THEN ', response.data);
         showSnack('Successfully added expense 💵');
-        //handleExpenseHide();
-        getExpenses();
+        handleExpenseHide();
+        // getExpenses();
       })
       .catch(function (error) {
         console.log('INSIDE ADD EXPENSE FUNC CATCH ', error);
@@ -157,6 +170,37 @@ const GroupScreen = ({navigation, route}) => {
           code: 401,
           message: error.response.data.message,
         };
+        return any;
+      });
+    return res;
+  };
+
+  //---------------------------------------------------//
+  /*** Function to get expenses for a group */
+  //---------------------------------------------------//
+  const getExpenses = async () => {
+    setLoading(true);
+    const instance = axios.create({
+      baseURL: API_URL,
+      timeout: 2500,
+      headers: {Authorization: 'Bearer ' + authToken},
+      params: {groupId: _id},
+    });
+    const res = await instance
+      .get(`expenses`)
+      .then(response => {
+        setExpenses(response.data.data);
+        console.log('INSIDE GET GROUP EXPENSE FUNC THEN ', response.data);
+        handleExpenseHide();
+        setLoading(false);
+      })
+      .catch(function (error) {
+        console.log('INSIDE GET GROUP EXPENSE FUNC CATCH ', error);
+        let any = {
+          code: 401,
+          message: error.response.data.message,
+        };
+        setLoading(false);
         return any;
       });
     return res;
@@ -227,7 +271,7 @@ const GroupScreen = ({navigation, route}) => {
 
             {/*********** Three Butons View (Only show if there is atleast one member in group) ***********/}
             {groupMembers.length > 1 && (
-              <View className="flex flex-row items-center space-x-3 justify-center">
+              <View className="flex flex-row items-center space-x-3 justify-center mb-6">
                 <TouchableOpacity className="flex flex-row items-center justify-center shadow-xl border border-[#8F43EE] bg-[#8F43EE] px-3 py-2 mt-6 rounded-md space-x-2">
                   <View className="flex flex-row items-center space-x-4">
                     <Text className="text-sm font-normal text-white">
@@ -250,20 +294,69 @@ const GroupScreen = ({navigation, route}) => {
                   />
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                  className="flex flex-row items-center justify-center border border-[#76C893] px-3 py-2 mt-6 rounded-md space-x-2"
-                  onPress={() => handleExpenseShow()}>
-                  <View className="flex flex-row items-center space-x-4">
-                    <Text className="text-sm font-normal text-[#184E77]">
-                      Add Expense
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                {expenses && (
+                  <TouchableOpacity
+                    className="flex flex-row items-center justify-center border border-[#76C893] px-3 py-2 mt-6 rounded-md space-x-2"
+                    onPress={() => handleExpenseShow()}>
+                    <View className="flex flex-row items-center space-x-4">
+                      <Text className="text-sm font-normal text-[#184E77]">
+                        Add Expense
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
               </View>
             )}
 
+            {/** Show if loading is true */}
+            {loading && (
+              <View className="h-[80%] w-full flex justify-center items-center">
+                <ActivityIndicator size="large" color="#8F43EE" />
+                <Text className="mt-2 font-light text-gray-500">
+                  Fetching info
+                </Text>
+              </View>
+            )}
+
+            {/** Single Expense Design */}
+            {!loading &&
+              expenses.map(expense => (
+                <View
+                  className="border-b pb-1 border-gray-100"
+                  key={expense.date}>
+                  <Swipeable className="flex flex-row items-center justify-between">
+                    <View className="flex flex-row justify-between items-center p-4">
+                      <View className="flex flex-row items-center space-x-4">
+                        <Image
+                          source={require('../../../assets/images/bag.png')}
+                          className="h-10 w-10"
+                        />
+                        <View className="flex space-y-1">
+                          <Text className="text-md font-normal">
+                            {expense.description}
+                          </Text>
+                          <Text className="text-md font-light text-gray-500">
+                            {expense.detailsPaid.message +
+                              ' CA $' +
+                              expense.detailsPaid.amount}
+                          </Text>
+                        </View>
+                      </View>
+                      <View className="flex space-y-1 justify-end items-end">
+                        <Text className="text-[12px] text-gray-800">
+                          {expense.detailsSplit.message}
+                        </Text>
+                        <Text className="text-[17px] text-sky-600 font-light">
+                          {'CA $' + expense.detailsSplit.amount}
+                        </Text>
+                      </View>
+                    </View>
+                  </Swipeable>
+                </View>
+              ))}
+
             {/** Show when atleast two members and no expense added in group */}
-            {groupMembers.length > 1 && (
+            {expenses.length === 0 && groupMembers.length > 1 && (
               <AddExpense handleExpenseShow={handleExpenseShow} />
             )}
 

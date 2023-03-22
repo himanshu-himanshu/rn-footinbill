@@ -15,6 +15,7 @@ import AddFriend from './components/AddFriend';
 import {createFriend, getAllFriends} from '../../actions/friendAction';
 import {useDispatch, useSelector} from 'react-redux';
 import {ScrollView} from 'react-native-gesture-handler';
+import {color} from 'react-native-reanimated';
 
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
@@ -48,10 +49,10 @@ const Home = ({navigation}) => {
   return (
     <View className="w-full h-screen bg-white">
       <SafeAreaView>
-        <View className="w-full h-full">
-          <View className="h-full w-full p-4 ">
+        <View className="w-full h-[90%]">
+          <View className="h-full w-full py-4 ">
             {/*********** Heading Text ***********/}
-            <View className="flex flex-row items-center justify-between">
+            <View className="flex flex-row items-center justify-between px-2">
               <Text className="text-2xl font-Raleway tracking-wider px-4 py-4">
                 Friends
               </Text>
@@ -65,11 +66,11 @@ const Home = ({navigation}) => {
             {/** Show when user has no friends */}
             {!friend && <AddFriend handleShow={handleShow} />}
 
-            <ScrollView>
-              {/** Show whenever there is atleast one friend  */}
-              <View className="p-2 flex flex-col">
-                {/*********** Card View ***********/}
-                <View className="bg-gray-200 py-2 px-2 w-full rounded-xl flex flex-row items-center mb-2 shadow-md">
+            {/** Show whenever there is atleast one friend  */}
+            <View className="py-2 flex flex-col">
+              {/*********** Card View ***********/}
+              <View className="px-4">
+                <View className="bg-gray-200 p-2 w-full rounded-xl flex flex-row items-center mb-2 shadow-md">
                   <View className="px-2">
                     <Image
                       source={require('../../../assets/images/list.png')}
@@ -85,9 +86,10 @@ const Home = ({navigation}) => {
                     </Text>
                   </View>
                 </View>
+              </View>
 
-                {/*********** Map through list to render each friend ***********/}
-
+              {/*********** Map through list to render each friend ***********/}
+              <ScrollView className="mb-24 px-4">
                 {friend &&
                   friend.data &&
                   friend.data.map((friend, index) => (
@@ -114,8 +116,8 @@ const Home = ({navigation}) => {
                       />
                     </TouchableOpacity>
                   ))}
-              </View>
-            </ScrollView>
+              </ScrollView>
+            </View>
           </View>
 
           {/******************* MODAL *******************/}

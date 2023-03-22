@@ -78,10 +78,12 @@ const GroupSettingModal = ({
           {/*********** Group Name View ***********/}
           <View className="p-2 w-full flex flex-row items-center mt-2 mb-2 space-x-2 border-b border-gray-100 pb-4">
             <Image
-              source={require('../../../assets/images/meet.png')}
+              source={require('../../../assets/images/mountains.png')}
               className="h-10 w-10"
             />
-            <Text className="text-md tracking-wide">{groupName}</Text>
+            <Text className="text-[16px] tracking-wide text-gray-700">
+              {groupName}
+            </Text>
           </View>
 
           {/*********** Links View ***********/}

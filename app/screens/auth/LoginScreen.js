@@ -24,7 +24,7 @@ const validationSchema = Yup.object({
 export const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
   //const formObject = {email: '', password: ''};
-  const formObject = {email: 'guru@yopmail.com', password: '12345678'};
+  const formObject = {email: 'sprint@yopmail.com', password: '12345678'};
 
   let performLogin = async values => {
     let payload = {

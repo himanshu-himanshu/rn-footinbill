@@ -7,6 +7,7 @@ import {
   Alert,
   Image,
   Modal,
+  ActivityIndicator,
   Button,
 } from 'react-native';
 
@@ -14,6 +15,7 @@ import React, {useEffect, useState} from 'react';
 import CreateGroup from './components/CreateGroup';
 import {createGroup, getAllGroups} from '../../../app/actions/groupAction';
 import {useSelector, useDispatch} from 'react-redux';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const Groups = ({navigation}) => {
   // State Variables
@@ -21,32 +23,37 @@ const Groups = ({navigation}) => {
 
   const [visible, setVisible] = useState(false);
   const [groupName, setGroupName] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const {authToken} = useSelector(state => state.auth);
 
   const {groups} = useSelector(state => state.group);
 
   useEffect(() => {
+    setLoading(true);
     dispatch(getAllGroups(authToken));
+    setLoading(false);
   }, []);
 
   useEffect(
     () => {
+      setLoading(true);
       dispatch(getAllGroups(authToken));
+      setLoading(false);
     },
     [navigation],
     [visible],
   );
 
   const handleCreateGroup = () => {
+    setLoading(true);
     console.log('41*******');
     dispatch(createGroup({name: groupName}, authToken));
     handleHide();
     console.log('44*******');
-    //dispatch(getAllGroups(authToken));
-    // setTimeout(() => {
-    //   setLoading(!loading);
-    // }, 4000);
+    dispatch(getAllGroups(authToken));
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   };
 
   //console.log('GROUPS***************', groups);
@@ -97,29 +104,43 @@ const Groups = ({navigation}) => {
                   className="h-6 w-6"
                 />
               </TouchableOpacity>
+
+              {/** Show if loading is true */}
+              {loading && (
+                <View className="h-[80%] w-full flex justify-center items-center">
+                  <ActivityIndicator size="large" color="#8F43EE" />
+                  <Text className="mt-2 font-light text-gray-500">
+                    Fetching groups
+                  </Text>
+                </View>
+              )}
+
               {/*********** Map through list to render each group ***********/}
-              {groups &&
-                groups.data &&
-                groups.data.map((group, key) => (
-                  <TouchableOpacity
-                    key={key}
-                    className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100"
-                    onPress={() =>
-                      navigation.navigate('groupScreen', {groupData: group})
-                    }>
-                    <View className="flex flex-row items-center space-x-3">
+              <ScrollView className="mb-24">
+                {!loading &&
+                  groups &&
+                  groups.data &&
+                  groups.data.map((group, key) => (
+                    <TouchableOpacity
+                      key={key}
+                      className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100"
+                      onPress={() =>
+                        navigation.navigate('groupScreen', {groupData: group})
+                      }>
+                      <View className="flex flex-row items-center space-x-3">
+                        <Image
+                          source={require('../../../assets/images/mountains.png')}
+                          className="h-11 w-11"
+                        />
+                        <Text className="text-lg font-light">{group.name}</Text>
+                      </View>
                       <Image
-                        source={require('../../../assets/images/mountains.png')}
-                        className="h-11 w-11"
+                        source={require('../../../assets/images/next.png')}
+                        className="h-6 w-6"
                       />
-                      <Text className="text-lg font-light">{group.name}</Text>
-                    </View>
-                    <Image
-                      source={require('../../../assets/images/next.png')}
-                      className="h-6 w-6"
-                    />
-                  </TouchableOpacity>
-                ))}
+                    </TouchableOpacity>
+                  ))}
+              </ScrollView>
             </View>
           </View>
 
@@ -144,7 +165,7 @@ const Groups = ({navigation}) => {
                   <Text className="text-2xl font-Raleway font-semibold tracking-wide py-4">
                     Create a group
                   </Text>
-                  <Text className="text-[12px] font-Raleway font-light tracking-wide px-4 pt-2">
+                  <Text className="text-[12px] font-Raleway font-light tracking-wide px-4 pt-1 text-center">
                     Create group now and start adding members to share expense
                     to a larger group.
                   </Text>
