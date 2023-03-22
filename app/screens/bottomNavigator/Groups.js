@@ -45,15 +45,20 @@ const Groups = ({navigation}) => {
   );
 
   const handleCreateGroup = () => {
-    setLoading(true);
-    console.log('41*******');
-    dispatch(createGroup({name: groupName}, authToken));
-    handleHide();
-    console.log('44*******');
-    dispatch(getAllGroups(authToken));
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    if (groupName === '') {
+      alert('Group name cannot be empty');
+      return;
+    } else {
+      setLoading(true);
+      console.log('41*******');
+      dispatch(createGroup({name: groupName}, authToken));
+      handleHide();
+      console.log('44*******');
+      dispatch(getAllGroups(authToken));
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    }
   };
 
   //console.log('GROUPS***************', groups);

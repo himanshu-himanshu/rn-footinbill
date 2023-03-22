@@ -4,13 +4,11 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TextInput,
-  Alert,
   Image,
-  Modal,
-  Button,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
+
 import {API_URL} from '../../constants/actionStrings';
 import showSnack from '../../utils/ShowSnack';
 

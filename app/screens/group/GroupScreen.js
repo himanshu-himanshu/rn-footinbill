@@ -162,7 +162,7 @@ const GroupScreen = ({navigation, route}) => {
         console.log('INSIDE ADD EXPENSE FUNC THEN ', response.data);
         showSnack('Successfully added expense 💵');
         handleExpenseHide();
-        // getExpenses();
+        getExpenses();
       })
       .catch(function (error) {
         console.log('INSIDE ADD EXPENSE FUNC CATCH ', error);
@@ -226,8 +226,6 @@ const GroupScreen = ({navigation, route}) => {
   };
 
   const {group} = useSelector(state => state.group);
-
-  const addFriendFunction = () => {};
 
   return (
     <View className="w-full h-screen bg-white">
@@ -324,8 +322,14 @@ const GroupScreen = ({navigation, route}) => {
                 <View
                   className="border-b pb-1 border-gray-100"
                   key={expense.date}>
-                  <Swipeable className="flex flex-row items-center justify-between">
-                    <View className="flex flex-row justify-between items-center p-4">
+                  <TouchableOpacity
+                    className="flex flex-row items-center justify-between"
+                    onPress={() =>
+                      navigation.navigate('expenseScreen', {
+                        expenseData: expense,
+                      })
+                    }>
+                    <View className="flex flex-row justify-between items-center py-4 px-1 w-full">
                       <View className="flex flex-row items-center space-x-4">
                         <Image
                           source={require('../../../assets/images/bag.png')}
@@ -351,7 +355,7 @@ const GroupScreen = ({navigation, route}) => {
                         </Text>
                       </View>
                     </View>
-                  </Swipeable>
+                  </TouchableOpacity>
                 </View>
               ))}
 
@@ -371,7 +375,6 @@ const GroupScreen = ({navigation, route}) => {
             onRequestClose={handleHide}>
             <AddFriendModal
               handleHide={handleHide}
-              addFriendFunction={addFriendFunction}
               groupId={group && group.data._id}
               authToken={authToken}
               getGroupMembers={getGroupMembers}

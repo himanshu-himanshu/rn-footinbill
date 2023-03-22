@@ -2,6 +2,7 @@ import {
   View,
   Text,
   SafeAreaView,
+  ScrollView,
   TouchableOpacity,
   Image,
   Modal,
@@ -240,41 +241,43 @@ const FriendScreen = ({navigation, route}) => {
             )}
 
             {/** Single Expense Design */}
-            {!loading &&
-              expenses.map(expense => (
-                <View
-                  className="border-b pb-3 border-gray-100"
-                  key={expense.date}>
-                  <Swipeable className="flex flex-row items-center justify-between">
-                    <View className="flex flex-row justify-between items-center p-4">
-                      <View className="flex flex-row items-center space-x-4">
-                        <Image
-                          source={require('../../../assets/images/bag.png')}
-                          className="h-10 w-10"
-                        />
-                        <View className="flex space-y-1">
-                          <Text className="text-md font-normal">
-                            {expense.description}
+            <ScrollView className="mb-12 pb-12">
+              {!loading &&
+                expenses.map(expense => (
+                  <View
+                    className="border-b pb-3 border-gray-100"
+                    key={expense.date}>
+                    <TouchableOpacity className="flex flex-row items-center justify-between">
+                      <View className="flex flex-row justify-between items-center p-4 w-full">
+                        <View className="flex flex-row items-center space-x-4">
+                          <Image
+                            source={require('../../../assets/images/bag.png')}
+                            className="h-10 w-10"
+                          />
+                          <View className="flex space-y-1">
+                            <Text className="text-md font-normal">
+                              {expense.description}
+                            </Text>
+                            <Text className="text-md font-light text-gray-500">
+                              {expense.detailsPaid.message +
+                                ' CA $' +
+                                expense.detailsPaid.amount}
+                            </Text>
+                          </View>
+                        </View>
+                        <View className="flex space-y-1 justify-end items-end">
+                          <Text className="text-[12px] text-gray-800">
+                            {expense.detailsSplit.message}
                           </Text>
-                          <Text className="text-md font-light text-gray-500">
-                            {expense.detailsPaid.message +
-                              ' CA $' +
-                              expense.detailsPaid.amount}
+                          <Text className="text-[17px] text-sky-600 font-light">
+                            {'CA $' + expense.detailsSplit.amount}
                           </Text>
                         </View>
                       </View>
-                      <View className="flex space-y-1 justify-end items-end">
-                        <Text className="text-[12px] text-gray-800">
-                          {expense.detailsSplit.message}
-                        </Text>
-                        <Text className="text-[17px] text-sky-600 font-light">
-                          {'CA $' + expense.detailsSplit.amount}
-                        </Text>
-                      </View>
-                    </View>
-                  </Swipeable>
-                </View>
-              ))}
+                    </TouchableOpacity>
+                  </View>
+                ))}
+            </ScrollView>
           </View>
 
           {/******************* SETTING MODAL *******************/}

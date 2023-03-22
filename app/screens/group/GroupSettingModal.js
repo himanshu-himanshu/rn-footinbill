@@ -3,11 +3,8 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
-  TextInput,
   Alert,
   Image,
-  Modal,
-  Button,
 } from 'react-native';
 import React from 'react';
 

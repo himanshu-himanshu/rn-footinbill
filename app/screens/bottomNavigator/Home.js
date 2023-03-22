@@ -34,9 +34,14 @@ const Home = ({navigation}) => {
   }, []);
 
   const createFriendFunc = () => {
-    dispatch(createFriend({name: friendName, email: friendEmail}, authToken));
-    handleHide();
-    dispatch(getAllFriends(authToken));
+    if (friendName === '' || friendEmail === '') {
+      alert('Fields cannot be empty');
+      return;
+    } else {
+      dispatch(createFriend({name: friendName, email: friendEmail}, authToken));
+      handleHide();
+      dispatch(getAllFriends(authToken));
+    }
   };
 
   const handleHide = () => {
@@ -138,8 +143,11 @@ const Home = ({navigation}) => {
                     source={require('../../../assets/images/add_friend.jpg')}
                     className="h-44 w-44"
                   />
-                  <Text className="text-2xl font-Raleway font-semibold tracking-wide py-4">
+                  <Text className="text-2xl font-Raleway font-semibold tracking-wide pt-4 pb-2">
                     Add new friend
+                  </Text>
+                  <Text className="text-[14px] font-Raleway font-light tracking-wide pb-2">
+                    Add new friends in your app to share expense.
                   </Text>
                 </View>
 

@@ -146,7 +146,7 @@ const GroupScreen = ({navigation, route}) => {
                     className="border-b pb-1 border-gray-100 px-4"
                     key={expense.id}>
                     <TouchableOpacity className="flex flex-row items-center justify-between">
-                      <View className="flex flex-row justify-between items-center px-1 py-4 w-full">
+                      <View className="flex flex-row justify-between items-center px-1 py-4">
                         <View className="flex flex-row items-center space-x-3">
                           <Image
                             source={require('../../../assets/images/bill.png')}
