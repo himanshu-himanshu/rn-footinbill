@@ -59,6 +59,7 @@ export const createFriend = (data, authToken) => async dispatch => {
     .then(response => {
       console.log('INSIDE THEN CREATE FRIEND ****** ', response.data);
       dispatch({type: createFriendString, payload: response});
+      dispatch(getAllFriends(authToken));
       let any = {
         code: 200,
         message: response.data.message,

@@ -7,6 +7,7 @@ import {
   Alert,
   Image,
   Modal,
+  ActivityIndicator,
   Button,
 } from 'react-native';
 
@@ -21,6 +22,7 @@ const Home = ({navigation}) => {
   const dispatch = useDispatch();
 
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [friendName, setFriendName] = useState('');
   const [friendEmail, setFriendEmail] = useState('');
   const [allFriends, setAllFriends] = useState([]);
@@ -30,7 +32,9 @@ const Home = ({navigation}) => {
   const {friend} = useSelector(state => state.friend);
 
   useEffect(() => {
+    setLoading(true);
     dispatch(getAllFriends(authToken));
+    setLoading(false);
   }, []);
 
   const createFriendFunc = () => {
@@ -38,9 +42,13 @@ const Home = ({navigation}) => {
       alert('Fields cannot be empty');
       return;
     } else {
+      setLoading(true);
       dispatch(createFriend({name: friendName, email: friendEmail}, authToken));
       handleHide();
       dispatch(getAllFriends(authToken));
+      setTimeout(() => {
+        setLoading(false);
+      }, 3000);
     }
   };
 
@@ -93,9 +101,20 @@ const Home = ({navigation}) => {
                 </View>
               </View>
 
+              {/** Show if loading is true */}
+              {loading && (
+                <View className="h-[80%] w-full flex justify-center items-center">
+                  <ActivityIndicator size="large" color="#8F43EE" />
+                  <Text className="mt-2 font-light text-gray-500">
+                    Fetching friends
+                  </Text>
+                </View>
+              )}
+
               {/*********** Map through list to render each friend ***********/}
               <ScrollView className="mb-24 px-4">
-                {friend &&
+                {!loading &&
+                  friend &&
                   friend.data &&
                   friend.data.map((friend, index) => (
                     <TouchableOpacity
@@ -177,6 +196,7 @@ const Home = ({navigation}) => {
                       onChangeText={value => setFriendEmail(value)}
                       placeholder="Enter Email"
                       name="email"
+                      autoCapitalize={false}
                       className="p-4 text-xl text-gray-600 rounded-md w-[85%]"
                     />
                   </View>
