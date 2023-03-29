@@ -20,7 +20,7 @@ export const getAllFriends = authToken => async dispatch => {
   const res = await instance
     .get(EndPoints.getAllFriends)
     .then(response => {
-      console.log('INSIDE THEN GET ALL FRIENDS ****** ', response);
+      //console.log('INSIDE THEN GET ALL FRIENDS ****** ', response);
       dispatch({type: getAllFriendsString, payload: response});
       let any = {
         code: 200,
@@ -30,7 +30,7 @@ export const getAllFriends = authToken => async dispatch => {
       return any;
     })
     .catch(function (error) {
-      console.log('GET ALL FRIENDS CATCH', error);
+      //console.log('GET ALL FRIENDS CATCH', error);
       let any = {
         code: 401,
         message: error.response.data.message,
@@ -44,8 +44,8 @@ export const getAllFriends = authToken => async dispatch => {
 // ------------------ createFriend EndPoints  ----------------------- //
 export const createFriend = (data, authToken) => async dispatch => {
   // dispatch({ type: isLoadingString, payload: { loader: true } });
-  console.log('authToken', authToken);
-  console.log('data', data);
+  //console.log('authToken', authToken);
+  //console.log('data', data);
   const instance = axios.create({
     baseURL: API_URL,
     timeout: 1000,
@@ -57,7 +57,7 @@ export const createFriend = (data, authToken) => async dispatch => {
       email: data.email,
     })
     .then(response => {
-      console.log('INSIDE THEN CREATE FRIEND ****** ', response.data);
+      //console.log('INSIDE THEN CREATE FRIEND ****** ', response.data);
       dispatch({type: createFriendString, payload: response});
       dispatch(getAllFriends(authToken));
       let any = {
@@ -67,10 +67,10 @@ export const createFriend = (data, authToken) => async dispatch => {
       return any;
     })
     .catch(function (error) {
-      console.log(
-        'INSIDE CATCH CREATE FRIEND ****** ',
-        error.response.data.message,
-      );
+      //console.log(
+      //   'INSIDE CATCH CREATE FRIEND ****** ',
+      //   error.response.data.message,
+      // );
       let any = {
         code: 401,
         message: error.response.data.message,

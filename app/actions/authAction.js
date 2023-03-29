@@ -24,7 +24,7 @@ export const getUserToken = () => async dispatch => {
 
 // -------------  saveAuthToken ------- //
 export const saveAuthToken = authToken => async dispatch => {
-  dispatch({ type: saveAuthTokenString, payload: authToken });
+  dispatch({type: saveAuthTokenString, payload: authToken});
 };
 
 // ------------------ Login User  ----------------------- //
@@ -32,7 +32,7 @@ export const loginUser = loginData => async dispatch => {
   let k = await axios
     .post(API_URL + EndPoints.signIn, loginData)
     .then(function (fff) {
-      console.log('fff', fff);
+      //console.log('fff', fff);
       dispatch(saveAuthToken(fff.data.data.access_token));
       dispatch(getAuthUser(fff.data.data.access_token));
       let any = {
@@ -50,20 +50,20 @@ export const loginUser = loginData => async dispatch => {
       };
       return any;
     });
-  console.log('k', k);
+  //console.log('k', k);
   return k;
 };
 
 // ------------------ Change Password  ----------------------- //
 export const changePassword = payload => async dispatch => {
   const config = {
-    headers: { Authorization: `Bearer ${payload.authToken}` },
+    headers: {Authorization: `Bearer ${payload.authToken}`},
   };
-  console.log('auth action payload change password line 43', config);
+  //console.log('auth action payload change password line 43', config);
   let response = await axios
     .put(API_URL + EndPoints.changePassword, payload, config)
     .then(function (innerResponse) {
-      console.log('innerResponse', innerResponse);
+      //console.log('innerResponse', innerResponse);
       let any = {
         code: 200,
         message: innerResponse.data.message,
@@ -71,10 +71,10 @@ export const changePassword = payload => async dispatch => {
       return any;
     })
     .catch(err => {
-      console.log(
-        'AUTH ACTION CHANGE PASS**************',
-        err.response.data.message,
-      );
+      //console.log(
+      //   'AUTH ACTION CHANGE PASS**************',
+      //   err.response.data.message,
+      // );
       let any = {
         code: 401,
         message: err.response.data.message,
@@ -87,12 +87,12 @@ export const changePassword = payload => async dispatch => {
 // ------------------ get Auth User  ----------------------- //
 export const getAuthUser = authToken => async dispatch => {
   const config = {
-    headers: { Authorization: `Bearer ${authToken}` },
+    headers: {Authorization: `Bearer ${authToken}`},
   };
   await axios
     .get(API_URL + EndPoints.getAuthUser, config)
     .then(function (response) {
-      dispatch({ type: saveAuthUserString, payload: response.data.data });
+      dispatch({type: saveAuthUserString, payload: response.data.data});
       return response;
     })
     .catch(function (error) {
@@ -110,7 +110,7 @@ export const registerUser = signUpData => async dispatch => {
     .then(function (response) {
       if (response && response.data.success) {
         AsyncStorage.setItem('userToken', response.data.data.access_token);
-        dispatch({ type: loginString, payload: response.data });
+        dispatch({type: loginString, payload: response.data});
         let any = {
           code: 200,
           message: response.data.message,
@@ -178,7 +178,7 @@ export const handleGoogleLogIn = googleloginData => async dispatch => {
   if (response && response.success) {
     AsyncStorage.setItem('userToken', response.token);
     AsyncStorage.setItem('user', JSON.stringify(response));
-    dispatch({ type: loginString, payload: { user: response } });
+    dispatch({type: loginString, payload: {user: response}});
   }
   // dispatch({ type: isLoadingString, payload: { loader: false } });
   //return response ? response : false;
@@ -190,7 +190,7 @@ export const registerPatient = (patientData, navigator) => async dispatch => {
   const response = await apiRequest(EndPoints.addPatient, 'POST', patientData);
 
   // dispatch({ type: isLoadingString, payload: { loader: false } });
-  dispatch({ type: registerPatientString, payload: response.data });
+  dispatch({type: registerPatientString, payload: response.data});
   return response && response.success ? response : false;
 };
 
@@ -200,8 +200,8 @@ export const updateProfile = data => async dispatch => {
   const response = await apiRequest(EndPoints.updateProfile, 'POST', data);
   if (response && response.success) {
     //
-    dispatch({ type: updateProfileString, payload: response });
-    dispatch({ type: updateAuthUserString, payload: response.data });
+    dispatch({type: updateProfileString, payload: response});
+    dispatch({type: updateAuthUserString, payload: response.data});
   }
   // dispatch({ type: isLoadingString, payload: { loader: false } });
   return response && response.success ? response : false;
@@ -219,7 +219,7 @@ export const updatePassword = payload => async dispatch => {
 export const logoutUser = logOutData => async dispatch => {
   AsyncStorage.removeItem('userToken');
   // dispatch({ type: isLoadingString, payload: { loader: true } });
-  dispatch({ type: logOutString, payload: {} });
+  dispatch({type: logOutString, payload: {}});
   // dispatch({ type: isLoadingString, payload: { loader: false } });
   return true;
 };

@@ -32,9 +32,9 @@ const Home = ({navigation}) => {
   const {friend} = useSelector(state => state.friend);
 
   useEffect(() => {
-    setLoading(true);
+    //setLoading(true);
     dispatch(getAllFriends(authToken));
-    setLoading(false);
+    //setLoading(false);
   }, []);
 
   const createFriendFunc = () => {

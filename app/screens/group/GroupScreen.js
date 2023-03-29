@@ -351,7 +351,7 @@ const GroupScreen = ({navigation, route}) => {
                           {expense.detailsSplit.message}
                         </Text>
                         <Text className="text-[17px] text-sky-600 font-light">
-                          {'CA $' + expense.detailsSplit.amount}
+                          {'CA $' + expense.detailsSplit.amount.toFixed(2)}
                         </Text>
                       </View>
                     </View>

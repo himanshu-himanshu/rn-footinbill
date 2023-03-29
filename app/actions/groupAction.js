@@ -20,7 +20,7 @@ export const getAllGroups = authToken => async dispatch => {
   const res = await instance
     .get(EndPoints.getAllGroups)
     .then(response => {
-      console.log('RESPON 123SE', response);
+      //console.log('RESPON 123SE', response);
       dispatch({type: getAllGroupsString, payload: response});
       let any = {
         code: 200,
@@ -41,7 +41,7 @@ export const getAllGroups = authToken => async dispatch => {
 // ------------------ getAGroup EndPoints  ----------------------- //
 export const getAGroup = (authToken, groupId) => async dispatch => {
   // dispatch({ type: isLoadingString, payload: { loader: true } });
-  console.log('FROM GET A GROUP ACTION FILE ', groupId);
+  //console.log('FROM GET A GROUP ACTION FILE ', groupId);
   const instance = axios.create({
     baseURL: API_URL,
     timeout: 1000,
@@ -50,7 +50,7 @@ export const getAGroup = (authToken, groupId) => async dispatch => {
   const res = await instance
     .get(EndPoints.getAGroup + `/` + groupId)
     .then(response => {
-      console.log('RESPON 123SE', groupId);
+      //console.log('RESPON 123SE', groupId);
       dispatch({type: getAGroupString, payload: response});
       let any = {
         code: 200,
@@ -71,8 +71,8 @@ export const getAGroup = (authToken, groupId) => async dispatch => {
 // ------------------ createGroup EndPoints  ----------------------- //
 export const createGroup = (data, authToken) => async dispatch => {
   // dispatch({ type: isLoadingString, payload: { loader: true } });
-  console.log('authToken', authToken);
-  console.log('data', data);
+  //console.log('authToken', authToken);
+  //console.log('data', data);
   const instance = axios.create({
     baseURL: API_URL,
     timeout: 1000,
@@ -83,7 +83,7 @@ export const createGroup = (data, authToken) => async dispatch => {
       name: data.name,
     })
     .then(response => {
-      console.log('RESPON 123SE', response.data);
+      //console.log('RESPON 123SE', response.data);
       dispatch({type: createGroupString, payload: response});
       dispatch(getAllGroups(authToken));
       let any = {
@@ -99,6 +99,6 @@ export const createGroup = (data, authToken) => async dispatch => {
       };
       return any;
     });
-  console.log('INSIDE CREATE GROUP', res);
+  //console.log('INSIDE CREATE GROUP', res);
   return res;
 };
