@@ -62,11 +62,11 @@ const Home = ({navigation}) => {
   return (
     <View className="w-full h-screen bg-white">
       <SafeAreaView>
-        <View className="w-full h-[90%]">
+        <View className="w-full h-full">
           <View className="h-full w-full py-4 ">
             {/*********** Heading Text ***********/}
             <View className="flex flex-row items-center justify-between px-2">
-              <Text className="text-2xl font-Raleway tracking-wider px-4 py-4">
+              <Text className="text-2xl font-Raleway tracking-wider px-4 py-3">
                 Friends
               </Text>
               <TouchableOpacity
@@ -82,8 +82,8 @@ const Home = ({navigation}) => {
             {/** Show whenever there is atleast one friend  */}
             <View className="py-2 flex flex-col">
               {/*********** Card View ***********/}
-              <View className="px-4">
-                <View className="bg-gray-200 p-2 w-full rounded-xl flex flex-row items-center mb-2 shadow-md">
+              <View className="px-4 py-2">
+                <View className="bg-gray-200 px-2 py-3 w-full rounded-xl flex flex-row items-center mb-2 shadow-md">
                   <View className="px-2">
                     <Image
                       source={require('../../../assets/images/list.png')}
@@ -91,13 +91,19 @@ const Home = ({navigation}) => {
                     />
                   </View>
                   <View className="px-4 py-2">
-                    <Text className="text-lg tracking-wider">
-                      Total balance
+                    <Text className="text-lg tracking-wider font-semibold text-gray-700">
+                      You are owed
                     </Text>
-                    <Text className="text-xsm text-gray-700">
-                      You are all settled up
+                    <Text className="text-xsm text-blue-700">
+                      You are owed CA $30.00
                     </Text>
                   </View>
+                  <TouchableOpacity className="px-2 ml-8 hover:cursor-pointer">
+                    <Image
+                      source={require('../../../assets/images/color.png')}
+                      className="h-7 w-7"
+                    />
+                  </TouchableOpacity>
                 </View>
               </View>
 

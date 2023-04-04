@@ -4,6 +4,7 @@ import Activity from './Activity';
 import Groups from './Groups';
 import Home from './Home';
 import Profile from './Profile';
+import AddExpense from './AddExpense';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,7 +20,7 @@ const BottomNavigator = () => {
           backgroundColor: '#D9ED92',
           paddingTop: 40,
           bottom: 30,
-          marginHorizontal: 20,
+          marginHorizontal: 10,
           borderRadius: 20,
         },
         tabBarLabelStyle: {
@@ -35,7 +36,7 @@ const BottomNavigator = () => {
           tabBarIcon: ({focused}) => (
             <Image
               source={require('../../../assets/images/home.png')}
-              className="h-10 w-10"
+              className="h-9 w-9"
               style={{tintColor: focused ? '#EA5455' : '#999999'}}
             />
           ),
@@ -51,14 +52,30 @@ const BottomNavigator = () => {
           tabBarIcon: ({focused}) => (
             <Image
               source={require('../../../assets/images/meeting.png')}
-              className="h-11 w-11"
+              className="h-10 w-10"
               style={{tintColor: focused ? '#EA5455' : '#999999'}}
             />
           ),
         }}
       />
 
-      {/*********** Groups Tab ***********/}
+      {/*********** Add Expense Tab ***********/}
+      <Tab.Screen
+        name="Add Expense"
+        component={AddExpense}
+        options={{
+          tabBarLabel: '',
+          tabBarIcon: ({focused}) => (
+            <Image
+              source={require('../../../assets/images/button.png')}
+              className="h-12 w-12"
+              style={{tintColor: focused ? '#19A7CE' : '#999999'}}
+            />
+          ),
+        }}
+      />
+
+      {/*********** Activity Tab ***********/}
       <Tab.Screen
         name="Activity"
         component={Activity}
@@ -67,7 +84,7 @@ const BottomNavigator = () => {
           tabBarIcon: ({focused}) => (
             <Image
               source={require('../../../assets/images/hour-glass.png')}
-              className="h-10 w-10"
+              className="h-9 w-9"
               style={{tintColor: focused ? '#EA5455' : '#999999'}}
             />
           ),
@@ -83,7 +100,7 @@ const BottomNavigator = () => {
           tabBarIcon: ({focused}) => (
             <Image
               source={require('../../../assets/images/settings.png')}
-              className="h-10 w-10"
+              className="h-9 w-9"
               style={{tintColor: focused ? '#EA5455' : '#999999'}}
             />
           ),

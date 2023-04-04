@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
   Image,
 } from 'react-native';
 
@@ -77,7 +78,7 @@ const Activity = ({navigation, route}) => {
       return (
         <Image
           source={require(`../../../assets/images/delete.png`)}
-          className="h-8 w-8"
+          className="h-7 w-7"
         />
       );
     } else if (type == 'group_member_added') {
@@ -103,11 +104,21 @@ const Activity = ({navigation, route}) => {
         <View className="w-full h-full">
           <View className="h-full w-full py-4">
             {/** Heading Text **/}
-            <View className="flex flex-row items-center justify-between px-4">
-              <Text className="text-2xl font-Raleway tracking-wider p-4">
-                Recent activities
+            <View className="flex flex-row items-center justify-between px-2 border-b border-gray-200">
+              <Text className="text-2xl font-Raleway tracking-wider p-4 text-gray-800">
+                Recent activity
               </Text>
             </View>
+            {/** Show if loading is true */}
+            {loading && (
+              <View className="h-[80%] w-full flex justify-center items-center">
+                <ActivityIndicator size="large" color="#8F43EE" />
+                <Text className="mt-2 font-light text-gray-500">
+                  Loading Activities
+                </Text>
+              </View>
+            )}
+
             {/** Single Expense Design */}
             <ScrollView className="mb-24">
               {!loading &&
@@ -120,11 +131,11 @@ const Activity = ({navigation, route}) => {
                         <View className="flex flex-row items-center space-x-3">
                           {getImages(activity.activityType)}
                           <View className="flex flex-col space-y-2">
-                            <Text className="text-[14px] font-bold">
+                            <Text className="text-[14px] font-bold text-gray-700">
                               {activity.description}
                             </Text>
                             <Text className="text-[12px] text-gray-800">
-                              {activity.date}
+                              {activity.date.split('T')[0]}
                             </Text>
                           </View>
                         </View>
