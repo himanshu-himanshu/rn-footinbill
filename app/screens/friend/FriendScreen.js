@@ -25,6 +25,8 @@ const FriendScreen = ({navigation, route}) => {
   const [visibleSetting, setVisibleSetting] = useState(false);
   const [expenseModal, setExpenseModal] = useState(false);
   const [totalLent, setTotalLent] = useState(0);
+  const [youPaid, setYouPaid] = useState(0);
+  const [youBorrowed, setYouBorrowed] = useState(0);
 
   const {authUser, authToken} = useSelector(state => state.auth);
 
@@ -59,10 +61,23 @@ const FriendScreen = ({navigation, route}) => {
 
   const getTotalLent = () => {
     let totalLent = 0;
+    let localPaid = 0;
+    let localBorrowed = 0;
     expenses &&
       expenses.map(expense => {
+        console.log('EXPENSE FROM FRIENDS', expense);
         totalLent = totalLent + expense.detailsSplit.amount;
+
+        if (expense.detailsPaid.message == 'you paid') {
+          localPaid = localPaid + expense.detailsPaid.amount / 2;
+          setYouPaid(localPaid);
+        }
+        if (expense.detailsPaid.message != 'you paid') {
+          localBorrowed = localBorrowed + expense.detailsPaid.amount / 2;
+          setYouBorrowed(localBorrowed);
+        }
       });
+    console.log('PAID: ', youPaid, ' AND BORROWED: ', youBorrowed);
     return totalLent;
   };
 
@@ -80,12 +95,12 @@ const FriendScreen = ({navigation, route}) => {
       .get(`expenses`)
       .then(response => {
         const dummyExpense = response.data.data;
-        const friendExpesne = dummyExpense.filter(expense => {
+        const friendExpense = dummyExpense.filter(expense => {
           if (friendId in expense.allDetails === true) {
             return expense;
           }
         });
-        setExpenses(friendExpesne);
+        setExpenses(friendExpense);
         console.log('INSIDE GET EXPENSE FUNC THEN ', response.data);
         handleExpenseHide();
         setLoading(false);
@@ -176,6 +191,9 @@ const FriendScreen = ({navigation, route}) => {
             {/*********** Heading Text ***********/}
             <View className="flex flex-row items-start justify-between py-2">
               <View>
+                <Text className="text-[12px] font-Raleway tracking-wider px-2 text-gray-800 pb-1">
+                  Your transactions with:
+                </Text>
                 <Text className="text-xl font-Raleway tracking-wider px-2 text-gray-800 pb-1 capitalize">
                   {route.params.friendData.name}
                 </Text>
@@ -185,8 +203,16 @@ const FriendScreen = ({navigation, route}) => {
                   </Text>
                 )}
                 {totalLent !== 0 && (
-                  <Text className="text-xsm font-Raleway px-2 text-sky-700 font-semibold">
-                    You are owed CA ${totalLent} overall
+                  <Text
+                    className={`text-xsm font-Raleway px-2 ${
+                      youPaid >= youBorrowed
+                        ? 'text-green-600'
+                        : 'text-pink-500'
+                    } font-semibold`}>
+                    Total Balance:{' '}
+                    {youPaid >= youBorrowed
+                      ? ` +$${youPaid - youBorrowed}`
+                      : ` -$${youBorrowed - youPaid}`}
                   </Text>
                 )}
               </View>

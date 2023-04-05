@@ -1,0 +1,12 @@
+{
+  "allDetails": {
+    "63ec1e7ede59170c34466b49": {"name": "guru", "owe": 10},
+    "641225446cc3d30c26375baa": {"name": "sprint", "owe": 10, "paid": 20}
+  },
+  "createdByName": "sprint",
+  "date": "2023-03-20T01:53:05.631Z",
+  "description": "Movie",
+  "detailsPaid": {"amount": 20, "message": "sprint paid"},
+  "detailsSplit": {"amount": 10, "message": "sprint lent you"},
+  "id": "6417bc811485204c02c4baaa"
+}

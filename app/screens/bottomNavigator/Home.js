@@ -4,11 +4,9 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TextInput,
-  Alert,
   Image,
   Modal,
   ActivityIndicator,
-  Button,
 } from 'react-native';
 
 import React, {useEffect, useState} from 'react';
@@ -17,6 +15,9 @@ import {createFriend, getAllFriends} from '../../actions/friendAction';
 import {useDispatch, useSelector} from 'react-redux';
 import {ScrollView} from 'react-native-gesture-handler';
 import {color} from 'react-native-reanimated';
+import axios from 'axios';
+
+import {API_URL} from '../../constants/actionStrings';
 
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
@@ -26,6 +27,8 @@ const Home = ({navigation}) => {
   const [friendName, setFriendName] = useState('');
   const [friendEmail, setFriendEmail] = useState('');
   const [allFriends, setAllFriends] = useState([]);
+  const [youPaid, setYouPaid] = useState(0);
+  const [youBorrowed, setYouBorrowed] = useState(0);
 
   const {authToken} = useSelector(state => state.auth);
 
@@ -33,9 +36,51 @@ const Home = ({navigation}) => {
 
   useEffect(() => {
     //setLoading(true);
+    getExpenses();
     dispatch(getAllFriends(authToken));
     //setLoading(false);
   }, []);
+
+  //---------------------------------------------------//
+  /*** Function to get expenses with a friend */
+  //---------------------------------------------------//
+  const getExpenses = async () => {
+    const instance = axios.create({
+      baseURL: API_URL,
+      timeout: 2500,
+      headers: {Authorization: 'Bearer ' + authToken},
+    });
+    const res = await instance
+      .get(`expenses`)
+      .then(response => {
+        const dummyExpense = response.data.data;
+        let localLent = 0;
+        let localBorrowed = 0;
+        dummyExpense.map(expense => {
+          console.log('EXPENSE FROM FRIENDS', expense);
+          if (expense.detailsPaid.message == 'you paid') {
+            localLent = localLent + expense.detailsPaid.amount / 2;
+            setYouPaid(localLent);
+          }
+          if (expense.detailsPaid.message != 'you paid') {
+            localBorrowed = localBorrowed + expense.detailsPaid.amount / 2;
+            setYouBorrowed(localBorrowed);
+          }
+        });
+        console.log('Lent: ', localLent, ' AND BORROWED: ', localBorrowed);
+        //console.log('INSIDE GET EXPENSE FUNC THEN ', response.data);
+      })
+      .catch(function (error) {
+        console.log('INSIDE GET EXPENSE FUNC CATCH ', error);
+        let any = {
+          code: 401,
+          message: error.response.data.message,
+        };
+        setLoading(false);
+        return any;
+      });
+    return res;
+  };
 
   const createFriendFunc = () => {
     if (friendName === '' || friendEmail === '') {
@@ -83,7 +128,7 @@ const Home = ({navigation}) => {
             <View className="py-2 flex flex-col">
               {/*********** Card View ***********/}
               <View className="px-4 py-2">
-                <View className="bg-gray-200 px-2 py-3 w-full rounded-xl flex flex-row items-center mb-2 shadow-md">
+                <View className="bg-gray-200 px-2 py-3 w-full rounded-xl flex flex-row space-x-2 items-center mb-2 shadow-md">
                   <View className="px-2">
                     <Image
                       source={require('../../../assets/images/list.png')}
@@ -92,18 +137,18 @@ const Home = ({navigation}) => {
                   </View>
                   <View className="px-4 py-2">
                     <Text className="text-lg tracking-wider font-semibold text-gray-700">
-                      You are owed
+                      Total Balance
                     </Text>
-                    <Text className="text-xsm text-blue-700">
-                      You are owed CA $30.00
+                    <Text
+                      className={`text-xsm ${
+                        youPaid < youBorrowed ? 'text-pink-500' : 'text-sky-600'
+                      }`}>
+                      You are owed CA
+                      {youPaid >= youBorrowed
+                        ? ` +$${youPaid - youBorrowed}`
+                        : ` -$${youBorrowed - youPaid}`}
                     </Text>
                   </View>
-                  <TouchableOpacity className="px-2 ml-8 hover:cursor-pointer">
-                    <Image
-                      source={require('../../../assets/images/color.png')}
-                      className="h-7 w-7"
-                    />
-                  </TouchableOpacity>
                 </View>
               </View>
 
