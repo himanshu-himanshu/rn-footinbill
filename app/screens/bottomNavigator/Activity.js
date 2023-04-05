@@ -109,12 +109,21 @@ const Activity = ({navigation, route}) => {
                 Recent activity
               </Text>
             </View>
+
             {/** Show if loading is true */}
             {loading && (
               <View className="h-[80%] w-full flex justify-center items-center">
                 <ActivityIndicator size="large" color="#8F43EE" />
                 <Text className="mt-2 font-light text-gray-500">
                   Loading Activities
+                </Text>
+              </View>
+            )}
+
+            {!loading && recentActivites.length == 0 && (
+              <View className="h-[80%] w-full flex justify-center items-center">
+                <Text className="mt-2 text-lg font-light text-gray-500">
+                  Nothing to show here ⚡️
                 </Text>
               </View>
             )}

@@ -34,6 +34,9 @@ const GroupScreen = ({navigation, route}) => {
   const [groupMembers, setGroupMembers] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [expenseModal, setExpenseModal] = useState(false);
+  const [youPaid, setYouPaid] = useState(0);
+  const [youBorrowed, setYouBorrowed] = useState(0);
+  const [totalLent, setTotalLent] = useState(0);
 
   // Fetch from state
   const {authToken, authUser} = useSelector(state => state.auth);
@@ -45,6 +48,7 @@ const GroupScreen = ({navigation, route}) => {
     dispatch(getAuthUser(authToken));
     getExpenses();
     console.log('USE STATE ARRAY ', groupMembers);
+    setTotalLent(getTotalLent());
   }, []);
 
   useEffect(
@@ -55,11 +59,35 @@ const GroupScreen = ({navigation, route}) => {
       dispatch(getAuthUser(authToken));
       getExpenses();
       console.log('USE STATE ARRAY ', groupMembers);
+      setTotalLent(getTotalLent());
     },
     [route],
     [navigation],
     [visible],
+    [expenses],
   );
+
+  const getTotalLent = () => {
+    let totalLent = 0;
+    let localPaid = 0;
+    let localBorrowed = 0;
+    expenses &&
+      expenses.map(expense => {
+        console.log('EXPENSE FROM FRIENDS', expense);
+        totalLent = totalLent + expense.detailsSplit.amount;
+
+        if (expense.detailsPaid.message == 'you paid') {
+          localPaid = localPaid + expense.detailsPaid.amount / 2;
+          setYouPaid(localPaid);
+        }
+        if (expense.detailsPaid.message != 'you paid') {
+          localBorrowed = localBorrowed + expense.detailsPaid.amount / 2;
+          setYouBorrowed(localBorrowed);
+        }
+      });
+    console.log('PAID: ', youPaid, ' AND BORROWED: ', youBorrowed);
+    return totalLent;
+  };
 
   //---------------------------------------------------//
   /*** Function to fetch members of current group */
@@ -251,9 +279,24 @@ const GroupScreen = ({navigation, route}) => {
                 <Text className="text-xl font-Raleway tracking-wider px-2 text-gray-800 pb-1">
                   {route.params.groupData.name}
                 </Text>
-                <Text className="text-xsm font-Raleway px-2 text-gray-600 font-light">
-                  No expenses to show.
-                </Text>
+                {totalLent === 0 && (
+                  <Text className="text-xsm font-Raleway px-2 text-gray-600 font-light">
+                    No expenses to show.
+                  </Text>
+                )}
+                {totalLent !== 0 && (
+                  <Text
+                    className={`text-xsm font-Raleway px-2 ${
+                      youPaid >= youBorrowed
+                        ? 'text-green-600'
+                        : 'text-pink-500'
+                    } font-semibold`}>
+                    Total Balance:{' '}
+                    {youPaid >= youBorrowed
+                      ? ` +$${youPaid - youBorrowed}`
+                      : ` -$${youBorrowed - youPaid}`}
+                  </Text>
+                )}
               </View>
               <View className="">
                 <TouchableOpacity
@@ -347,11 +390,21 @@ const GroupScreen = ({navigation, route}) => {
                         </View>
                       </View>
                       <View className="flex space-y-1 justify-end items-end">
-                        <Text className="text-[12px] text-gray-800">
+                        <Text
+                          className={`text-[12px] ${
+                            expense.detailsPaid.message === 'you paid'
+                              ? 'text-green-600'
+                              : 'text-pink-500'
+                          }`}>
                           {expense.detailsSplit.message}
                         </Text>
-                        <Text className="text-[17px] text-sky-600 font-light">
-                          {'CA $' + expense.detailsSplit.amount.toFixed(2)}
+                        <Text
+                          className={`text-[17px]  ${
+                            expense.detailsPaid.message === 'you paid'
+                              ? 'text-green-600'
+                              : 'text-pink-500'
+                          } font-light`}>
+                          {'CA $' + expense.detailsSplit.amount}
                         </Text>
                       </View>
                     </View>

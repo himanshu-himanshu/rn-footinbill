@@ -14,7 +14,6 @@ import AddFriend from './components/AddFriend';
 import {createFriend, getAllFriends} from '../../actions/friendAction';
 import {useDispatch, useSelector} from 'react-redux';
 import {ScrollView} from 'react-native-gesture-handler';
-import {color} from 'react-native-reanimated';
 import axios from 'axios';
 
 import {API_URL} from '../../constants/actionStrings';

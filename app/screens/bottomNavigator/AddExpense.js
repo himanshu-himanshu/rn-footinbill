@@ -17,6 +17,7 @@ import CreateGroup from './components/CreateGroup';
 import {createGroup, getAllGroups} from '../../../app/actions/groupAction';
 import {useSelector, useDispatch} from 'react-redux';
 import {ScrollView} from 'react-native-gesture-handler';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const AddExpense = ({navigation}) => {
   // State Variables
@@ -24,7 +25,26 @@ const AddExpense = ({navigation}) => {
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentValue, setCurrentValue] = useState([]);
   const {authToken} = useSelector(state => state.auth);
+
+  const friends = [
+    {
+      label: 'Gurminder',
+      value: 'Gurminder',
+    },
+    {
+      label: 'Nirav',
+      value: 'Nirav',
+    },
+    {
+      label: 'Himanshu',
+      value: 'Himanshu',
+    },
+  ];
+
+  console.log(currentValue);
 
   // useEffect(() => {
   //   setLoading(true);
@@ -35,41 +55,45 @@ const AddExpense = ({navigation}) => {
   return (
     <View className="w-full h-screen bg-white">
       <SafeAreaView>
-        <View className="w-full h-full">
+        <View className="w-full h-full -mt-[80px]">
           <View className="h-full w-full py-4">
+            <View className="relative pt-2">
+              <Image
+                source={require('../../../assets/images/0000.jpg')}
+                className="h-40 w-full"
+              />
+            </View>
             {/*********** Heading Text ***********/}
-            <View className="flex flex-col items-start justify-center px-2 h-[10%">
+            <View className="flex flex-col items-start justify-center px-2 h-[10%]">
               <Text className="text-2xl font-Raleway tracking-wider px-4">
                 Add an expense
               </Text>
             </View>
 
-            <View className="h-[90%] px-2 flex items-center mt-4">
+            <View className="h-[90%] px-2 flex items-center">
               {/*********** Header View ***********/}
-              <View className="flex w-full pb-6 px-6 mb-18 rounded-lg">
-                <Text className="text-lg font-Raleway tracking-wide pt-4 text-gray-700">
+              <View className="flex w-full pb-6 px-6 mb-[10px] rounded-lg z-40">
+                <Text className="text-lg font-Raleway tracking-wide pt-4 text-gray-700 mb-4">
                   With you and:
                 </Text>
-                <ScrollView
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  className="py-4 flex flex-row space-x-2">
-                  <TouchableOpacity className="text-lg font-Raleway tracking-wide bg-[#F3E8FF] p-2 rounded-full">
-                    <Text className="text-blue-500">Gurminder</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity className="text-lg font-Raleway tracking-wide bg-[#F3E8FF] p-2 rounded-full">
-                    <Text className="text-blue-500">Nirav Goswami</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity className="text-lg font-Raleway tracking-wide bg-[#F3E8FF] p-2 rounded-full">
-                    <Text className="text-blue-500">Sprint</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity className="text-lg font-Raleway tracking-wide bg-[#F3E8FF] p-2 rounded-full">
-                    <Text className="text-blue-500">Himanshu</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity className="text-lg font-Raleway tracking-wide bg-[#F3E8FF] p-2 rounded-full">
-                    <Text className="text-blue-500">Samir</Text>
-                  </TouchableOpacity>
-                </ScrollView>
+
+                <DropDownPicker
+                  items={friends}
+                  open={isOpen}
+                  value={currentValue}
+                  setOpen={() => setIsOpen(!isOpen)}
+                  setValue={val => setCurrentValue(val)}
+                  maxHeight={120}
+                  autoScroll
+                  placeholder="Select friends"
+                  placeholderStyle={{color: '#333333'}}
+                  multiple={true}
+                  min={1}
+                  mode="BADGE"
+                  badgeColors={['#19376D', '#8F43EE', '#245953']}
+                  badgeDotColors={['white']}
+                  badgeTextStyle={{color: 'white'}}
+                />
               </View>
 
               {/*********** Inputs View ***********/}

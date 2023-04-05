@@ -94,24 +94,6 @@ const Groups = ({navigation}) => {
 
             {/** Show whenever there is atleast one group  */}
             <View className="py-2 flex flex-col px-4">
-              {/*********** Card View ***********/}
-              {/* <View className="bg-gray-200 px-2 py-3 w-full rounded-xl flex flex-row items-center mb-2 shadow-md">
-                <View className="px-2">
-                  <Image
-                    source={require('../../../assets/images/mountain.png')}
-                    className="h-14 w-14"
-                  />
-                </View>
-                <View className="px-4 py-2">
-                  <Text className="text-lg tracking-wider font-semibold text-gray-700">
-                    You are owed
-                  </Text>
-                  <Text className="text-xsm text-blue-700">
-                    You are owed CA $30.00
-                  </Text>
-                </View>
-              </View> */}
-
               {/****** Render Each Group ******/}
               <TouchableOpacity
                 className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100"

@@ -292,10 +292,20 @@ const FriendScreen = ({navigation, route}) => {
                           </View>
                         </View>
                         <View className="flex space-y-1 justify-end items-end">
-                          <Text className="text-[12px] text-gray-800">
+                          <Text
+                            className={`text-[12px] ${
+                              expense.detailsPaid.message === 'you paid'
+                                ? 'text-green-600'
+                                : 'text-pink-500'
+                            }`}>
                             {expense.detailsSplit.message}
                           </Text>
-                          <Text className="text-[17px] text-sky-600 font-light">
+                          <Text
+                            className={`text-[17px]  ${
+                              expense.detailsPaid.message === 'you paid'
+                                ? 'text-green-600'
+                                : 'text-pink-500'
+                            } font-light`}>
                             {'CA $' + expense.detailsSplit.amount}
                           </Text>
                         </View>

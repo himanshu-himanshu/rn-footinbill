@@ -1,14 +1,4 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  TextInput,
-  Alert,
-  Image,
-  Modal,
-  Button,
-} from 'react-native';
+import {View, Text, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 
 const CreateGroup = ({handleShow}) => {
