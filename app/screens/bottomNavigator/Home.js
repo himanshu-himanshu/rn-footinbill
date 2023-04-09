@@ -9,16 +9,16 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import AddFriend from './components/AddFriend';
-import {createFriend, getAllFriends} from '../../actions/friendAction';
-import {useDispatch, useSelector} from 'react-redux';
-import {ScrollView} from 'react-native-gesture-handler';
+import { createFriend, getAllFriends } from '../../actions/friendAction';
+import { useDispatch, useSelector } from 'react-redux';
+import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 
-import {API_URL} from '../../constants/actionStrings';
+import { API_URL } from '../../constants/actionStrings';
 
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const [visible, setVisible] = useState(false);
@@ -29,9 +29,9 @@ const Home = ({navigation}) => {
   const [youPaid, setYouPaid] = useState(0);
   const [youBorrowed, setYouBorrowed] = useState(0);
 
-  const {authToken} = useSelector(state => state.auth);
+  const { authToken } = useSelector(state => state.auth);
 
-  const {friend} = useSelector(state => state.friend);
+  const { friend } = useSelector(state => state.friend);
 
   useEffect(() => {
     //setLoading(true);
@@ -47,7 +47,7 @@ const Home = ({navigation}) => {
     const instance = axios.create({
       baseURL: API_URL,
       timeout: 2500,
-      headers: {Authorization: 'Bearer ' + authToken},
+      headers: { Authorization: 'Bearer ' + authToken },
     });
     const res = await instance
       .get(`expenses`)
@@ -87,7 +87,7 @@ const Home = ({navigation}) => {
       return;
     } else {
       setLoading(true);
-      dispatch(createFriend({name: friendName, email: friendEmail}, authToken));
+      dispatch(createFriend({ name: friendName, email: friendEmail }, authToken));
       handleHide();
       dispatch(getAllFriends(authToken));
       setTimeout(() => {
@@ -139,9 +139,8 @@ const Home = ({navigation}) => {
                       Total Balance
                     </Text>
                     <Text
-                      className={`text-xsm ${
-                        youPaid < youBorrowed ? 'text-pink-500' : 'text-sky-600'
-                      }`}>
+                      className={`text-xsm ${youPaid < youBorrowed ? 'text-pink-500' : 'text-sky-600'
+                        }`}>
                       You are owed CA
                       {youPaid >= youBorrowed
                         ? ` +$${youPaid - youBorrowed}`

@@ -11,22 +11,22 @@ import {
   Button,
 } from 'react-native';
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import CreateGroup from './components/CreateGroup';
-import {createGroup, getAllGroups} from '../../../app/actions/groupAction';
-import {useSelector, useDispatch} from 'react-redux';
-import {ScrollView} from 'react-native-gesture-handler';
+import { createGroup, getAllGroups } from '../../../app/actions/groupAction';
+import { useSelector, useDispatch } from 'react-redux';
+import { ScrollView } from 'react-native-gesture-handler';
 
-const Groups = ({navigation}) => {
+const Groups = ({ navigation }) => {
   // State Variables
   const dispatch = useDispatch();
 
   const [visible, setVisible] = useState(false);
   const [groupName, setGroupName] = useState('');
   const [loading, setLoading] = useState(false);
-  const {authToken} = useSelector(state => state.auth);
+  const { authToken } = useSelector(state => state.auth);
 
-  const {groups} = useSelector(state => state.group);
+  const { groups } = useSelector(state => state.group);
 
   useEffect(() => {
     setLoading(true);
@@ -51,7 +51,7 @@ const Groups = ({navigation}) => {
     } else {
       setLoading(true);
       console.log('41*******');
-      dispatch(createGroup({name: groupName}, authToken));
+      dispatch(createGroup({ name: groupName }, authToken));
       handleHide();
       console.log('44*******');
       dispatch(getAllGroups(authToken));
@@ -131,7 +131,7 @@ const Groups = ({navigation}) => {
                       key={key}
                       className="flex flex-row items-center justify-between p-2 py-3 shadow-lg border-b border-gray-100"
                       onPress={() =>
-                        navigation.navigate('groupScreen', {groupData: group})
+                        navigation.navigate('groupScreen', { groupData: group })
                       }>
                       <View className="flex flex-row items-center space-x-3">
                         <Image

@@ -39,6 +39,10 @@ const ExpenseScreen = ({navigation, route}) => {
     setExpenseModal(true);
   };
 
+  const settleExpenseApi = () => {
+
+  }
+
   const getTotalLent = () => {
     let totalLent = 0;
     expenses &&
@@ -116,7 +120,7 @@ const ExpenseScreen = ({navigation, route}) => {
 
             {/*********** Two Butons View ***********/}
             <View className="flex flex-row items-center space-x-4 justify-start mb-4">
-              <TouchableOpacity className="flex flex-row items-center justify-center shadow-xl border border-[#F2921D] bg-[#F2921D] px-3 py-2 mt-6 rounded-md space-x-2 ">
+              <TouchableOpacity onPress={() => settleExpenseApi()} className="flex flex-row items-center justify-center shadow-xl border border-[#F2921D] bg-[#F2921D] px-3 py-2 mt-6 rounded-md space-x-2 ">
                 <View className="flex flex-row items-center space-x-4">
                   <Text className="text-sm font-normal text-white">
                     Settle up
@@ -124,13 +128,13 @@ const ExpenseScreen = ({navigation, route}) => {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity className="flex flex-row items-center justify-center border border-[#F2921D] px-3 py-2 mt-6 rounded-md space-x-2 shadow-lg">
-                <View className="flex flex-row items-center space-x-4">
+              {/* <TouchableOpacity className="flex flex-row items-center justify-center border border-[#F2921D] px-3 py-2 mt-6 rounded-md space-x-2 shadow-lg">
+                <View cla
                   <Text className="text-sm font-normal text-[#F2921D]">
                     Edit Expense
                   </Text>
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
 
             {/** Show when atleast two members and no expense added in group */}

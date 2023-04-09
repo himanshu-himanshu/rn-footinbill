@@ -8,16 +8,16 @@ import {
   Swipeable,
   Modal,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 
-import {API_URL} from '../../constants/actionStrings';
-import {getAuthUser} from '../../../app/actions/authAction';
+import { API_URL } from '../../constants/actionStrings';
+import { getAuthUser } from '../../../app/actions/authAction';
 import AddExpense from './components/AddExpense';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 
-const GroupScreen = ({navigation, route}) => {
+const GroupScreen = ({ navigation, route }) => {
   //   const {_id} = route.params.groupData;
 
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const GroupScreen = ({navigation, route}) => {
   const [expenses, setExpenses] = useState([]);
 
   // Fetch from state
-  const {authToken, authUser} = useSelector(state => state.auth);
+  const { authToken, authUser } = useSelector(state => state.auth);
 
   useEffect(() => {
     dispatch(getAuthUser(authToken));
@@ -53,7 +53,7 @@ const GroupScreen = ({navigation, route}) => {
     const instance = axios.create({
       baseURL: API_URL,
       timeout: 2500,
-      headers: {Authorization: 'Bearer ' + authToken},
+      headers: { Authorization: 'Bearer ' + authToken },
     });
     const res = await instance
       .get(`expenses`)

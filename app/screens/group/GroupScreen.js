@@ -21,11 +21,14 @@ import AddExpense from './components/AddExpense';
 import AddExpenseModal from '../friend/AddExpenseModal';
 import showSnack from '../../utils/ShowSnack';
 import {Swipeable} from 'react-native-gesture-handler';
+import {useIsFocused} from '@react-navigation/native';
 
 const GroupScreen = ({navigation, route}) => {
   const {_id} = route.params.groupData;
 
   const dispatch = useDispatch();
+
+  const isFocused = useIsFocused();
 
   // useState Variables
   const [loading, setLoading] = useState(true);
@@ -42,38 +45,28 @@ const GroupScreen = ({navigation, route}) => {
   const {authToken, authUser} = useSelector(state => state.auth);
 
   useEffect(() => {
-    console.log('USE EFFECT CALLED', authToken, _id);
     dispatch(getAGroup(authToken, _id));
     getGroupMembers();
     dispatch(getAuthUser(authToken));
     getExpenses();
-    console.log('USE STATE ARRAY ', groupMembers);
     setTotalLent(getTotalLent());
   }, []);
 
-  useEffect(
-    () => {
-      console.log('USE EFFECT CALLED', authToken, _id);
-      dispatch(getAGroup(authToken, _id));
-      getGroupMembers();
-      dispatch(getAuthUser(authToken));
-      getExpenses();
-      console.log('USE STATE ARRAY ', groupMembers);
-      setTotalLent(getTotalLent());
-    },
-    [route],
-    [navigation],
-    [visible],
-    [expenses],
-  );
+  useEffect(() => {
+    dispatch(getAGroup(authToken, _id));
+    getGroupMembers();
+    dispatch(getAuthUser(authToken));
+    getExpenses();
+    setTotalLent(getTotalLent());
+  }, [isFocused]);
 
   const getTotalLent = () => {
+    console.log('TOTAL LENT CALLED ****** ', expenses);
     let totalLent = 0;
     let localPaid = 0;
     let localBorrowed = 0;
     expenses &&
       expenses.map(expense => {
-        console.log('EXPENSE FROM FRIENDS', expense);
         totalLent = totalLent + expense.detailsSplit.amount;
 
         if (expense.detailsPaid.message == 'you paid') {
@@ -101,11 +94,11 @@ const GroupScreen = ({navigation, route}) => {
     const res = await instance
       .get(`groups` + `/` + _id + `/members`)
       .then(response => {
-        console.log('INSIDE GET ALL MEMBERS FUNC THEN ', response.data.data);
+        //console.log('INSIDE GET ALL MEMBERS FUNC THEN ', response.data.data);
         setGroupMembers(response.data.data);
       })
       .catch(function (error) {
-        console.log('INSIDE GET ALL MEMBERS FUNC CATCH ', error);
+        //console.log('INSIDE GET ALL MEMBERS FUNC CATCH ', error);
         let any = {
           code: 401,
           message: error.response.data.message,
@@ -128,14 +121,14 @@ const GroupScreen = ({navigation, route}) => {
     const res = await instance
       .delete(`groups` + `/` + _id)
       .then(response => {
-        console.log('INSIDE DELETE GROUP FUNC THEN ', response.data.data);
+        //console.log('INSIDE DELETE GROUP FUNC THEN ', response.data.data);
         showSnack('Group deleted successfully');
         handleSettingHide();
         navigation.goBack();
         dispatch(getAllGroups(authToken));
       })
       .catch(function (error) {
-        console.log('IINSIDE DELETE GROUP FUNC CATCH ', error);
+        //console.log('IINSIDE DELETE GROUP FUNC CATCH ', error);
         let any = {
           code: 401,
           message: error.response.data.message,
@@ -161,8 +154,6 @@ const GroupScreen = ({navigation, route}) => {
       tempSplitWith.push(obj);
     });
 
-    console.log('TEMP SPLIT WITH', tempSplitWith);
-
     let payload = {
       description: description,
       totalAmount: amountFloat,
@@ -177,8 +168,6 @@ const GroupScreen = ({navigation, route}) => {
       group: _id,
     };
 
-    console.log(payload);
-
     const instance = axios.create({
       baseURL: API_URL,
       timeout: 2500,
@@ -187,13 +176,13 @@ const GroupScreen = ({navigation, route}) => {
     const res = await instance
       .post(`expenses`, payload)
       .then(response => {
-        console.log('INSIDE ADD EXPENSE FUNC THEN ', response.data);
+        //console.log('INSIDE ADD EXPENSE FUNC THEN ', response.data);
         showSnack('Successfully added expense 💵');
         handleExpenseHide();
         getExpenses();
       })
       .catch(function (error) {
-        console.log('INSIDE ADD EXPENSE FUNC CATCH ', error);
+        //console.log('INSIDE ADD EXPENSE FUNC CATCH ', error);
         let any = {
           code: 401,
           message: error.response.data.message,
@@ -221,6 +210,7 @@ const GroupScreen = ({navigation, route}) => {
         console.log('INSIDE GET GROUP EXPENSE FUNC THEN ', response.data);
         handleExpenseHide();
         setLoading(false);
+        setTotalLent(getTotalLent());
       })
       .catch(function (error) {
         console.log('INSIDE GET GROUP EXPENSE FUNC CATCH ', error);
@@ -279,7 +269,7 @@ const GroupScreen = ({navigation, route}) => {
                 <Text className="text-xl font-Raleway tracking-wider px-2 text-gray-800 pb-1">
                   {route.params.groupData.name}
                 </Text>
-                {totalLent === 0 && (
+                {totalLent == 0 && (
                   <Text className="text-xsm font-Raleway px-2 text-gray-600 font-light">
                     No expenses to show.
                   </Text>

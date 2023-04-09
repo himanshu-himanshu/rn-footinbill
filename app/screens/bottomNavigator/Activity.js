@@ -8,13 +8,13 @@ import {
   Image,
 } from 'react-native';
 
-import React, {useEffect, useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import {API_URL} from '../../constants/actionStrings';
-import {useIsFocused} from '@react-navigation/native';
+import { API_URL } from '../../constants/actionStrings';
+import { useIsFocused } from '@react-navigation/native';
 
-const Activity = ({navigation, route}) => {
+const Activity = ({ navigation, route }) => {
   const isFocused = useIsFocused();
   console.log(navigation, 'AND', route);
   // useState Variables
@@ -22,7 +22,7 @@ const Activity = ({navigation, route}) => {
   let [recentActivites, setRecentActivities] = useState([]);
 
   // Fetch from state
-  const {authToken} = useSelector(state => state.auth);
+  const { authToken } = useSelector(state => state.auth);
 
   useEffect(() => {
     setLoading(true);
@@ -43,7 +43,7 @@ const Activity = ({navigation, route}) => {
     const instance = axios.create({
       baseURL: API_URL,
       timeout: 2500,
-      headers: {Authorization: 'Bearer ' + authToken},
+      headers: { Authorization: 'Bearer ' + authToken },
     });
     const res = await instance
       .get('activities')
