@@ -73,7 +73,7 @@ const Home = ({ navigation }) => {
         console.log('INSIDE GET EXPENSE FUNC CATCH ', error);
         let any = {
           code: 401,
-          message: error.response.data.message,
+          message: "-",
         };
         setLoading(false);
         return any;

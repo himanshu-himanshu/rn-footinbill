@@ -113,7 +113,7 @@ const GroupScreen = ({ navigation, route }) => {
 
             {/*********** Three Butons View (Only show if there is atleast one member in group) ***********/}
 
-            <View className="flex flex-row items-center space-x-4 justify-start mb-5 px-4">
+            {/* <View className="flex flex-row items-center space-x-4 justify-start mb-5 px-4">
               <TouchableOpacity className="flex flex-row items-center justify-center shadow-xl border border-[#8F43EE] bg-[#8F43EE] px-3 py-2 mt-6 rounded-md space-x-2">
                 <View className="flex flex-row items-center space-x-4">
                   <Text className="text-sm font-normal text-white">
@@ -129,7 +129,7 @@ const GroupScreen = ({ navigation, route }) => {
                   </Text>
                 </View>
               </TouchableOpacity>
-            </View>
+            </View> */}
 
             {/** Show if loading is true */}
             {loading && (
@@ -141,8 +141,31 @@ const GroupScreen = ({ navigation, route }) => {
             <ScrollView className="mb-12 pb-12">
               {!loading &&
                 expenses &&
-                expenses.map(expense => (
-                  <View
+                expenses.map((expense) => (
+                  expense.type == "settle" ? (<View 
+                    className="border-b pb-1 border-gray-100 px-4"
+                    key={expense.date}>
+                    <TouchableOpacity className="flex flex-row items-center justify-between">
+                      <View className="flex flex-row justify-between items-center px-1 py-4 w-full">
+                        <View className="flex flex-row items-center space-x-3">
+                          <Image
+                            source={require('../../../assets/images/bill.png')}
+                            className="h-11 w-11"
+                          />
+                          <View className="flex space-y-1">
+                            <Text className="text-md font-normal capitalize">
+                              {expense.description}
+                            </Text>
+                            <Text className="text-md font-light text-gray-600">
+                              {expense.message +
+                                ' CA $ ' +
+                                expense.amount.toFixed(2)}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  </View>) : (<View
                     className="border-b pb-1 border-gray-100 px-4"
                     key={expense.id}>
                     <TouchableOpacity className="flex flex-row items-center justify-between">
@@ -173,7 +196,7 @@ const GroupScreen = ({ navigation, route }) => {
                         </View>
                       </View>
                     </TouchableOpacity>
-                  </View>
+                  </View>)
                 ))}
             </ScrollView>
             {/** Show when atleast two members and no expense added in group */}

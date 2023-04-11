@@ -65,16 +65,31 @@ const FriendScreen = ({ navigation, route }) => {
     let localBorrowed = 0;
     expenses &&
       expenses.map(expense => {
-        console.log('EXPENSE FROM FRIENDS', expense);
-        totalLent = totalLent + expense.detailsSplit.amount;
+        if (expense.type == "expense") {
+          console.log('EXPENSE FROM FRIENDS', expense);
+          totalLent = totalLent + expense.detailsSplit.amount;
 
-        if (expense.detailsPaid.message == 'you paid') {
-          localPaid = localPaid + expense.detailsPaid.amount / 2;
-          setYouPaid(localPaid);
-        }
-        if (expense.detailsPaid.message != 'you paid') {
-          localBorrowed = localBorrowed + expense.detailsPaid.amount / 2;
-          setYouBorrowed(localBorrowed);
+          if (expense.detailsPaid.message == 'you paid') {
+            localPaid = localPaid + expense.detailsPaid.amount / 2;
+            setYouPaid(localPaid);
+          }
+          if (expense.detailsPaid.message != 'you paid') {
+            localBorrowed = localBorrowed + expense.detailsPaid.amount / 2;
+            setYouBorrowed(localBorrowed);
+          }
+        } else {
+          console.log('asdlaskjdjaslkdj sklajd lasj daksj dlaskjdla');
+          console.log('authUser.id', authUser.id);
+          console.log('expense.payer', expense.payer);
+          console.log('expense.recipient', expense.recipient);
+          if (authUser.id == expense.payer) {
+            localPaid += expense.amount;
+            setYouPaid(localPaid);
+          }
+          if (authUser.id == expense.recipient) {
+            localBorrowed += expense.amount;
+            setYouBorrowed(localBorrowed);
+          }
         }
       });
     console.log('PAID: ', youPaid, ' AND BORROWED: ', youBorrowed);
@@ -95,9 +110,16 @@ const FriendScreen = ({ navigation, route }) => {
       .get(`expenses`)
       .then(response => {
         const dummyExpense = response.data.data;
+        console.log('dummy expernse 120931290321', dummyExpense);
         const friendExpense = dummyExpense.filter(expense => {
-          if (friendId in expense.allDetails === true) {
-            return expense;
+          if (expense.type == "expense") {
+            if (friendId in expense.allDetails === true) {
+              return expense;
+            }
+          } else {
+            if (friendId == expense.payer || friendId == expense.recipient) {
+              return expense;
+            }
           }
         });
         setExpenses(friendExpense);
@@ -265,7 +287,30 @@ const FriendScreen = ({ navigation, route }) => {
             <ScrollView className="mb-12 pb-12">
               {!loading &&
                 expenses.map(expense => (
-                  <View
+                  expense.type == "settle" ? (<View
+                    className="border-b pb-3 border-gray-100"
+                    key={expense.date}>
+                    <TouchableOpacity className="flex flex-row items-center justify-between">
+                      <View className="flex flex-row justify-between items-center p-4 w-full">
+                        <View className="flex flex-row items-center space-x-4">
+                          <Image
+                            source={require('../../../assets/images/bag.png')}
+                            className="h-10 w-10"
+                          />
+                          <View className="flex space-y-1">
+                            <Text className="text-md font-normal">
+                              {expense.description}
+                            </Text>
+                            <Text className="text-md font-light text-gray-500">
+                              {expense.message +
+                                ' CA $' +
+                                expense.amount}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  </View>) : <View
                     className="border-b pb-3 border-gray-100"
                     key={expense.date}>
                     <TouchableOpacity onPress={() =>

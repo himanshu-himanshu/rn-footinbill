@@ -169,7 +169,7 @@ export const RegisterScreen = ({navigation}) => {
                     </View>
 
                     {/********* Social Media View **********/}
-                    <View className="flex w-full justify-center items-center mt-6">
+                    {/* <View className="flex w-full justify-center items-center mt-6">
                       <Text className="text-gray-400 tracking-wide py-4">
                         Or
                       </Text>
@@ -187,7 +187,7 @@ export const RegisterScreen = ({navigation}) => {
                           />
                         </TouchableOpacity>
                       </View>
-                    </View>
+                    </View> */}
                   </View>
                 </SafeAreaView>
               </View>

@@ -12,14 +12,12 @@ import {
   Button,
 } from 'react-native';
 
-import React, {useEffect, useState} from 'react';
-import CreateGroup from './components/CreateGroup';
-import {createGroup, getAllGroups} from '../../../app/actions/groupAction';
-import {useSelector, useDispatch} from 'react-redux';
-import {ScrollView} from 'react-native-gesture-handler';
+import { getAllFriends } from '../../../app/actions/friendAction';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-const AddExpense = ({navigation}) => {
+const AddExpense = ({ navigation }) => {
   // State Variables
   const dispatch = useDispatch();
   const [description, setDescription] = useState('');
@@ -27,24 +25,42 @@ const AddExpense = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [currentValue, setCurrentValue] = useState([]);
-  const {authToken} = useSelector(state => state.auth);
+  const { authToken } = useSelector(state => state.auth);
+  const { friend } = useSelector(state => state.friend);
 
-  const friends = [
-    {
-      label: 'Gurminder',
-      value: 'Gurminder',
-    },
-    {
-      label: 'Nirav',
-      value: 'Nirav',
-    },
-    {
-      label: 'Himanshu',
-      value: 'Himanshu',
-    },
-  ];
+  const [friends, setFriends] = useState();
+  //   [
+  //   {
+  //     label: 'Gurminder',
+  //     value: 'Gurminder',
+  //   },
+  //   {
+  //     label: 'Nirav',
+  //     value: 'Nirav',
+  //   },
+  //   {
+  //     label: 'Himanshu',
+  //     value: 'Himanshu',
+  //   },
+  // ]
 
   console.log(currentValue);
+
+  useEffect(() => {
+    dispatch(getAllFriends(authToken));
+  }, []);
+
+  useEffect(() => {
+    let k = [];
+    friend.data.map((friend, index) => {
+      let obj = {
+        label: friend.name,
+        value: friend.name
+      };
+      k.push(obj);
+    });
+    setFriends(k);
+  }, []);
 
   // useEffect(() => {
   //   setLoading(true);
@@ -86,13 +102,13 @@ const AddExpense = ({navigation}) => {
                   maxHeight={120}
                   autoScroll
                   placeholder="Select friends"
-                  placeholderStyle={{color: '#333333'}}
+                  placeholderStyle={{ color: '#333333' }}
                   multiple={true}
                   min={1}
                   mode="BADGE"
                   badgeColors={['#19376D', '#8F43EE', '#245953']}
                   badgeDotColors={['white']}
-                  badgeTextStyle={{color: 'white'}}
+                  badgeTextStyle={{ color: 'white' }}
                 />
               </View>
 

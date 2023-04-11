@@ -23,8 +23,8 @@ const validationSchema = Yup.object({
 
 export const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
-  //const formObject = {email: '', password: ''};
-  const formObject = {email: 'right@yopmail.com', password: 'right1234'};
+  // const formObject = {email: '', password: ''};
+  const formObject = {email: 'giver@yopmail.com', password: '12345678'};
 
   let performLogin = async values => {
     let payload = {
@@ -148,7 +148,7 @@ export const LoginScreen = ({navigation}) => {
                     </View>
 
                     {/*** Social Media View ****/}
-                    <View className="flex w-full justify-center items-center mt-14">
+                    {/* <View className="flex w-full justify-center items-center mt-14">
                       <Text className="text-gray-400 tracking-wide py-4">
                         Or
                       </Text>
@@ -166,7 +166,7 @@ export const LoginScreen = ({navigation}) => {
                           />
                         </TouchableOpacity>
                       </View>
-                    </View>
+                    </View> */}
                   </View>
                 </SafeAreaView>
               </View>

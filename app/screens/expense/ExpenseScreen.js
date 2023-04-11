@@ -8,22 +8,22 @@ import {
   Modal,
   ActivityIndicator,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {Swipeable} from 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react';
+import { Swipeable } from 'react-native-gesture-handler';
 import axios from 'axios';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import {API_URL} from '../../constants/actionStrings';
+import { API_URL } from '../../constants/actionStrings';
 import showSnack from '../../utils/ShowSnack';
 
-const ExpenseScreen = ({navigation, route}) => {
+const ExpenseScreen = ({ navigation, route }) => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState([]);
   const [visibleSetting, setVisibleSetting] = useState(false);
   const [expenseModal, setExpenseModal] = useState(false);
   const [totalLent, setTotalLent] = useState(0);
 
-  const {authUser, authToken} = useSelector(state => state.auth);
+  const { authUser, authToken } = useSelector(state => state.auth);
 
   const handleSettingHide = () => {
     setVisibleSetting(false);
@@ -39,9 +39,40 @@ const ExpenseScreen = ({navigation, route}) => {
     setExpenseModal(true);
   };
 
-  const settleExpenseApi = () => {
+  const settleUpExpense = async (expense, authUser) => {
+    console.log('EXPENSE LINE 45-00-----0-0-', expense, authUser);
+    const instance = axios.create({
+      baseURL: API_URL,
+      timeout: 2500,
+      headers: { Authorization: 'Bearer ' + authToken },
+    });
+    let amt = expense.allDetails[authUser.id].owe;
+    let data = {
+      payer: authUser.id,
+      recipient: expense.paidBy,
+      expense: expense.id,
+      settleAmount: amt
+    };
+    console.log('data being passed ---1023-1203-1203-2103-120321-0', data);
+    const res = await instance
+      .put('expenses/settle', data)
+      .then(response => {
+        console.log('inside settle up THEN ', response.data);
+        showSnack(response.data.message);
+        getGroupMembers();
+        handleHide();
+      })
+      .catch(function (error) {
 
-  }
+        let any = {
+          code: 401,
+          message: "-"
+          // message: error.response.data.message,
+        };
+        return any;
+      });
+    return res;
+  };
 
   const getTotalLent = () => {
     let totalLent = 0;
@@ -51,7 +82,7 @@ const ExpenseScreen = ({navigation, route}) => {
       });
     return totalLent;
   };
-
+  let routeExpenseData = route.params.expenseData;
   //---------------------------------------------------//
   /*** Function to get expenses with a friend */
   //---------------------------------------------------//
@@ -60,12 +91,13 @@ const ExpenseScreen = ({navigation, route}) => {
     const instance = axios.create({
       baseURL: API_URL,
       timeout: 2500,
-      headers: {Authorization: 'Bearer ' + authToken},
+      headers: { Authorization: 'Bearer ' + authToken },
     });
     const res = await instance
       .get(`expenses`)
       .then(response => {
         const dummyExpense = response.data.data;
+        console.log('dummyExpense 1203812098321098', dummyExpense);
         const friendExpesne = dummyExpense.filter(expense => {
           if (friendId in expense.allDetails === true) {
             return expense;
@@ -80,7 +112,7 @@ const ExpenseScreen = ({navigation, route}) => {
         console.log('INSIDE GET EXPENSE FUNC CATCH ', error);
         let any = {
           code: 401,
-          message: error.response.data.message,
+          message: "-",
         };
         setLoading(false);
         return any;
@@ -120,13 +152,14 @@ const ExpenseScreen = ({navigation, route}) => {
 
             {/*********** Two Butons View ***********/}
             <View className="flex flex-row items-center space-x-4 justify-start mb-4">
-              <TouchableOpacity onPress={() => settleExpenseApi()} className="flex flex-row items-center justify-center shadow-xl border border-[#F2921D] bg-[#F2921D] px-3 py-2 mt-6 rounded-md space-x-2 ">
+              {authUser.id == routeExpenseData.paidBy ? '' : <TouchableOpacity onPress={() => settleUpExpense(routeExpenseData, authUser)} className="flex flex-row items-center justify-center shadow-xl border border-[#F2921D] bg-[#F2921D] px-3 py-2 mt-6 rounded-md space-x-2 ">
                 <View className="flex flex-row items-center space-x-4">
                   <Text className="text-sm font-normal text-white">
                     Settle up
                   </Text>
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity>}
+
 
               {/* <TouchableOpacity className="flex flex-row items-center justify-center border border-[#F2921D] px-3 py-2 mt-6 rounded-md space-x-2 shadow-lg">
                 <View cla
@@ -163,18 +196,18 @@ const ExpenseScreen = ({navigation, route}) => {
                     />
                     <View className="flex space-y-1">
                       <Text className="text-lg font-light">
-                        {route.params.expenseData.description}
+                        {routeExpenseData.description}
                       </Text>
                       <Text className="text-2xl font-bold text-gray-500">
                         {'CA $' +
-                          route.params.expenseData.detailsPaid.amount.toFixed(
+                          routeExpenseData.detailsPaid.amount.toFixed(
                             2,
                           )}
                       </Text>
                     </View>
                   </View>
                   <Text className="text-[12px] text-gray-600 font-light py-1 capitalize pt-8">
-                    {`Added by ` + route.params.expenseData.createdByName}
+                    {`Added by ` + routeExpenseData.createdByName}
                   </Text>
                 </View>
               </View>
@@ -188,9 +221,9 @@ const ExpenseScreen = ({navigation, route}) => {
                     />
                     <View className="flex space-y-1">
                       <Text className="text-lg font-light capitalize">
-                        {route.params.expenseData.detailsPaid.message +
+                        {routeExpenseData.detailsPaid.message +
                           ' $' +
-                          route.params.expenseData.detailsPaid.amount.toFixed(
+                          routeExpenseData.detailsPaid.amount.toFixed(
                             2,
                           )}
                       </Text>
@@ -209,9 +242,9 @@ const ExpenseScreen = ({navigation, route}) => {
                     />
                     <View className="flex space-y-1">
                       <Text className="text-md font-light capitalize">
-                        {route.params.expenseData.detailsSplit.message +
+                        {routeExpenseData.detailsSplit.message +
                           ' $' +
-                          route.params.expenseData.detailsSplit.amount.toFixed(
+                          routeExpenseData.detailsSplit.amount.toFixed(
                             2,
                           )}
                       </Text>

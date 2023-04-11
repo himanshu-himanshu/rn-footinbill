@@ -7,24 +7,24 @@ import {
   ActivityIndicator,
   Modal,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 
-import {API_URL} from '../../constants/actionStrings';
-import {getAGroup, getAllGroups} from '../../../app/actions/groupAction';
-import {getAuthUser} from '../../../app/actions/authAction';
+import { API_URL } from '../../constants/actionStrings';
+import { getAGroup, getAllGroups } from '../../../app/actions/groupAction';
+import { getAuthUser } from '../../../app/actions/authAction';
 import AddFriendModal from './AddFriendModal';
 import GroupSettingModal from './GroupSettingModal';
 import AddMember from './components/AddMember';
 import AddExpense from './components/AddExpense';
 import AddExpenseModal from '../friend/AddExpenseModal';
 import showSnack from '../../utils/ShowSnack';
-import {Swipeable} from 'react-native-gesture-handler';
-import {useIsFocused} from '@react-navigation/native';
+import { Swipeable } from 'react-native-gesture-handler';
+import { useIsFocused } from '@react-navigation/native';
 
-const GroupScreen = ({navigation, route}) => {
-  const {_id} = route.params.groupData;
+const GroupScreen = ({ navigation, route }) => {
+  const { _id } = route.params.groupData;
 
   const dispatch = useDispatch();
 
@@ -42,7 +42,7 @@ const GroupScreen = ({navigation, route}) => {
   const [totalLent, setTotalLent] = useState(0);
 
   // Fetch from state
-  const {authToken, authUser} = useSelector(state => state.auth);
+  const { authToken, authUser } = useSelector(state => state.auth);
 
   useEffect(() => {
     dispatch(getAGroup(authToken, _id));
@@ -89,7 +89,7 @@ const GroupScreen = ({navigation, route}) => {
     const instance = axios.create({
       baseURL: API_URL,
       timeout: 2500,
-      headers: {Authorization: 'Bearer ' + authToken},
+      headers: { Authorization: 'Bearer ' + authToken },
     });
     const res = await instance
       .get(`groups` + `/` + _id + `/members`)
@@ -116,7 +116,7 @@ const GroupScreen = ({navigation, route}) => {
     const instance = axios.create({
       baseURL: API_URL,
       timeout: 2500,
-      headers: {Authorization: 'Bearer ' + authToken},
+      headers: { Authorization: 'Bearer ' + authToken },
     });
     const res = await instance
       .delete(`groups` + `/` + _id)
@@ -171,7 +171,7 @@ const GroupScreen = ({navigation, route}) => {
     const instance = axios.create({
       baseURL: API_URL,
       timeout: 2500,
-      headers: {Authorization: 'Bearer ' + authToken},
+      headers: { Authorization: 'Bearer ' + authToken },
     });
     const res = await instance
       .post(`expenses`, payload)
@@ -200,8 +200,8 @@ const GroupScreen = ({navigation, route}) => {
     const instance = axios.create({
       baseURL: API_URL,
       timeout: 2500,
-      headers: {Authorization: 'Bearer ' + authToken},
-      params: {groupId: _id},
+      headers: { Authorization: 'Bearer ' + authToken },
+      params: { groupId: _id },
     });
     const res = await instance
       .get(`expenses`)
@@ -243,7 +243,7 @@ const GroupScreen = ({navigation, route}) => {
     setExpenseModal(true);
   };
 
-  const {group} = useSelector(state => state.group);
+  const { group } = useSelector(state => state.group);
 
   return (
     <View className="w-full h-screen bg-white">
@@ -271,16 +271,15 @@ const GroupScreen = ({navigation, route}) => {
                 </Text>
                 {totalLent == 0 && (
                   <Text className="text-xsm font-Raleway px-2 text-gray-600 font-light">
-                    No expenses to show.
+                    -
                   </Text>
                 )}
                 {totalLent !== 0 && (
                   <Text
-                    className={`text-xsm font-Raleway px-2 ${
-                      youPaid >= youBorrowed
-                        ? 'text-green-600'
-                        : 'text-pink-500'
-                    } font-semibold`}>
+                    className={`text-xsm font-Raleway px-2 ${youPaid >= youBorrowed
+                      ? 'text-green-600'
+                      : 'text-pink-500'
+                      } font-semibold`}>
                     Total Balance:{' '}
                     {youPaid >= youBorrowed
                       ? ` +$${youPaid - youBorrowed}`
@@ -302,14 +301,14 @@ const GroupScreen = ({navigation, route}) => {
 
             {/*********** Three Butons View (Only show if there is atleast one member in group) ***********/}
             {groupMembers.length > 1 && (
-              <View className="flex flex-row items-center space-x-3 justify-center mb-6">
-                <TouchableOpacity className="flex flex-row items-center justify-center shadow-xl border border-[#8F43EE] bg-[#8F43EE] px-3 py-2 mt-6 rounded-md space-x-2">
+              <View className="flex flex-row items-center space-x-3 mb-6">
+                {/* <TouchableOpacity className="flex flex-row items-center justify-center shadow-xl border border-[#8F43EE] bg-[#8F43EE] px-3 py-2 mt-6 rounded-md space-x-2">
                   <View className="flex flex-row items-center space-x-4">
                     <Text className="text-sm font-normal text-white">
                       Settle up
                     </Text>
                   </View>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
                 <TouchableOpacity
                   className="flex flex-row items-center justify-center border border-[#76C893] px-3 py-2 mt-6 rounded-md space-x-2"
@@ -352,7 +351,32 @@ const GroupScreen = ({navigation, route}) => {
             {/** Single Expense Design */}
             {!loading &&
               expenses.map(expense => (
-                <View
+                expense.type == "settle" ? (<View
+                  className="border-b pb-1 border-gray-100"
+                  key={expense.date}>
+                  <TouchableOpacity
+                    className="flex flex-row items-center justify-between"
+                     >
+                    <View className="flex flex-row justify-between items-center py-4 px-1 w-full">
+                      <View className="flex flex-row items-center space-x-4">
+                        <Image
+                          source={require('../../../assets/images/bag.png')}
+                          className="h-10 w-10"
+                        />
+                        <View className="flex space-y-1">
+                          <Text className="text-md font-normal">
+                            {expense.description}
+                          </Text>
+                          <Text className="text-md font-light text-gray-500">
+                            {expense.message +
+                              ' CA $' +
+                              expense.amount}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                </View>) : (<View
                   className="border-b pb-1 border-gray-100"
                   key={expense.date}>
                   <TouchableOpacity
@@ -381,25 +405,23 @@ const GroupScreen = ({navigation, route}) => {
                       </View>
                       <View className="flex space-y-1 justify-end items-end">
                         <Text
-                          className={`text-[12px] ${
-                            expense.detailsPaid.message === 'you paid'
-                              ? 'text-green-600'
-                              : 'text-pink-500'
-                          }`}>
+                          className={`text-[12px] ${expense.detailsPaid.message === 'you paid'
+                            ? 'text-green-600'
+                            : 'text-pink-500'
+                            }`}>
                           {expense.detailsSplit.message}
                         </Text>
                         <Text
-                          className={`text-[17px]  ${
-                            expense.detailsPaid.message === 'you paid'
-                              ? 'text-green-600'
-                              : 'text-pink-500'
-                          } font-light`}>
+                          className={`text-[17px]  ${expense.detailsPaid.message === 'you paid'
+                            ? 'text-green-600'
+                            : 'text-pink-500'
+                            } font-light`}>
                           {'CA $' + expense.detailsSplit.amount}
                         </Text>
                       </View>
                     </View>
                   </TouchableOpacity>
-                </View>
+                </View>)
               ))}
 
             {/** Show when atleast two members and no expense added in group */}

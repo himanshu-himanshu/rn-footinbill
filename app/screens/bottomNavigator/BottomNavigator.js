@@ -60,7 +60,7 @@ const BottomNavigator = () => {
       />
 
       {/*********** Add Expense Tab ***********/}
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Add Expense"
         component={AddExpense}
         options={{
@@ -73,7 +73,7 @@ const BottomNavigator = () => {
             />
           ),
         }}
-      />
+      /> */}
 
       {/*********** Activity Tab ***********/}
       <Tab.Screen
