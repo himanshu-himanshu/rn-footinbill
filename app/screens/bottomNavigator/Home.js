@@ -27,31 +27,69 @@ const Home = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [friendName, setFriendName] = useState('');
   const [friendEmail, setFriendEmail] = useState('');
-  const [allFriends, setAllFriends] = useState([]);
+  const [expenses, setExpenses] = useState([]);
+  const [totalLent, setTotalLent] = useState(0);
   const [youPaid, setYouPaid] = useState(0);
   const [youBorrowed, setYouBorrowed] = useState(0);
 
-  const {authToken} = useSelector(state => state.auth);
-
+  const {authUser, authToken} = useSelector(state => state.auth);
   const {friend} = useSelector(state => state.friend);
 
   useEffect(() => {
-    //setLoading(true);
     getExpenses();
     dispatch(getAllFriends(authToken));
+    setTotalLent(getTotalLent());
     console.log('AUTH TOKEN HOME SCREEN', authToken);
-    //setLoading(false);
   }, []);
 
   useEffect(() => {
     getExpenses();
     dispatch(getAllFriends(authToken));
+    setTotalLent(getTotalLent());
   }, [isFocused]);
 
+  const getTotalLent = () => {
+    let totalLent = 0;
+    let localPaid = 0;
+    let localBorrowed = 0;
+    expenses &&
+      expenses.map(expense => {
+        if (expense.type == 'expense') {
+          console.log('EXPENSE FROM FRIENDS', expense);
+          totalLent = totalLent + expense.detailsSplit.amount;
+
+          if (expense.detailsPaid.message == 'you paid') {
+            localPaid = localPaid + expense.detailsPaid.amount / 2;
+            setYouPaid(localPaid);
+          }
+          if (expense.detailsPaid.message != 'you paid') {
+            localBorrowed = localBorrowed + expense.detailsPaid.amount / 2;
+            setYouBorrowed(localBorrowed);
+          }
+        } else {
+          console.log('asdlaskjdjaslkdj sklajd lasj daksj dlaskjdla');
+          console.log('authUser.id', authUser.id);
+          console.log('expense.payer', expense.payer);
+          console.log('expense.recipient', expense.recipient);
+          if (authUser.id == expense.payer) {
+            localPaid += expense.amount;
+            setYouPaid(localPaid);
+          }
+          if (authUser.id == expense.recipient) {
+            localBorrowed += expense.amount;
+            setYouBorrowed(localBorrowed);
+          }
+        }
+      });
+    console.log('PAID: ', youPaid, ' AND BORROWED: ', youBorrowed);
+    return totalLent;
+  };
+
   //---------------------------------------------------//
-  /*** Function to get expenses with a friend */
+  /*** Function to get expenses */
   //---------------------------------------------------//
   const getExpenses = async () => {
+    setLoading(true);
     const instance = axios.create({
       baseURL: API_URL,
       timeout: 2500,
@@ -61,27 +99,15 @@ const Home = ({navigation}) => {
       .get(`expenses`)
       .then(response => {
         const dummyExpense = response.data.data;
-        let localLent = 0;
-        let localBorrowed = 0;
-        dummyExpense.map(expense => {
-          console.log('EXPENSE FROM FRIENDS', expense);
-          if (expense.detailsPaid.message == 'you paid') {
-            localLent = localLent + expense.detailsPaid.amount / 2;
-            setYouPaid(localLent);
-          }
-          if (expense.detailsPaid.message != 'you paid') {
-            localBorrowed = localBorrowed + expense.detailsPaid.amount / 2;
-            setYouBorrowed(localBorrowed);
-          }
-        });
-        console.log('Lent: ', localLent, ' AND BORROWED: ', localBorrowed);
-        //console.log('INSIDE GET EXPENSE FUNC THEN ', response.data);
+        setExpenses(dummyExpense);
+        console.log('INSIDE GET EXPENSE FUNC THEN ', response.data);
+        setLoading(false);
       })
       .catch(function (error) {
         console.log('INSIDE GET EXPENSE FUNC CATCH ', error);
         let any = {
           code: 401,
-          message: '-',
+          message: error.response.data.message,
         };
         setLoading(false);
         return any;

@@ -109,7 +109,9 @@ export const registerUser = signUpData => async dispatch => {
     .post(url, signUpData)
     .then(function (response) {
       if (response && response.data.success) {
-        AsyncStorage.setItem('userToken', response.data.data.access_token);
+        dispatch(saveAuthToken(response.data.data.access_token));
+        dispatch(getAuthUser(response.data.data.access_token));
+        //AsyncStorage.setItem('userToken', response.data.data.access_token);
         dispatch({type: loginString, payload: response.data});
         let any = {
           code: 200,
