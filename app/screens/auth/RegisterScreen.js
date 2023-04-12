@@ -74,7 +74,7 @@ export const RegisterScreen = ({navigation}) => {
                 <SafeAreaView>
                   <View className="w-full h-full">
                     {/********* Header View **********/}
-                    <View className="flex w-full justify-center items-center pt-8 pb-10">
+                    <View className="flex w-full justify-center items-center py-12">
                       <Text className="text-3xl font-Raleway font-semibold tracking-wide py-4">
                         Sign up
                       </Text>
@@ -84,13 +84,14 @@ export const RegisterScreen = ({navigation}) => {
                     </View>
 
                     {/********* Username, Email and Password View **********/}
-                    <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
+                    <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2 mt-8">
                       <TextInput
                         secureTextEntry={false}
                         placeholder="Username"
                         name="name"
                         className="p-4 text-xl text-gray-600 border border-gray-300"
                         keyboardType="default"
+                        autoCorrect="false"
                         // value={formObject.name}
                         onBlur={handleBlur('name')}
                         onChangeText={handleChange('name')}
@@ -109,6 +110,7 @@ export const RegisterScreen = ({navigation}) => {
                         secureTextEntry={false}
                         placeholder="Enter Email"
                         name="email"
+                        autoCorrect="false"
                         className="p-4 text-xl text-gray-600 border border-gray-300"
                         keyboardType="default"
                         // value={formObject.email}
@@ -135,6 +137,7 @@ export const RegisterScreen = ({navigation}) => {
                         autoCapitalize="none"
                         onChangeText={handleChange('password')}
                         onBlur={handleBlur('password')}
+                        autoCorrect="false"
                       />
                       {touched.password && errors.password ? (
                         <Text className="text-red-400 px-1 font-light">
@@ -146,7 +149,7 @@ export const RegisterScreen = ({navigation}) => {
                     </View>
 
                     {/********* Signin Button View **********/}
-                    <View className="w-[90%] mx-auto shadow-md bg-primary rounded-sm mt-6 bg-[#b5e48c]">
+                    <View className="w-[90%] mx-auto shadow-md bg-primary rounded-sm mt-12 bg-[#b5e48c]">
                       <TouchableOpacity onPress={handleSubmit}>
                         <Text className="text-center px-10 py-4 text-gray-700 font-bold text-xl rounded-full">
                           Create account
@@ -155,7 +158,7 @@ export const RegisterScreen = ({navigation}) => {
                     </View>
 
                     {/********* Login View **********/}
-                    <View className="flex w-[90%] justify-end items-center mt-8 mx-auto">
+                    <View className="flex w-[90%] justify-end items-center mt-12 mx-auto">
                       <TouchableOpacity
                         className="flex flex-row space-x-2"
                         onPress={() => navigation.navigate('loginScreen')}>
@@ -167,27 +170,6 @@ export const RegisterScreen = ({navigation}) => {
                         </Text>
                       </TouchableOpacity>
                     </View>
-
-                    {/********* Social Media View **********/}
-                    {/* <View className="flex w-full justify-center items-center mt-6">
-                      <Text className="text-gray-400 tracking-wide py-4">
-                        Or
-                      </Text>
-                      <View className="flex flex-row space-x-4">
-                        <TouchableOpacity className="p-4 w-[60px] h-[60px] rounded-full flex justify-center items-center">
-                          <Image
-                            className="h-14 w-14"
-                            source={require('../../../assets/images/facebook.png')}
-                          />
-                        </TouchableOpacity>
-                        <TouchableOpacity className="p-4 w-[60px] h-[60px] rounded-full flex justify-center items-center">
-                          <Image
-                            className="h-12 w-12"
-                            source={require('../../../assets/images/google.png')}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    </View> */}
                   </View>
                 </SafeAreaView>
               </View>

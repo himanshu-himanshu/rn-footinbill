@@ -9,17 +9,19 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-import React, { useEffect, useState } from 'react';
-import AddFriend from './components/AddFriend';
-import { createFriend, getAllFriends } from '../../actions/friendAction';
-import { useDispatch, useSelector } from 'react-redux';
-import { ScrollView } from 'react-native-gesture-handler';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {ScrollView} from 'react-native-gesture-handler';
 import axios from 'axios';
+import {useIsFocused} from '@react-navigation/native';
 
-import { API_URL } from '../../constants/actionStrings';
+import {API_URL} from '../../constants/actionStrings';
+import {createFriend, getAllFriends} from '../../actions/friendAction';
+import AddFriend from './components/AddFriend';
 
-const Home = ({ navigation }) => {
+const Home = ({navigation}) => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -29,16 +31,22 @@ const Home = ({ navigation }) => {
   const [youPaid, setYouPaid] = useState(0);
   const [youBorrowed, setYouBorrowed] = useState(0);
 
-  const { authToken } = useSelector(state => state.auth);
+  const {authToken} = useSelector(state => state.auth);
 
-  const { friend } = useSelector(state => state.friend);
+  const {friend} = useSelector(state => state.friend);
 
   useEffect(() => {
     //setLoading(true);
     getExpenses();
     dispatch(getAllFriends(authToken));
+    console.log('AUTH TOKEN HOME SCREEN', authToken);
     //setLoading(false);
   }, []);
+
+  useEffect(() => {
+    getExpenses();
+    dispatch(getAllFriends(authToken));
+  }, [isFocused]);
 
   //---------------------------------------------------//
   /*** Function to get expenses with a friend */
@@ -47,7 +55,7 @@ const Home = ({ navigation }) => {
     const instance = axios.create({
       baseURL: API_URL,
       timeout: 2500,
-      headers: { Authorization: 'Bearer ' + authToken },
+      headers: {Authorization: 'Bearer ' + authToken},
     });
     const res = await instance
       .get(`expenses`)
@@ -73,7 +81,7 @@ const Home = ({ navigation }) => {
         console.log('INSIDE GET EXPENSE FUNC CATCH ', error);
         let any = {
           code: 401,
-          message: "-",
+          message: '-',
         };
         setLoading(false);
         return any;
@@ -87,12 +95,12 @@ const Home = ({ navigation }) => {
       return;
     } else {
       setLoading(true);
-      dispatch(createFriend({ name: friendName, email: friendEmail }, authToken));
+      dispatch(createFriend({name: friendName, email: friendEmail}, authToken));
       handleHide();
       dispatch(getAllFriends(authToken));
       setTimeout(() => {
         setLoading(false);
-      }, 3000);
+      }, 4000);
     }
   };
 
@@ -139,8 +147,9 @@ const Home = ({ navigation }) => {
                       Total Balance
                     </Text>
                     <Text
-                      className={`text-xsm ${youPaid < youBorrowed ? 'text-pink-500' : 'text-sky-600'
-                        }`}>
+                      className={`text-xsm ${
+                        youPaid < youBorrowed ? 'text-pink-500' : 'text-sky-600'
+                      }`}>
                       You are owed CA
                       {youPaid >= youBorrowed
                         ? ` +$${youPaid - youBorrowed}`

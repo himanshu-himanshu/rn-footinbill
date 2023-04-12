@@ -23,8 +23,8 @@ const validationSchema = Yup.object({
 
 export const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
-  // const formObject = {email: '', password: ''};
-  const formObject = {email: 'giver@yopmail.com', password: '12345678'};
+  const formObject = {email: '', password: ''};
+  //const formObject = {email: 'giver@yopmail.com', password: '12345678'};
 
   let performLogin = async values => {
     let payload = {
@@ -65,7 +65,7 @@ export const LoginScreen = ({navigation}) => {
                 <SafeAreaView>
                   <View className="w-full h-full">
                     {/*** Header View ****/}
-                    <View className="flex w-full justify-center items-center pt-8 pb-12">
+                    <View className="flex w-full justify-center items-center py-12">
                       <Text className="text-3xl font-Raleway font-bold tracking-wide py-4">
                         Log in
                       </Text>
@@ -75,7 +75,7 @@ export const LoginScreen = ({navigation}) => {
                     </View>
 
                     {/*** Email & Password View ****/}
-                    <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2">
+                    <View className="flex w-[90%] justify-center mx-auto my-2 rounded-sm space-y-2 mt-8">
                       <TextInput
                         secureTextEntry={false}
                         placeholder="Email"
@@ -85,6 +85,7 @@ export const LoginScreen = ({navigation}) => {
                         onBlur={handleBlur('email')}
                         onChangeText={handleChange('email')}
                         autoCapitalize="none"
+                        autoCorrect="false"
                       />
                       {touched.email && errors.email ? (
                         <Text className="text-red-400 px-1 font-light">
@@ -102,6 +103,7 @@ export const LoginScreen = ({navigation}) => {
                         className="p-4 text-xl text-gray-700 border border-gray-300"
                         keyboardType="default"
                         autoCapitalize="none"
+                        autoCorrect="false"
                         onChangeText={handleChange('password')}
                         onBlur={handleBlur('password')}
                       />
@@ -125,7 +127,7 @@ export const LoginScreen = ({navigation}) => {
                     </View>
 
                     {/*** Login Button View ****/}
-                    <View className="w-[90%] mx-auto shadow-md bg-[#b5e48c] rounded-sm mt-12">
+                    <View className="w-[90%] mx-auto shadow-md bg-[#b5e48c] rounded-sm mt-14">
                       <TouchableOpacity onPress={handleSubmit}>
                         <Text className="text-center px-10 py-4 text-gray-700 font-bold text-xl rounded-full">
                           Log in
@@ -134,7 +136,7 @@ export const LoginScreen = ({navigation}) => {
                     </View>
 
                     {/*** Signup View ****/}
-                    <View className="flex w-[90%] justify-end items-center mt-8 mx-auto">
+                    <View className="flex w-[90%] justify-end items-center mt-12 mx-auto">
                       <TouchableOpacity
                         className="flex flex-row space-x-2"
                         onPress={() => navigation.navigate('registerScreen')}>
@@ -146,27 +148,6 @@ export const LoginScreen = ({navigation}) => {
                         </Text>
                       </TouchableOpacity>
                     </View>
-
-                    {/*** Social Media View ****/}
-                    {/* <View className="flex w-full justify-center items-center mt-14">
-                      <Text className="text-gray-400 tracking-wide py-4">
-                        Or
-                      </Text>
-                      <View className="flex flex-row space-x-4">
-                        <TouchableOpacity className="p-4 w-[60px] h-[60px] rounded-full flex justify-center items-center">
-                          <Image
-                            className="h-14 w-14"
-                            source={require('../../../assets/images/facebook.png')}
-                          />
-                        </TouchableOpacity>
-                        <TouchableOpacity className="p-4 w-[60px] h-[60px] rounded-full flex justify-center items-center">
-                          <Image
-                            className="h-12 w-12"
-                            source={require('../../../assets/images/google.png')}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    </View> */}
                   </View>
                 </SafeAreaView>
               </View>

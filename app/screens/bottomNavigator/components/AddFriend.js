@@ -5,7 +5,7 @@ const AddFriend = ({handleShow}) => {
   return (
     <>
       {/*********** Center Text View ***********/}
-      <View className="h-[80%] w-full px-4 flex justify-center items-center">
+      <View className="h-[100%] w-full px-4 flex justify-center items-center pb-12">
         <Text className="text-gray-900 text-md tracking-wide text-center font-bold mb-2">
           Welcome to FootInBill
         </Text>

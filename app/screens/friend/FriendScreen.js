@@ -8,18 +8,18 @@ import {
   Modal,
   ActivityIndicator,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 
-import { API_URL } from '../../constants/actionStrings';
+import {API_URL} from '../../constants/actionStrings';
 import AddExpense from './components/AddExpense';
 import AddExpenseModal from './AddExpenseModal';
 import showSnack from '../../utils/ShowSnack';
-import { Swipeable } from 'react-native-gesture-handler';
+import {Swipeable} from 'react-native-gesture-handler';
 import FriendSettingModal from './FriendSettingModal';
 
-const FriendScreen = ({ navigation, route }) => {
+const FriendScreen = ({navigation, route}) => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState([]);
   const [visibleSetting, setVisibleSetting] = useState(false);
@@ -28,7 +28,7 @@ const FriendScreen = ({ navigation, route }) => {
   const [youPaid, setYouPaid] = useState(0);
   const [youBorrowed, setYouBorrowed] = useState(0);
 
-  const { authUser, authToken } = useSelector(state => state.auth);
+  const {authUser, authToken} = useSelector(state => state.auth);
 
   useEffect(() => {
     setLoading(true);
@@ -65,7 +65,7 @@ const FriendScreen = ({ navigation, route }) => {
     let localBorrowed = 0;
     expenses &&
       expenses.map(expense => {
-        if (expense.type == "expense") {
+        if (expense.type == 'expense') {
           console.log('EXPENSE FROM FRIENDS', expense);
           totalLent = totalLent + expense.detailsSplit.amount;
 
@@ -104,7 +104,7 @@ const FriendScreen = ({ navigation, route }) => {
     const instance = axios.create({
       baseURL: API_URL,
       timeout: 2500,
-      headers: { Authorization: 'Bearer ' + authToken },
+      headers: {Authorization: 'Bearer ' + authToken},
     });
     const res = await instance
       .get(`expenses`)
@@ -112,7 +112,7 @@ const FriendScreen = ({ navigation, route }) => {
         const dummyExpense = response.data.data;
         console.log('dummy expernse 120931290321', dummyExpense);
         const friendExpense = dummyExpense.filter(expense => {
-          if (expense.type == "expense") {
+          if (expense.type == 'expense') {
             if (friendId in expense.allDetails === true) {
               return expense;
             }
@@ -171,7 +171,7 @@ const FriendScreen = ({ navigation, route }) => {
     const instance = axios.create({
       baseURL: API_URL,
       timeout: 2500,
-      headers: { Authorization: 'Bearer ' + authToken },
+      headers: {Authorization: 'Bearer ' + authToken},
     });
     const res = await instance
       .post(`expenses`, payload)
@@ -226,10 +226,11 @@ const FriendScreen = ({ navigation, route }) => {
                 )}
                 {totalLent !== 0 && (
                   <Text
-                    className={`text-xsm font-Raleway px-2 ${youPaid >= youBorrowed
-                      ? 'text-green-600'
-                      : 'text-pink-500'
-                      } font-semibold`}>
+                    className={`text-xsm font-Raleway px-2 ${
+                      youPaid >= youBorrowed
+                        ? 'text-green-600'
+                        : 'text-pink-500'
+                    } font-semibold`}>
                     Total Balance:{' '}
                     {youPaid >= youBorrowed
                       ? ` +$${youPaid - youBorrowed}`
@@ -252,7 +253,6 @@ const FriendScreen = ({ navigation, route }) => {
             {/*********** Two Butons View ***********/}
 
             <View className="flex flex-row items-center space-x-4 justify-start mb-4">
-
               {true && (
                 <TouchableOpacity
                   className="flex flex-row items-center justify-center border border-[#E96479] px-3 py-2 mt-6 rounded-md space-x-2 shadow-lg"
@@ -263,10 +263,8 @@ const FriendScreen = ({ navigation, route }) => {
                     </Text>
                   </View>
                 </TouchableOpacity>
-
               )}
             </View>
-
 
             {/** Show when atleast two members and no expense added in group */}
             {!loading && expenses.length === 0 && (
@@ -286,75 +284,87 @@ const FriendScreen = ({ navigation, route }) => {
             {/** Single Expense Design */}
             <ScrollView className="mb-12 pb-12">
               {!loading &&
-                expenses.map(expense => (
-                  expense.type == "settle" ? (<View
-                    className="border-b pb-3 border-gray-100"
-                    key={expense.date}>
-                    <TouchableOpacity className="flex flex-row items-center justify-between">
-                      <View className="flex flex-row justify-between items-center p-4 w-full">
-                        <View className="flex flex-row items-center space-x-4">
-                          <Image
-                            source={require('../../../assets/images/bag.png')}
-                            className="h-10 w-10"
-                          />
-                          <View className="flex space-y-1">
-                            <Text className="text-md font-normal">
-                              {expense.description}
-                            </Text>
-                            <Text className="text-md font-light text-gray-500">
-                              {expense.message +
-                                ' CA $' +
-                                expense.amount}
+                expenses.map(expense =>
+                  expense.type == 'settle' ? (
+                    <View
+                      className="border-b pb-3 border-gray-100"
+                      key={expense.date}>
+                      <TouchableOpacity className="flex flex-row items-center justify-between">
+                        <View className="flex flex-row justify-between items-center p-4 w-full">
+                          <View className="flex flex-row items-center space-x-4">
+                            <Image
+                              source={require('../../../assets/images/settled.png')}
+                              className="h-10 w-10"
+                            />
+                            <View className="flex space-y-1">
+                              <Text className="text-md font-normal">
+                                {expense.description}
+                              </Text>
+                              <Text className="text-md font-light text-gray-500">
+                                {expense.message + ' CA $' + expense.amount}
+                              </Text>
+                            </View>
+                          </View>
+                          <View className="flex space-y-1 justify-end items-end">
+                            <Text
+                              className={`text-[14px] font-light text-gray-500`}>
+                              Settled
                             </Text>
                           </View>
                         </View>
-                      </View>
-                    </TouchableOpacity>
-                  </View>) : <View
-                    className="border-b pb-3 border-gray-100"
-                    key={expense.date}>
-                    <TouchableOpacity onPress={() =>
-                      navigation.navigate('expenseScreen', {
-                        expenseData: expense,
-                      })
-                    } className="flex flex-row items-center justify-between">
-                      <View className="flex flex-row justify-between items-center p-4 w-full">
-                        <View className="flex flex-row items-center space-x-4">
-                          <Image
-                            source={require('../../../assets/images/bag.png')}
-                            className="h-10 w-10"
-                          />
-                          <View className="flex space-y-1">
-                            <Text className="text-md font-normal">
-                              {expense.description}
-                            </Text>
-                            <Text className="text-md font-light text-gray-500">
-                              {expense.detailsPaid.message +
-                                ' CA $' +
-                                expense.detailsPaid.amount}
-                            </Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <View
+                      className="border-b pb-3 border-gray-100"
+                      key={expense.date}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate('expenseScreen', {
+                            expenseData: expense,
+                          })
+                        }
+                        className="flex flex-row items-center justify-between">
+                        <View className="flex flex-row justify-between items-center p-4 w-full">
+                          <View className="flex flex-row items-center space-x-4">
+                            <Image
+                              source={require('../../../assets/images/bag.png')}
+                              className="h-10 w-10"
+                            />
+                            <View className="flex space-y-1">
+                              <Text className="text-md font-normal">
+                                {expense.description}
+                              </Text>
+                              <Text className="text-md font-light text-gray-500">
+                                {expense.detailsPaid.message +
+                                  ' CA $' +
+                                  expense.detailsPaid.amount}
+                              </Text>
+                            </View>
                           </View>
-                        </View>
-                        <View className="flex space-y-1 justify-end items-end">
-                          <Text
-                            className={`text-[12px] ${expense.detailsPaid.message === 'you paid'
-                              ? 'text-green-600'
-                              : 'text-pink-500'
+                          <View className="flex space-y-1 justify-end items-end">
+                            <Text
+                              className={`text-[12px] ${
+                                expense.detailsPaid.message === 'you paid'
+                                  ? 'text-green-600'
+                                  : 'text-pink-500'
                               }`}>
-                            {expense.detailsSplit.message}
-                          </Text>
-                          <Text
-                            className={`text-[17px]  ${expense.detailsPaid.message === 'you paid'
-                              ? 'text-green-600'
-                              : 'text-pink-500'
+                              {expense.detailsSplit.message}
+                            </Text>
+                            <Text
+                              className={`text-[17px]  ${
+                                expense.detailsPaid.message === 'you paid'
+                                  ? 'text-green-600'
+                                  : 'text-pink-500'
                               } font-light`}>
-                            {'CA $' + expense.detailsSplit.amount}
-                          </Text>
+                              {'CA $' + expense.detailsSplit.amount}
+                            </Text>
+                          </View>
                         </View>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                ))}
+                      </TouchableOpacity>
+                    </View>
+                  ),
+                )}
             </ScrollView>
           </View>
 

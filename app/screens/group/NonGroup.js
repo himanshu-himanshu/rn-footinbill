@@ -8,16 +8,16 @@ import {
   Swipeable,
   Modal,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, {useEffect, useState} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 
-import { API_URL } from '../../constants/actionStrings';
-import { getAuthUser } from '../../../app/actions/authAction';
+import {API_URL} from '../../constants/actionStrings';
+import {getAuthUser} from '../../../app/actions/authAction';
 import AddExpense from './components/AddExpense';
-import { ScrollView } from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 
-const GroupScreen = ({ navigation, route }) => {
+const GroupScreen = ({navigation, route}) => {
   //   const {_id} = route.params.groupData;
 
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const GroupScreen = ({ navigation, route }) => {
   const [expenses, setExpenses] = useState([]);
 
   // Fetch from state
-  const { authToken, authUser } = useSelector(state => state.auth);
+  const {authToken, authUser} = useSelector(state => state.auth);
 
   useEffect(() => {
     dispatch(getAuthUser(authToken));
@@ -53,7 +53,7 @@ const GroupScreen = ({ navigation, route }) => {
     const instance = axios.create({
       baseURL: API_URL,
       timeout: 2500,
-      headers: { Authorization: 'Bearer ' + authToken },
+      headers: {Authorization: 'Bearer ' + authToken},
     });
     const res = await instance
       .get(`expenses`)
@@ -138,66 +138,78 @@ const GroupScreen = ({ navigation, route }) => {
               </View>
             )}
 
+            {!loading && expenses.length == 0 && (
+              <View className="h-[80%] w-full flex justify-center items-center">
+                <Text className="mt-2 text-lg font-light text-gray-500">
+                  Nothing to show here ⚡️
+                </Text>
+              </View>
+            )}
+
             <ScrollView className="mb-12 pb-12">
               {!loading &&
                 expenses &&
-                expenses.map((expense) => (
-                  expense.type == "settle" ? (<View 
-                    className="border-b pb-1 border-gray-100 px-4"
-                    key={expense.date}>
-                    <TouchableOpacity className="flex flex-row items-center justify-between">
-                      <View className="flex flex-row justify-between items-center px-1 py-4 w-full">
-                        <View className="flex flex-row items-center space-x-3">
-                          <Image
-                            source={require('../../../assets/images/bill.png')}
-                            className="h-11 w-11"
-                          />
-                          <View className="flex space-y-1">
-                            <Text className="text-md font-normal capitalize">
-                              {expense.description}
+                expenses.map(expense =>
+                  expense.type == 'settle' ? (
+                    <View
+                      className="border-b pb-1 border-gray-100 px-4"
+                      key={expense.date}>
+                      <TouchableOpacity className="flex flex-row items-center justify-between">
+                        <View className="flex flex-row justify-between items-center px-1 py-4 w-full">
+                          <View className="flex flex-row items-center space-x-3">
+                            <Image
+                              source={require('../../../assets/images/bill.png')}
+                              className="h-11 w-11"
+                            />
+                            <View className="flex space-y-1">
+                              <Text className="text-md font-normal capitalize">
+                                {expense.description}
+                              </Text>
+                              <Text className="text-md font-light text-gray-600">
+                                {expense.message +
+                                  ' CA $ ' +
+                                  expense.amount.toFixed(2)}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <View
+                      className="border-b pb-1 border-gray-100 px-4"
+                      key={expense.id}>
+                      <TouchableOpacity className="flex flex-row items-center justify-between">
+                        <View className="flex flex-row justify-between items-center px-1 py-4 w-full">
+                          <View className="flex flex-row items-center space-x-3">
+                            <Image
+                              source={require('../../../assets/images/bill.png')}
+                              className="h-11 w-11"
+                            />
+                            <View className="flex space-y-1">
+                              <Text className="text-md font-normal capitalize">
+                                {expense.description}
+                              </Text>
+                              <Text className="text-md font-light text-gray-600">
+                                {expense.detailsPaid.message +
+                                  ' CA $ ' +
+                                  expense.detailsPaid.amount.toFixed(2)}
+                              </Text>
+                            </View>
+                          </View>
+                          <View className="flex space-y-1 justify-end items-end">
+                            <Text className="text-[12px] text-gray-800">
+                              {expense.detailsSplit.message}
                             </Text>
-                            <Text className="text-md font-light text-gray-600">
-                              {expense.message +
-                                ' CA $ ' +
-                                expense.amount.toFixed(2)}
+                            <Text className="text-[17px] text-sky-600 font-light">
+                              {'CA $ ' + expense.detailsSplit.amount.toFixed(2)}
                             </Text>
                           </View>
                         </View>
-                      </View>
-                    </TouchableOpacity>
-                  </View>) : (<View
-                    className="border-b pb-1 border-gray-100 px-4"
-                    key={expense.id}>
-                    <TouchableOpacity className="flex flex-row items-center justify-between">
-                      <View className="flex flex-row justify-between items-center px-1 py-4 w-full">
-                        <View className="flex flex-row items-center space-x-3">
-                          <Image
-                            source={require('../../../assets/images/bill.png')}
-                            className="h-11 w-11"
-                          />
-                          <View className="flex space-y-1">
-                            <Text className="text-md font-normal capitalize">
-                              {expense.description}
-                            </Text>
-                            <Text className="text-md font-light text-gray-600">
-                              {expense.detailsPaid.message +
-                                ' CA $ ' +
-                                expense.detailsPaid.amount.toFixed(2)}
-                            </Text>
-                          </View>
-                        </View>
-                        <View className="flex space-y-1 justify-end items-end">
-                          <Text className="text-[12px] text-gray-800">
-                            {expense.detailsSplit.message}
-                          </Text>
-                          <Text className="text-[17px] text-sky-600 font-light">
-                            {'CA $ ' + expense.detailsSplit.amount.toFixed(2)}
-                          </Text>
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                  </View>)
-                ))}
+                      </TouchableOpacity>
+                    </View>
+                  ),
+                )}
             </ScrollView>
             {/** Show when atleast two members and no expense added in group */}
             {false && <AddExpense handleExpenseShow={handleExpenseShow} />}
